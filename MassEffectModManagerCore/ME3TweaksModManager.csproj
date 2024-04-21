@@ -6,8 +6,8 @@
 		<PublishReadyToRun>false</PublishReadyToRun>
 		<PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
 		<!-- Windows 2004 -->
-		<TargetFrameworks>net6.0-windows10.0.19041</TargetFrameworks>
-		<RuntimeIdentifier>win10-x64</RuntimeIdentifier>
+		<TargetFrameworks>net8.0-windows10.0.19041</TargetFrameworks>
+		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
 		<PublishReadyToRunShowWarnings>true</PublishReadyToRunShowWarnings>
 		<UseWPF>true</UseWPF>
 		<Platforms>x64</Platforms>

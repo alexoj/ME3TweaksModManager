@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<OutputType>WinExe</OutputType>
 		<!-- Windows 2004 -->
-		<TargetFrameworks>net6.0-windows10.0.19041</TargetFrameworks>
+		<TargetFrameworks>net8.0-windows10.0.19041</TargetFrameworks>
 		<UseWPF>true</UseWPF>
 		<Authors>Mgamerz</Authors>
 		<Company>ME3Tweaks</Company>
