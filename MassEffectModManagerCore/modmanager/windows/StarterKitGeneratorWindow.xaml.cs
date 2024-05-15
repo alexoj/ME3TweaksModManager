@@ -570,7 +570,7 @@ namespace ME3TweaksModManager.modmanager.windows
         /// <returns></returns>
         public static Mod CreateStarterKitMod(StarterKitOptions skOption, Action<string> UITextCallback)
         {
-            var modPath = DLCModGenerator.CreateStarterKitMod(skOption.OutputFolderOverride ?? Path.Combine(M3LoadedMods.GetModDirectoryForGame(skOption.ModGame), MUtilities.SanitizePath(skOption.ModName))
+            var modPath = DLCModGenerator.CreateStarterKitMod(M3LoadedMods.GetModDirectoryForGame(skOption.ModGame)
                 , skOption, UITextCallback, out var moddescAddinDelegates);
             if (skOption.GenerateModdesc)
             {
