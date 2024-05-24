@@ -97,6 +97,12 @@
     <xctk:BusyIndicator
         IsBusy="{Binding IsBusy}"
         BusyContent="{Binding BusyText}">
+        <xctk:BusyIndicator.OverlayStyle>
+            <Style TargetType="Rectangle">
+                <Setter Property="Fill" Value="{DynamicResource {x:Static adonisUi:Brushes.ThemeHardColorBrush}}" />
+                <Setter Property="Opacity" Value="0.6" />
+            </Style>
+        </xctk:BusyIndicator.OverlayStyle>
         <xctk:BusyIndicator.ProgressBarStyle>
             <!-- This makes it look like adonis and not standard wpf -->
             <Style
@@ -145,7 +151,7 @@
                     Height="{Binding Path=(local:StarterKitGeneratorWindow.VisibleRowHeight), Mode=OneWay}" />
                 <!-- Mount Flag-->
                 <RowDefinition
-                    Height="{Binding Path=(local:StarterKitGeneratorWindow.VisibleRowHeight), Mode=OneWay}" />
+                    Height="{Binding Game, Converter={StaticResource StarterKitRowHeightConverter}, ConverterParameter='Not_Game1'}" />
                 <RowDefinition
                     Height="*"
                     MinHeight="300" />
