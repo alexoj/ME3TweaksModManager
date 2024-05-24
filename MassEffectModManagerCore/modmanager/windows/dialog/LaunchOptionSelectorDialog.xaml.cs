@@ -1,25 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
+﻿using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using Dark.Net;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCoreWPF.UI;
 using ME3TweaksModManager.extensions;
 using ME3TweaksModManager.modmanager.objects.launcher;
-using Microsoft.WindowsAPICodePack.PortableDevices.EventSystem;
-using Pathoschild.FluentNexus.Models;
 
-namespace ME3TweaksModManager.modmanager.windows
+namespace ME3TweaksModManager.modmanager.windows.dialog
 {
     /// <summary>
     /// Interaction logic for LaunchOptionSelectorDialog.xaml

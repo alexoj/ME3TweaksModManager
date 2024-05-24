@@ -329,7 +329,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                     if (SelectedTarget.Game == MEGame.LE1)
                     {
-                        Result.TargetsToCoalescedMerge.Add(SelectedTarget); // Rebuild coalesced merge
+                        Result.TargetsToLE1Merge.Add(SelectedTarget); // Rebuild coalesced merge
                     }
 
                     if (SelectedTarget.Game.IsGame2())
@@ -353,7 +353,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                     if (SelectedTarget.Game == MEGame.LE1)
                     {
-                        Result.TargetsToCoalescedMerge.Add(SelectedTarget); // Rebuild coalesced merge
+                        Result.TargetsToLE1Merge.Add(SelectedTarget); // Rebuild coalesced merge
                     }
 
                     if (SelectedTarget.Game.IsGame2())

@@ -17,7 +17,6 @@ using ME3TweaksModManager.modmanager.objects.mod.interfaces;
 using ME3TweaksModManager.modmanager.objects.mod.texture;
 using Microsoft.AppCenter.Crashes;
 using SevenZip.EventArguments;
-using WinCopies.Util;
 using ME3TweaksModManager.modmanager.localizations;
 
 namespace ME3TweaksModManager.modmanager.objects.batch

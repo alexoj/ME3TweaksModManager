@@ -120,8 +120,8 @@ namespace ME3TweaksModManager.modmanager.memoryanalyzer
             LargeFreeStr = FileSize.FormatSize(MixinHandler.MixinMemoryStreamManager.LargePoolFreeSize);
             SmallInUseStr = FileSize.FormatSize(MixinHandler.MixinMemoryStreamManager.SmallPoolInUseSize);
             SmallFreeStr = FileSize.FormatSize(MixinHandler.MixinMemoryStreamManager.SmallPoolFreeSize);
-            MaxBufferSize = FileSize.FormatSize(MixinHandler.MixinMemoryStreamManager.MaximumBufferSize);
-            MemoryBlockSize = FileSize.FormatSize(MixinHandler.MixinMemoryStreamManager.BlockSize);
+            MaxBufferSize = FileSize.FormatSize(MixinHandler.MixinMemoryStreamManager.Settings.MaximumBufferSize);
+            MemoryBlockSize = FileSize.FormatSize(MixinHandler.MixinMemoryStreamManager.Settings.BlockSize);
             //foreach (var item in InstancedTrackedMemoryObjects)
             //{
             //    item.RefreshStatus();

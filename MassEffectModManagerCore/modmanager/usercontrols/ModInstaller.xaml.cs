@@ -46,7 +46,6 @@ using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Newtonsoft.Json;
 using SevenZip;
-using Extensions = WinCopies.Util.Extensions;
 using Mod = ME3TweaksModManager.modmanager.objects.mod.Mod;
 
 namespace ME3TweaksModManager.modmanager.usercontrols
@@ -1603,7 +1602,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                 if (InstallOptionsPackage.ModBeingInstalled.Game == MEGame.LE1)
                 {
-                    Result.TargetsToCoalescedMerge.Add(InstallOptionsPackage.InstallTarget);
+                    Result.TargetsToLE1Merge.Add(InstallOptionsPackage.InstallTarget);
                 }
 
                 if (InstallOptionsPackage.ModBeingInstalled.Game == MEGame.ME3 || InstallOptionsPackage.ModBeingInstalled.Game.IsLEGame())
