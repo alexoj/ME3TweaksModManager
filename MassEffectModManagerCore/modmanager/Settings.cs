@@ -374,6 +374,13 @@ namespace ME3TweaksModManager.modmanager
             set => SetProperty(ref _enableLE1CoalescedMerge, value);
         }
 
+        private static bool _enableLE12DAMerge = true;
+        public static bool EnableLE12DAMerge
+        {
+            get => _enableLE12DAMerge;
+            set => SetProperty(ref _enableLE12DAMerge, value);
+        }
+
         private static bool _isLE1ConsoleKeySet;
         public static bool IsLE1ConsoleKeySet
         {
@@ -490,6 +497,7 @@ namespace ME3TweaksModManager.modmanager
             // LEGENDARY
             SkipLELauncher = LoadSettingBool(settingsIni, "ModManager", "SkipLELauncher", true);
             EnableLE1CoalescedMerge = LoadSettingBool(settingsIni, "ModManager", "EnableLE1CoalescedMerge", true);
+            EnableLE12DAMerge = LoadSettingBool(settingsIni, "ModManager", "EnableLE12DAMerge", true);
             GenerationSettingLE = LoadSettingBool(settingsIni, "ModManager", "GenerationSettingLE", true);
             GenerationSettingOT = LoadSettingBool(settingsIni, "ModManager", "GenerationSettingOT", true);
 
@@ -712,6 +720,7 @@ namespace ME3TweaksModManager.modmanager
                 SaveSettingGuid(settingsIni, "ModManager", "SelectedLE3LaunchOption", SelectedLE3LaunchOption);
 
                 SaveSettingBool(settingsIni, "ModManager", "EnableLE1CoalescedMerge", EnableLE1CoalescedMerge);
+                SaveSettingBool(settingsIni, "ModManager", "EnableLE12DAMerge", EnableLE12DAMerge);
                 SaveSettingBool(settingsIni, "ModManager", "ForcePullContentNextBoot", ForcePullContentNextBoot);
 
                 SaveSettingBool(settingsIni, "ModMaker", "AutoAddControllerMixins", ModMakerControllerModOption);
