@@ -32,6 +32,7 @@ using ME3TweaksCore.GameFilesystem;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Localization;
 using ME3TweaksCore.ME3Tweaks.M3Merge;
+using ME3TweaksCore.ME3Tweaks.M3Merge.Bio2DATable;
 using ME3TweaksCore.ME3Tweaks.M3Merge.Game2Email;
 using ME3TweaksCore.NativeMods;
 using ME3TweaksCore.Services;
@@ -62,6 +63,7 @@ using ME3TweaksModManager.ui;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Win32;
 using Pathoschild.FluentNexus.Models;
+using LaunchOptionSelectorDialog = ME3TweaksModManager.modmanager.windows.dialog.LaunchOptionSelectorDialog;
 using M3OnlineContent = ME3TweaksModManager.modmanager.me3tweaks.services.M3OnlineContent;
 using Mod = ME3TweaksModManager.modmanager.objects.mod.Mod;
 using SaveSelectorUI = ME3TweaksModManager.modmanager.windows.input.SaveSelectorUI;
@@ -1942,9 +1944,10 @@ namespace ME3TweaksModManager
                 SyncPlotManagerForTarget(v);
             }
 
-            foreach (var v in result.TargetsToCoalescedMerge)
+            foreach (var v in result.TargetsToLE1Merge)
             {
                 MergeLE1CoalescedForTarget(v);
+                MergeLE12DAsForTarget(v);
             }
 
             // MERGE DLC
@@ -3571,7 +3574,7 @@ namespace ME3TweaksModManager
                         var result = new PanelResult()
                         {
                             TargetsToEmailMergeSync = { t },
-                            TargetsToCoalescedMerge = { t },
+                            TargetsToLE1Merge = { t },
                             TargetsToSquadmateMergeSync = { t },
                             TargetsToPlotManagerSync = { t },
                             TargetsToAutoTOC = { t },
@@ -3579,7 +3582,7 @@ namespace ME3TweaksModManager
 
                         if (t.Game != MEGame.LE1)
                         {
-                            result.TargetsToCoalescedMerge.Clear(); // Don't do it on non-LE1 games
+                            result.TargetsToLE1Merge.Clear(); // Don't do it on non-LE1 games
                         }
 
                         // Handle the panel result
@@ -4416,6 +4419,20 @@ namespace ME3TweaksModManager
                 ReleaseBusyControl();
             };
             ShowBusyControl(coalMergePanel);
+        }
+
+        private void MergeLE12DAsForTarget(GameTarget target)
+        {
+            if (!Settings.EnableLE12DAMerge)
+            {
+                M3Log.Warning(@"Cannot perform LE1 2DA Merge: feature is disabled by user request");
+                return;
+            }
+
+            ShowRunAndDone((updateUIString) => Bio2DAMerge.RunBio2DAMerge(target),
+                "Merging 2DA tables",
+                "Merged 2DA tables",
+                null);
         }
 
         private void RunAutoTOCOnGame(object obj)
