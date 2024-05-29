@@ -768,6 +768,9 @@ namespace ME3TweaksModManager
         [Option(@"installasi", HelpText = "Instructs Mod Manager to automatically install the ASI with the specified group ID to the specified game")]
         public int AutoInstallASIGroupID { get; set; }
 
+        [Option(@"asiversion", HelpText = "Chooses a specific version of an ASI when paired with --installasi")]
+        public int AutoInstallASIVersion { get; set; }
+
         [Option(@"installbink", HelpText = "Instructs Mod Manager to automatically install the bink asi loader to the specified game")]
         public bool AutoInstallBink { get; set; }
 

@@ -170,6 +170,8 @@ namespace ME3TweaksModManager
                     CommandLinePending.PendingGameBoot = parsedCommandLineArgs.Value.GameBoot;
                 if (parsedCommandLineArgs.Value.AutoInstallASIGroupID > 0)
                     CommandLinePending.PendingInstallASIID = parsedCommandLineArgs.Value.AutoInstallASIGroupID;
+                if (parsedCommandLineArgs.Value.AutoInstallASIVersion > 0)
+                    CommandLinePending.PendingInstallASIVersion = parsedCommandLineArgs.Value.AutoInstallASIVersion;
                 if (parsedCommandLineArgs.Value.AutoInstallBink != false)
                     CommandLinePending.PendingInstallBink = parsedCommandLineArgs.Value.AutoInstallBink;
                 if (parsedCommandLineArgs.Value.CreateMergeDLC != false)
@@ -3548,8 +3550,7 @@ namespace ME3TweaksModManager
                         GameTargetWPF t = GetCurrentTarget(CommandLinePending.PendingGame.Value);
                         if (t != null)
                         {
-                            if (ASIManager.InstallASIToTargetByGroupID(CommandLinePending.PendingInstallASIID,
-                                    @"Automated command line request", t, includeHiddenASIs: true))
+                            if (ASIManager.InstallASIToTargetByGroupID(CommandLinePending.PendingInstallASIID, @"Automated command line request", t, CommandLinePending.PendingInstallASIVersion, includeHiddenASIs: true))
                             {
                                 CurrentOperationText = M3L.GetString(M3L.string_installedASIModByCommandLineRequest);
                             }

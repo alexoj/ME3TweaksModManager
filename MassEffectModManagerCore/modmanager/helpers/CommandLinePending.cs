@@ -49,6 +49,11 @@ namespace ME3TweaksModManager.modmanager.helpers
         public static int PendingInstallASIID;
 
         /// <summary>
+        /// The version for an asi to install to the pending game
+        /// </summary>
+        public static int PendingInstallASIVersion;
+
+        /// <summary>
         /// If bink should be installed to the pending game
         /// </summary>
         public static bool PendingInstallBink;
@@ -62,6 +67,7 @@ namespace ME3TweaksModManager.modmanager.helpers
             {
                 // Nothing will work that depends on this
                 PendingInstallASIID = 0;
+                PendingInstallASIVersion = 0;
                 PendingGameBoot = false;
                 PendingInstallBink = false;
                 PendingMergeDLCCreation = false;
