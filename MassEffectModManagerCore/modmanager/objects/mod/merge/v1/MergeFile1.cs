@@ -191,10 +191,23 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             if (FileName == null) throw new Exception(M3L.GetString(M3L.string_filenameCannotBeNullInAMergeManifestFile!));
             var safeFiles = MergeModLoader.GetAllowedMergeTargetFilenames(Parent.Game);
 
-            if (!safeFiles.Any(x => FileName.StartsWith(Path.GetFileNameWithoutExtension(x), StringComparison.InvariantCultureIgnoreCase)))
+            if (OwningMM.ModDescVersion >= 9.0)
             {
-                // Does this catch DLC startups? 
-                throw new Exception(M3L.GetString(M3L.string_interp_targetingNonStartupFile, FileName));
+                // Mod Manager 9.0: Support targeting specific localizations of files, e.g. Specific changes for Startup_POL
+                if (!safeFiles.Any(x => FileName.StripUnrealLocalization().StartsWith(Path.GetFileNameWithoutExtension(x.StripUnrealLocalization()), StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    // Does this catch DLC startups? 
+                    throw new Exception(M3L.GetString(M3L.string_interp_targetingNonStartupFile, FileName));
+                }
+            }
+            else
+            {
+                // Backwards compatibility - this is how Mod Manager 8.2.3 and below parsed names.
+                if (!safeFiles.Any(x => FileName.StartsWith(Path.GetFileNameWithoutExtension(x), StringComparison.InvariantCultureIgnoreCase)))
+                {
+                    // Does this catch DLC startups? 
+                    throw new Exception(M3L.GetString(M3L.string_interp_targetingNonStartupFile, FileName));
+                }
             }
 
             foreach (var mc in MergeChanges)

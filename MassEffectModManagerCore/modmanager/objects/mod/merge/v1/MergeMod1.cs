@@ -39,8 +39,10 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         [JsonIgnore]
         public CaseInsensitiveDictionary<MergeAsset> Assets { get; set; }
 
+        public double ModDescVersion { get; set; }
+
         private MergeMod1() { }
-        public static MergeMod1 ReadMergeMod(Stream mergeFileStream, string mergeModName, bool loadAssets)
+        public static MergeMod1 ReadMergeMod(Stream mergeFileStream, string mergeModName, bool loadAssets, double parsingModDescVersion = 0.0)
         {
             // Version and magic will already be read by main value
             var manifest = mergeFileStream.ReadUnrealString();
@@ -63,6 +65,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             var mm = JsonConvert.DeserializeObject<MergeMod1>(manifest);
             M3MemoryAnalyzer.AddTrackedMemoryItem($@"MergeMod1 {mergeModName}", mm);
             mm.MergeModFilename = mergeModName;
+            mm.ModDescVersion = parsingModDescVersion;
 
             // setup links
             foreach (var ff in mm.FilesToMergeInto)
@@ -106,6 +109,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             {
                 throw new Exception(M3L.GetString(M3L.string_interp_mergefile_serialSizeMismatch, mergeFileStream.Position, mergeFileStream.Length));
             }
+
             return mm;
         }
 

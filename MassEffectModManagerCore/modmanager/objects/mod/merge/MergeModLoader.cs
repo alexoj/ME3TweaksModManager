@@ -13,7 +13,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
     public class MergeModLoader
     {
         private const string MERGEMOD_MAGIC = @"M3MM";
-        public static IMergeMod LoadMergeMod(Stream mergeFileStream, string filename, bool loadAssets)
+        public static IMergeMod LoadMergeMod(Stream mergeFileStream, string filename, bool loadAssets, double modDescVersion)
         {
             if (mergeFileStream.ReadStringASCII(4) != MERGEMOD_MAGIC)
             {
@@ -24,7 +24,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
             switch (version)
             {
                 case 1:
-                    return MergeMod1.ReadMergeMod(mergeFileStream, filename, loadAssets);
+                    return MergeMod1.ReadMergeMod(mergeFileStream, filename, loadAssets, modDescVersion);
                 default:
                     return null;
             }
@@ -66,7 +66,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         public static void DecompileM3M(string file)
         {
             using var fs = File.OpenRead(file);
-            var mm = LoadMergeMod(fs, file, true);
+            var mm = LoadMergeMod(fs, file, true, 0.0); // Decompile does not depend on version number
             mm.ExtractToFolder(Directory.GetParent(file).FullName);
 
         }
