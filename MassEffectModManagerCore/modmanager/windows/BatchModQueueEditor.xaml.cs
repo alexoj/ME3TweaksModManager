@@ -103,28 +103,35 @@ namespace ME3TweaksModManager.modmanager.windows
             {
                 Filter = M3L.GetString(M3L.string_massEffectModderFiles) + @" (*.mem)|*.mem", // Todo: Localize this properly
                 Title = M3L.GetString(M3L.string_selectMemFile),
+                Multiselect = true,
             };
 
             var result = ofd.ShowDialog();
             if (result == true)
             {
-
-                var memFileGame = ModFileFormats.GetGameMEMFileIsFor(ofd.FileName);
-                if (memFileGame != SelectedGame)
+                foreach (var f in ofd.FileNames)
                 {
-                    M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_dialog_memForDifferentGame, SelectedGame, memFileGame), M3L.GetString(M3L.string_wrongGame), MessageBoxButton.OK, MessageBoxImage.Error);
-                    return;
+                    var memFileGame = ModFileFormats.GetGameMEMFileIsFor(f);
+                    if (memFileGame != SelectedGame)
+                    {
+                        // TODO: UPDATE LOCALIZATION TO INCLUDE FILENAME
+                        M3L.ShowDialog(this,
+                            M3L.GetString(M3L.string_interp_dialog_memForDifferentGame, SelectedGame, memFileGame),
+                            M3L.GetString(M3L.string_wrongGame), MessageBoxButton.OK, MessageBoxImage.Error);
+                        continue;
+                    }
+
+                    // User selected file
+                    MEMMod m = new MEMMod()
+                    {
+                        FilePath = f
+                    };
+
+                    m.ParseMEMData();
+
+                    VisibleFilteredMEMMods
+                        .Add(m); //Todo: Check no duplicates in left list (or existing already on right?)
                 }
-
-                // User selected file
-                MEMMod m = new MEMMod()
-                {
-                    FilePath = ofd.FileName // Todo: Figure out relative pathing
-                };
-
-                m.ParseMEMData();
-
-                VisibleFilteredMEMMods.Add(m); //Todo: Check no duplicates in left list (or existing already on right?)
             }
         }
 
@@ -317,7 +324,7 @@ namespace ME3TweaksModManager.modmanager.windows
                     SelectedInstallGroupMod = mod;
                 }
             }
-            
+
             ScrollSelectedModIntoView();
         }
 
