@@ -4344,7 +4344,8 @@ namespace ME3TweaksModManager
                 }
             };
 
-            BatchPanelResult = new PanelResult();
+            // 05/29/2024 - Change to null-only assignment as it would wipe out an existing BatchPanelResult, such as from the Mod Update list.
+            BatchPanelResult ??= new PanelResult();
             HandleBatchPanelResult = false;
             ShowBusyControl(modInspector, priority);
         }
