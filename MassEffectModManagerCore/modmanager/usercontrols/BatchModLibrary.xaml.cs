@@ -1,37 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
+﻿using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
-using LegendaryExplorerCore.Packages;
 using ME3TweaksCore.Helpers;
-using ME3TweaksCore.Misc;
 using ME3TweaksCore.Services.FileSource;
-using ME3TweaksCoreWPF;
 using ME3TweaksCoreWPF.Targets;
 using ME3TweaksCoreWPF.UI;
 using ME3TweaksModManager.modmanager.helpers;
-using ME3TweaksModManager.modmanager.loaders;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.memoryanalyzer;
 using ME3TweaksModManager.modmanager.nexusmodsintegration;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.batch;
-using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.objects.mod.texture;
-using ME3TweaksModManager.modmanager.usercontrols.interfaces;
 using ME3TweaksModManager.modmanager.usercontrols.moddescinieditor;
 using ME3TweaksModManager.modmanager.windows;
-using ME3TweaksModManager.modmanager.windows.input;
 using ME3TweaksModManager.ui;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.Win32;
-using Newtonsoft.Json;
 using SevenZip;
 
 namespace ME3TweaksModManager.modmanager.usercontrols
@@ -50,6 +37,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             M3MemoryAnalyzer.AddTrackedMemoryItem(@"Batch Mod Installer Panel", this);
             LoadCommands();
         }
+
+        /// <summary>
+        /// If the batch library is loading biq files
+        /// </summary>
+        public bool IsLoading { get; private set; }
         public ICommand CloseCommand { get; private set; }
         public ICommand CreateNewGroupCommand { get; private set; }
         public ICommand InstallGroupCommand { get; private set; }
@@ -255,16 +247,29 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             }
         }
 
+        public void OnIsLoadingChanged()
+        {
+            ClipperHelper.ShowHideVerticalContent(LoadingStatusPanel, IsLoading);
+        }
+
         public override void OnPanelVisible()
         {
             InitializeComponent();
+           
             if (RefreshContentsOnVisible)
             {
                 ReloadModData();
             }
             else
             {
-                parseBatchFiles();
+                Task.Run(() =>
+                {
+                    IsLoading = true;
+                    parseBatchFiles();
+                }).ContinueWithOnUIThread(x =>
+                {
+                    IsLoading = false;
+                });
             }
 
             RefreshContentsOnVisible = false;

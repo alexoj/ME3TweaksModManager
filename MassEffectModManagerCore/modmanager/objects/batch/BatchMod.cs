@@ -105,6 +105,22 @@ namespace ME3TweaksModManager.modmanager.objects.batch
         }
 
         /// <summary>
+        /// The UI bound tooltip string to show if options were chosen or not
+        /// </summary>
+        [JsonIgnore]
+        public string OptionsRecordedTooltipString
+        {
+            get
+            {
+                // Standalone
+                if (Mod != null && Mod.InstallationJobs.Sum(x => x.GetAllAlternates().Count) == 0) return "This mod does not have configurable options. It always installs the same";
+                if (!HasChosenOptions) return "This mod has configurable options, but none have been saved. Install the group to record options for next time";
+                if (ChosenOptionsDesync) return "This mod has changed since the configurable options were saved. When this group is installed again, you will have to choose options";
+                return "Timestamp of when configuration options were chosen";
+            }
+        }
+
+        /// <summary>
         /// Indiciates this is the first mod being installed
         /// </summary>
         [JsonIgnore]

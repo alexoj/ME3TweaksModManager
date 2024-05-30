@@ -20,21 +20,7 @@
         <DockPanel
             DockPanel.Dock="Bottom"
             Margin="0,4,0,0">
-            <Button
-                Content="{DynamicResource string_editGroup}"
-                DockPanel.Dock="Left"
-                Command="{Binding EditGroupCommand}"
-                Margin="0,0,5,0" />
-            <Button
-                HorizontalAlignment="Left"
-                Content="{DynamicResource string_duplicateGroup}"
-                Margin="0,0,5,0"
-                Command="{Binding DuplicateGroupCommand}" />
-            <Button
-                Content="{DynamicResource string_deleteGroup}"
-                DockPanel.Dock="Left"
-                Command="{Binding DeleteGroupCommand}"
-                Margin="0,0,5,0" />
+
             <Button
                 HorizontalAlignment="Left"
                 Content="{DynamicResource string_createANewInstallGroup}"
@@ -45,12 +31,6 @@
                 Content="{DynamicResource string_debugTriggerDataReload}"
                 Margin="5,0"
                 Command="{Binding TriggerDataReloadCommand}" />
-            <Button
-                Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}"
-                HorizontalAlignment="Left"
-                Content="{DynamicResource string_deploy}"
-                Margin="5,0"
-                Command="{Binding DeployQueueCommand}" />
             <Button
                 DockPanel.Dock="Left"
                 HorizontalAlignment="Right"
@@ -63,7 +43,33 @@
                 Text="{DynamicResource string_installGroups}"
                 DockPanel.Dock="Top"
                 FontWeight="Bold" />
+            <ui:Clipper
+                HorizontalAlignment="Center"
+                VerticalAlignment="Bottom"
+                Constraint="Width"
+                DockPanel.Dock="Bottom">
+                <StackPanel
+                    ui:Clipper.WidthFraction="1"
+                    ui:Clipper.HeightFraction="0"
+                    Name="LoadingStatusPanel"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Margin="0,2"
+                    Visibility="{Binding IsLoading, Converter={StaticResource BoolToVisibilityConverter}}">
+                    <fa5:ImageAwesome
+                        Icon="Solid_Spinner"
+                        Height="16"
+                        Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
+                        Spin="True" />
+                    <TextBlock
+                        Text="{DynamicResource string_loading}"
+                        VerticalAlignment="Center"
+                        Margin="3,0,0,0" />
+                </StackPanel>
+            </ui:Clipper>
             <ListBox
+                IsEnabled="{Binding IsLoading, Converter={StaticResource BoolEnabledConverter}, ConverterParameter='Not'}"
                 ItemsSource="{Binding AvailableBatchQueues}"
                 SelectedItem="{Binding SelectedBatchQueue}"
                 Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
@@ -109,6 +115,29 @@
                 <DockPanel
                     DockPanel.Dock="Bottom"
                     Margin="0,4,0,0">
+                    <DockPanel DockPanel.Dock="Top">
+                        <Button
+                            Content="{DynamicResource string_editGroup}"
+                            DockPanel.Dock="Left"
+                            Command="{Binding EditGroupCommand}"
+                            Margin="0,0,5,4" />
+                        <Button
+                            HorizontalAlignment="Left"
+                            Content="{DynamicResource string_duplicateGroup}"
+                            Margin="0,0,5,4"
+                            Command="{Binding DuplicateGroupCommand}" />
+                        <Button
+                            Content="{DynamicResource string_deleteGroup}"
+                            DockPanel.Dock="Left"
+                            Command="{Binding DeleteGroupCommand}"
+                            Margin="0,0,5,4" />
+                        <Button
+                            Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}"
+                            HorizontalAlignment="Right"
+                            Content="{DynamicResource string_deploy}"
+                            Margin="5,0,0,4"
+                            Command="{Binding DeployQueueCommand}" />
+                    </DockPanel>
                     <Button
                         Content="{DynamicResource string_installThisGroup}"
                         DockPanel.Dock="Right"
@@ -190,6 +219,7 @@
                                             VerticalAlignment="Center" />
                                     </StackPanel>
                                     <Border
+                                        ToolTip="{Binding OptionsRecordedTooltipString}"
                                         Visibility="{Binding Mod, Converter={StaticResource NullVisibilityConverter}}"
                                         HorizontalAlignment="Right"
                                         BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer1BorderBrush}}"
