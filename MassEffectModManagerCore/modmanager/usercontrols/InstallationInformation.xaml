@@ -100,6 +100,18 @@
                         DockPanel.Dock="Bottom"
                         Background="{DynamicResource {x:Static adonisUi:Brushes.Layer3BackgroundBrush}}">
                         <Button
+                            Command="{Binding EnableAllDLCModsCommand}"
+                            Content="Enable all"
+                            HorizontalAlignment="Right"
+                            Margin="4"
+                            Padding="7,3" />
+                        <Button
+                            Command="{Binding DisableAllDLCModsCommand}"
+                            Content="Disable all"
+                            HorizontalAlignment="Right"
+                            Margin="0,4"
+                            Padding="7,3" />
+                        <Button
                             Content="{Binding ShowInstalledOptionsText, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type usercontrols:InstallationInformation}}}"
                             HorizontalAlignment="Right"
                             Margin="4"
