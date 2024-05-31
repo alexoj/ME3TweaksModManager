@@ -109,7 +109,10 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             addMergeWeightCompleted?.Invoke(MergeFileChange1.WEIGHT_DISABLECONFIGUPDATE);
         }
 
-        // Links the merge types to this file that we are merging into
+        /// <summary>
+        /// Links each update type to the proper parent for accessing variables in the merge mod
+        /// </summary>
+        /// <param name="parent"></param>
         public void SetupParent(MergeFile1 parent)
         {
             Parent = parent;
@@ -400,6 +403,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                 {
                     // Create it
                     container = ExportCreator.CreatePackageExport(package, containingPackage, null);
+                    (container as ExportEntry).ExportFlags |= UnrealFlags.EExportFlags.ForcedExport; // If a class is nested under a package the package must be forced export, at least in the official compiler
                 }
             }
 
