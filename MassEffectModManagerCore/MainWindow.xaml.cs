@@ -4223,12 +4223,16 @@ namespace ME3TweaksModManager
 
                         case @".json":
                             {
+                                var version = MergeModLoader.GetMergeModVersionForCompile(this, file);
+                                if (version == null)
+                                    return; // User canceled.
+
                                 var task = BackgroundTaskEngine.SubmitBackgroundJob(@"M3MCompile", M3L.GetString(M3L.string_compilingMergemod),
                                     M3L.GetString(M3L.string_compiledMergemod));
                                 NamedBackgroundWorker nbw = new NamedBackgroundWorker(@"MergeModCompiler");
                                 nbw.DoWork += (o, args) =>
                                 {
-                                    MergeModLoader.SerializeManifest(file, 1);
+                                    MergeModLoader.SerializeManifest(file, version.Value);
                                 };
                                 nbw.RunWorkerCompleted += (o, args) =>
                                 {
@@ -4257,7 +4261,7 @@ namespace ME3TweaksModManager
                             catch (Exception ex)
                             {
                                 M3Log.Error($@"Error decompiling m3m mod file: {ex.Message}");
-                                M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_errorCompilingm3mX, ex.Message), M3L.GetString(M3L.string_errorCompilingm3m), MessageBoxButton.OK, MessageBoxImage.Error);
+                                M3L.ShowDialog(this, $"Error decompiling m3m file: {ex.Message}", "Error decompiling m3m", MessageBoxButton.OK, MessageBoxImage.Error);
                             }
 
                             break;

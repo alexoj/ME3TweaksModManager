@@ -113,6 +113,7 @@
 		<None Remove="modmanager\merge\coalesced\LE1\Coalesced_INT.bin" />
 		<None Remove="modmanager\nexusmodsintegration\nexusmods_icon.png" />
 		<None Remove="modmanager\objects\mod\merge\v1\schema.json" />
+		<None Remove="modmanager\objects\mod\merge\vanillaclasses.json.lzma" />
 		<None Remove="modmanager\starterkit\henchimages\placeholder_available.png" />
 		<None Remove="modmanager\starterkit\henchimages\placeholder_chosen.png" />
 		<None Remove="modmanager\starterkit\henchimages\placeholder_silo.png" />
@@ -172,6 +173,7 @@
 		<EmbeddedResource Include="modmanager\meim\propertymaps\BioEngine.xml" />
 		<EmbeddedResource Include="modmanager\meim\propertymaps\BioGame.xml" />
 		<EmbeddedResource Include="modmanager\meim\propertymaps\BioParty.xml" />
+		<EmbeddedResource Include="modmanager\objects\mod\merge\vanillaclasses.json.lzma" />
 		<EmbeddedResource Include="modmanager\starterkit\henchimages\placeholder_available.png" />
 		<EmbeddedResource Include="modmanager\starterkit\henchimages\placeholder_chosen.png" />
 		<EmbeddedResource Include="modmanager\starterkit\scripts\SFXGUIData_ModSettings.uc" />

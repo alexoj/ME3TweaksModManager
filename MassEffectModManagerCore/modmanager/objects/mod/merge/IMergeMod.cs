@@ -26,9 +26,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         public CaseInsensitiveDictionary<MergeAsset> Assets { get; set; }
 
         /// <summary>
-        /// The ModDesc version of the owning mod that was used when this mod loaded. Used for backwards compatibility
+        /// The version of this merge mod
         /// </summary>
-        public double ModDescVersion { get; set; }
+        public int MergeModVersion { get; set; }
 
         /// <summary>
         /// Applies the merge mod to the target

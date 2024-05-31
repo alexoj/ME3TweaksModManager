@@ -33,7 +33,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             {
                 // if modpath = "" there is no starting /
                 int extraLen = ModPath.Length > 0 ? 2 : 1;
-                mm = MergeModLoader.LoadMergeMod(sourceStream, fullPath.Substring(ModPath.Length + extraLen + Mod.MergeModFolderName.Length), IsInArchive, ModDescTargetVersion);
+                mm = MergeModLoader.LoadMergeMod(sourceStream, fullPath.Substring(ModPath.Length + extraLen + Mod.MergeModFolderName.Length), IsInArchive);
             }
             catch (Exception e)
             {
