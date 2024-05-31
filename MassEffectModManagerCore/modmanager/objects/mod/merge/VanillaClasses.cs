@@ -14,7 +14,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         {
             if (VanillaClassMap == null)
             {
-                var vanillaTextLZ = M3Utilities.ExtractInternalFileToStream("ME3TweaksModManager.modmanager.mod.merge.vanillaclasses.json.lzma");
+                var vanillaTextLZ = M3Utilities.ExtractInternalFileToStream(@"ME3TweaksModManager.modmanager.objects.mod.merge.vanillaclasses.json.lzma");
 
                 MemoryStream ms = new MemoryStream();
                 LZMA.DecompressLZMAStream(vanillaTextLZ, ms);

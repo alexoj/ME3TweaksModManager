@@ -60,6 +60,11 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         /// </summary>
         /// <returns></returns>
         IEnumerable<string> GetMergeFileTargetFiles();
+
+        /// <summary>
+        /// Releases memory for loaded assets that were loaded on-disk from m3ms. Does nothing for memory m3ms
+        /// </summary>
+        public void ReleaseAssets();
     }
 
     public interface IMergeModCommentable

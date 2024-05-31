@@ -54,6 +54,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             // APPLY ASSET UPDATE
             AssetUpdate?.ApplyUpdate(package, ref export, installingMod, addMergeWeightCompletion, gameTarget);
 
+            ClassUpdate?.ApplyUpdate(package, ref export, assetsCache, gameTarget, addMergeWeightCompletion);
             // The below all require a target export so we enforce it here.
             if (export == null)
                 throw new Exception(M3L.GetString(M3L.string_interp_mergefile_couldNotFindExportInPackage, package.FilePath, ExportInstancedFullPath));
@@ -392,7 +393,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         [JsonProperty(@"assetname")]
         public string AssetName { get; set; }
 
-        public bool ApplyUpdate(IMEPackage package, ExportEntry targetExport, MergeAssetCache1 assetsCache, GameTarget gameTarget, Action<int> addMergeWeightCompleted)
+        public bool ApplyUpdate(IMEPackage package, ref ExportEntry outClass, MergeAssetCache1 assetsCache, GameTarget gameTarget, Action<int> addMergeWeightCompleted)
         {
             var classText = OwningMM.Assets[AssetName].AsString();
             var containingPackage = GetContainingPackage();
@@ -409,18 +410,20 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             }
 
             FileLib fl = MergeFileChange1.GetFileLibForMerge(package, Parent.ExportInstancedFullPath, assetsCache, gameTarget);
-            (_, MessageLog log) = UnrealScriptCompiler.CompileClass(package, classText, fl, parent: container);
+            (_, MessageLog log) = UnrealScriptCompiler.CompileClass(package, classText, fl, export: package.FindExport(Parent.ExportInstancedFullPath, @"Class"), parent: container);
             if (log.HasErrors)
             {
-                M3Log.Error($@"Error compiling class {targetExport.InstancedFullPath}:");
+                M3Log.Error($@"Error compiling class {Parent.ExportInstancedFullPath}:");
                 foreach (var l in log.AllErrors)
                 {
                     M3Log.Error(l.Message);
                 }
 
                 // TODO: Update localization on this
-                throw new Exception(M3L.GetString(M3L.string_interp_mergefile_errorCompilingFunction, targetExport.InstancedFullPath, string.Join(Environment.NewLine, log.AllErrors)));
+                throw new Exception(M3L.GetString(M3L.string_interp_mergefile_errorCompilingFunction, Parent.ExportInstancedFullPath, string.Join(Environment.NewLine, log.AllErrors)));
             }
+
+            outClass = package.FindExport(Parent.ExportInstancedFullPath, "Class");
             addMergeWeightCompleted?.Invoke(MergeFileChange1.WEIGHT_CLASSUPDATE);
             return true;
         }
@@ -499,20 +502,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         public bool ApplyUpdate(IMEPackage package, ref ExportEntry targetExport, Mod installingMod, Action<int> addMergeWeightCompleted, GameTarget target)
         {
             // targetExport CAN BE NULL starting with ModDesc 8.1 mods!
-            Stream binaryStream;
             string sourcePath = null;
-            if (OwningMM.Assets[AssetName].AssetBinary != null)
-            {
-                binaryStream = new MemoryStream(OwningMM.Assets[AssetName].AssetBinary);
-            }
-            else
-            {
-                sourcePath = FilesystemInterposer.PathCombine(installingMod.IsInArchive, installingMod.ModPath, Mod.MergeModFolderName, OwningMM.MergeModFilename);
-                using var fileS = File.OpenRead(sourcePath);
-                fileS.Seek(OwningMM.Assets[AssetName].FileOffset, SeekOrigin.Begin);
-                binaryStream = fileS.
-                    ReadToMemoryStream(OwningMM.Assets[AssetName].FileSize);
-            }
+            OwningMM.Assets[AssetName].EnsureAssetLoaded();
+            var binaryStream = new MemoryStream(OwningMM.Assets[AssetName].AssetBinary);
 
             using var sourcePackage = MEPackageHandler.OpenMEPackageFromStream(binaryStream, sourcePath);
             var sourceEntry = sourcePackage.FindExport(AssetExportInstancedFullPath);

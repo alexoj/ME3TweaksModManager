@@ -23,8 +23,8 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         /// </summary>
         private const int TEXT_MIN_SIZE_TO_COMPRESS = 80;
 
-        private const string ManifestSchemaInternalPath = @"ME3TweaksModManager.modmanager.objects.mod.merge.v1.schema.json";
         private const string MMV1_ASSETMAGIC = @"MMV1";
+
         [JsonIgnore]
         public string MergeModFilename { get; set; }
 
@@ -101,6 +101,10 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             M3MemoryAnalyzer.AddTrackedMemoryItem($@"MergeMod1 {mergeModName}", mm);
             mm.MergeModFilename = mergeModName;
             mm.MergeModVersion = mergeModVersion;
+            if (mergeFileStream is FileStream fs)
+            {
+                mm.LoadedFromPath = fs.Name;
+            }
 
             // setup links
             foreach (var ff in mm.FilesToMergeInto)
@@ -122,7 +126,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         throw new Exception(M3L.GetString(M3L.string_error_mergefile_badMagic));
                     }
 
-                    MergeAsset ma = new MergeAsset();
+                    MergeAsset ma = new MergeAsset() { OwningMM = mm };
                     var assetName = mergeFileStream.ReadUnrealString(); // Uncompressed as it will be short.
                     
                     // Uncompressed asset size
@@ -151,7 +155,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         ma.FileOffset = (int)mergeFileStream.Position;
                         if (ma.IsCompressed)
                         {
-                            mergeFileStream.Skip(ma.FileSize);
+                            mergeFileStream.Skip((uint)ma.CompressedSize);
                         }
                         else
                         {
@@ -290,6 +294,20 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         }
 
         /// <summary>
+        /// Releases memory used by assets
+        /// </summary>
+        public void ReleaseAssets()
+        {
+            if (LoadedFromPath != null)
+            {
+                foreach (var asset in Assets)
+                {
+                    asset.Value.AssetBinary = null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Converts this merge mod object to binary form in the given stream
         /// </summary>
         /// <param name="outStream"></param>
@@ -306,11 +324,20 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             M3Log.Information($@"M3MCompiler: Source json text: {manifestText}", Settings.LogModInstallation); // This is as close as I can get...
 
             // VALIDATE JSON SCHEMA
-            var schemaText = new StreamReader(M3Utilities.ExtractInternalFileToStream(ManifestSchemaInternalPath)).ReadToEnd();
-            var schemaFailureMessages = JsonSchemaValidator.ValidateSchema(manifestText, schemaText);
-            if (schemaFailureMessages != null && schemaFailureMessages.Any())
+            if (mergeModVersion != 2) // Testing format without schema currently
             {
-                return schemaFailureMessages;
+#if !DEBUG
+DO NOT COMPILE THIS FOR RELEASE BUILDS
+#endif
+
+                var schemaText =
+                    new StreamReader(M3Utilities.ExtractInternalFileToStream(GetSchemaPath(mergeModVersion)))
+                        .ReadToEnd();
+                var schemaFailureMessages = JsonSchemaValidator.ValidateSchema(manifestText, schemaText);
+                if (schemaFailureMessages != null && schemaFailureMessages.Any())
+                {
+                    return schemaFailureMessages;
+                }
             }
 
             var mm = JsonConvert.DeserializeObject<MergeMod1>(manifestText);
@@ -403,11 +430,11 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         if (!File.Exists(classDiskFile))
                         {
                             // Todo: Update to asset
-                            throw new Exception(M3L.GetString(M3L.string_interp_error_mergefile_scriptNotFoundX, mc.ScriptUpdate.ScriptFileName));
+                            throw new Exception(M3L.GetString(M3L.string_interp_error_mergefile_scriptNotFoundX, mc.ClassUpdate.AssetName));
                         }
                         M3Log.Information($@"M3MCompiler: Adding class update file to m3m: {classDiskFile}");
                         // Class udpates are always compressed. As they will typically be many characters.
-                        assets.Add(new MergeAsset(mc.AssetUpdate.AssetName, true));
+                        assets.Add(new MergeAsset(mc.ClassUpdate.AssetName, true));
                     }
                 }
             }
@@ -430,23 +457,38 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                 if (mergeModVersion >= 2)
                 {
                     // Assets could be compressed in V2
-                    outStream.WriteBoolByte(asset.IsCompressed);
+                    // First determine if compression benefits us at all
+
 
                     // Handle compression
                     if (asset.IsCompressed)
                     {
                         var assetBytesCompressed = LZMA.Compress(assetBytes);
-                        outStream.WriteInt32(assetBytesCompressed.Length); // COMPRESSED ASSET LENGTH
-                        outStream.Write(assetBytesCompressed); // COMPRESSED ASSET DATA
+                        var hasCompressionBenefits = assetBytesCompressed.Length + (assetBytes.Length * 0.20) < assetBytes.Length;
+                        outStream.WriteBoolByte(hasCompressionBenefits);
+                        if (hasCompressionBenefits)
+                        {
+                            M3Log.Information($@"M3MCompiler: Asset {asset} is being stored compressed");
+                            outStream.WriteInt32(assetBytesCompressed.Length); // COMPRESSED ASSET LENGTH
+                            outStream.Write(assetBytesCompressed); // COMPRESSED ASSET DATA
+                        }
+                        else
+                        {
+                            M3Log.Information($@"M3MCompiler: Asset {asset} does not shrink enough from compression to warrant compressing it. It is being stored uncompressed");
+                            outStream.Write(assetBytes); // UNCOMPRESSED ASSET DATA
+                        }
                     }
                     else
                     {
-                        outStream.Write(assetBytes); // ASSET DATA
+                        M3Log.Information($@"M3MCompiler: Asset {asset} is being stored uncompressed");
+                        outStream.WriteBoolByte(false); // Not compressed
+                        outStream.Write(assetBytes); // UNCOMPRESSED ASSET DATA
                     }
                 }
                 else
                 {
                     // Assets are not compressed at all in V1
+                    M3Log.Information($@"M3MCompiler: Asset {asset} is being stored uncompressed (V1)");
                     outStream.Write(assetBytes); // ASSET DATA
                 }
 
@@ -456,7 +498,15 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             return null;
         }
 
+        private static string GetSchemaPath(int mergeModVersion) => $@"ME3TweaksModManager.modmanager.objects.mod.merge.v{mergeModVersion}.schema.json";
+
         [JsonProperty(@"comment")]
         public string Comment { get; set; }
+
+        /// <summary>
+        /// The path this merge mod loaded from. Only works if on disk and from m3m form.
+        /// </summary>
+        [JsonIgnore]
+        public string LoadedFromPath { get; set; }
     }
 }

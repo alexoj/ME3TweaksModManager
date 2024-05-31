@@ -1716,6 +1716,15 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 InstallOptionsPackage.ModBeingInstalled.Archive = null;
             }
 
+            var mergeMods = InstallOptionsPackage.ModBeingInstalled.GetJob(ModJob.JobHeader.BASEGAME)?.MergeMods;
+            if (mergeMods != null)
+            {
+                foreach (var mm in mergeMods)
+                {
+                    mm.ReleaseAssets();
+                }
+            }
+
             base.OnClosing(DataEventArgs.Empty);
         }
 

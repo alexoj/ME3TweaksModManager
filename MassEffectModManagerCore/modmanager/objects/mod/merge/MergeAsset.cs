@@ -1,8 +1,7 @@
-﻿using System.IO;
-using System.Text;
-using System.Windows.Shapes;
+﻿using System.Text;
 using LegendaryExplorerCore.Compression;
 using LegendaryExplorerCore.Helpers;
+using ME3TweaksModManager.modmanager.objects.mod.merge.v1;
 using Newtonsoft.Json;
 
 namespace ME3TweaksModManager.modmanager.objects.mod.merge
@@ -12,6 +11,12 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
     /// </summary>
     public class MergeAsset
     {
+        // Concurrency
+        private static object syncObj = new object();
+
+        [JsonIgnore]
+        public MergeMod1 OwningMM;
+
         /// <summary>
         /// Filename of the asset. Only used during serialization and for logging errors
         /// </summary>
@@ -49,6 +54,21 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         public int FileOffset;
 
         /// <summary>
+        /// Ensures an asset is loaded for use. Throws an exception if the asset cannot be loaded.
+        /// </summary>
+        /// <exception cref="Exception"></exception>
+        public void EnsureAssetLoaded()
+        {
+            if (AssetBinary != null)
+                return; // It's loaded
+
+            if (OwningMM.LoadedFromPath == null)
+                throw new Exception(@"Cannot load asset data from an m3m that was not loaded from disk at a time after initial load. This is a bug, please report it.");
+
+            LoadAsset();
+        }
+
+        /// <summary>
         /// Reads the asset binary data into the <see cref="AssetBinary"/> byte array. Seeks and reads from the specified stream.
         /// </summary>
         /// <param name="mergeFileStream">The stream to read from.</param>
@@ -75,14 +95,31 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         /// <returns></returns>
         public string AsString()
         {
+            EnsureAssetLoaded();
+
             if (AssetBinary == null)
                 throw new Exception(@"AssetBinary was null in this MergeAsset! The m3m was not loaded. This is a bug.");
+
             // This is how File.ReadAllText() works
             using StreamReader sr = new StreamReader(new MemoryStream(AssetBinary), Encoding.UTF8, detectEncodingFromByteOrderMarks: true);
             return sr.ReadToEnd();
         }
 
-        public MergeAsset(){}
+        private void LoadAsset()
+        {
+            lock (syncObj)
+            {
+                if (AssetBinary != null)
+                    return; // Already loaded.
+                if (OwningMM.LoadedFromPath == null)
+                    return; // Cannot load asset at a later time if the loaded from path is not set.
+
+                using var fs = File.OpenRead(OwningMM.LoadedFromPath);
+                ReadAssetBinary(fs);
+            }
+        }
+
+        public MergeAsset() { }
 
         public MergeAsset(string assetName, bool compressAsset)
         {
