@@ -16,7 +16,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
     /// <summary>
     /// Merge Mod V1. Merges properties, objects
     /// </summary>
-    public class MergeMod1 : IMergeMod
+    public class MergeMod1 : IMergeMod, IMergeModCommentable
     {
         /// <summary>
         /// The minimum size to compress in merge mod format 2. Used only in certain update classes.
@@ -455,5 +455,8 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             M3Log.Information($@"M3MCompiler: V1 serialization complete");
             return null;
         }
+
+        [JsonProperty(@"comment")]
+        public string Comment { get; set; }
     }
 }

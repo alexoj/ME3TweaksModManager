@@ -1,39 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
-using System.IO;
-using System.Linq;
 using Windows.Foundation.Metadata;
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Kismet;
-using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Packages.CloningImportingAndRelinking;
 using LegendaryExplorerCore.Unreal;
 using LegendaryExplorerCore.Unreal.BinaryConverters;
 using LegendaryExplorerCore.UnrealScript;
 using LegendaryExplorerCore.UnrealScript.Compiling.Errors;
-using ME3TweaksCore.Diagnostics;
 using ME3TweaksCore.GameFilesystem;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Misc;
-using ME3TweaksCore.Targets;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.localizations;
 using Newtonsoft.Json;
-using Windows.Storage;
-using LegendaryExplorerCore.Unreal.ObjectInfo;
-using WinRT;
 
 namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 {
     /// <summary>
     /// Describes a change to a single export (or at least specified by a single target if it depends on that export)
     /// </summary>
-    public class MergeFileChange1
+    public class MergeFileChange1 : IMergeModCommentable
     {
-        [JsonProperty(@"entryname")] public string EntryName { get; set; }
+        [JsonProperty(@"entryname")] public string ExportInstancedFullPath { get; set; }
         [JsonProperty(@"propertyupdates")] public List<PropertyUpdate1> PropertyUpdates { get; set; }
         [JsonProperty(@"disableconfigupdate")] public bool DisableConfigUpdate { get; set; }
         [JsonProperty(@"assetupdate")] public AssetUpdate1 AssetUpdate { get; set; }
@@ -45,16 +33,22 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         [JsonIgnore] public MergeFile1 Parent;
         [JsonIgnore] public MergeMod1 OwningMM => Parent.OwningMM;
 
+        /// <summary>
+        /// The comment on this field. Optional.
+        /// </summary>
+        [JsonProperty("comment")]
+        public string Comment { get; set; }
+
         public void ApplyChanges(IMEPackage package, MergeAssetCache1 assetsCache, Mod installingMod, GameTarget gameTarget, Action<int> addMergeWeightCompletion)
         {
             // APPLY PROPERTY UPDATES
-            M3Log.Information($@"Merging changes into {EntryName}");
-            var export = package.FindExport(EntryName);
+            M3Log.Information($@"Merging changes into {ExportInstancedFullPath}");
+            var export = package.FindExport(ExportInstancedFullPath);
 
             // Mod MUST target 8.1 or higher to be able to use this functionality at all
             if (installingMod.ModDescTargetVersion < 8.1 && export == null)
             {
-                throw new Exception(M3L.GetString(M3L.string_interp_mergefile_couldNotFindExportInPackage, package.FilePath, EntryName));
+                throw new Exception(M3L.GetString(M3L.string_interp_mergefile_couldNotFindExportInPackage, package.FilePath, ExportInstancedFullPath));
             }
 
             // APPLY ASSET UPDATE
@@ -62,12 +56,12 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
             // The below all require a target export so we enforce it here.
             if (export == null)
-                throw new Exception(M3L.GetString(M3L.string_interp_mergefile_couldNotFindExportInPackage, package.FilePath, EntryName));
+                throw new Exception(M3L.GetString(M3L.string_interp_mergefile_couldNotFindExportInPackage, package.FilePath, ExportInstancedFullPath));
 
             if (PropertyUpdates != null)
             {
                 if (export == null)
-                    throw new Exception(M3L.GetString(M3L.string_interp_mergefile_couldNotFindExportInPackage, package.FilePath, EntryName));
+                    throw new Exception(M3L.GetString(M3L.string_interp_mergefile_couldNotFindExportInPackage, package.FilePath, ExportInstancedFullPath));
 
                 var props = export.GetProperties();
                 foreach (var pu in PropertyUpdates)
@@ -93,6 +87,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             }
         }
 
+        [Deprecated("Use LE1 config merge feature instead", DeprecationType.Deprecate, 1)]
         private void DisableConfigFlag(IMEPackage package, ExportEntry export, Mod installingMod, Action<int> addMergeWeightCompleted)
         {
             if (ObjectBinary.From(export) is UProperty ob)
@@ -117,6 +112,15 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         {
             Parent = parent;
 
+            if (PropertyUpdates != null)
+            {
+                foreach (var pu in PropertyUpdates)
+                {
+                    pu.Parent = this;
+                }
+            }
+            if (SequenceSkipUpdate != null)
+                SequenceSkipUpdate.Parent = this;
             if (AssetUpdate != null)
                 AssetUpdate.Parent = this;
             if (ScriptUpdate != null)
@@ -225,7 +229,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         internal const int WEIGHT_CLASSUPDATE = 25;
     }
 
-    public class PropertyUpdate1
+    public class PropertyUpdate1 : MergeModUpdateBase
     {
         [JsonProperty(@"propertyname")]
         public string PropertyName { get; set; }
@@ -367,7 +371,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             }
         }
 
-        public void Validate()
+        public override void Validate()
         {
             if (PropertyType == @"EnumProperty")
             {
@@ -380,16 +384,13 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
     /// <summary>
     /// Mod Manager 9: Allow adding new entire classes to files, using the class compiler. Does NOT allow compiling vanilla classes!
     /// </summary>
-    public class ClassUpdate1
+    public class ClassUpdate1 : MergeModUpdateBase
     {
         /// <summary>
         /// Name of the .uc file
         /// </summary>
         [JsonProperty(@"assetname")]
         public string AssetName { get; set; }
-
-        [JsonIgnore] public MergeFileChange1 Parent;
-        [JsonIgnore] public MergeMod1 OwningMM => Parent.OwningMM;
 
         public bool ApplyUpdate(IMEPackage package, ExportEntry targetExport, MergeAssetCache1 assetsCache, GameTarget gameTarget, Action<int> addMergeWeightCompleted)
         {
@@ -407,7 +408,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                 }
             }
 
-            FileLib fl = MergeFileChange1.GetFileLibForMerge(package, Parent.EntryName, assetsCache, gameTarget);
+            FileLib fl = MergeFileChange1.GetFileLibForMerge(package, Parent.ExportInstancedFullPath, assetsCache, gameTarget);
             (_, MessageLog log) = UnrealScriptCompiler.CompileClass(package, classText, fl, parent: container);
             if (log.HasErrors)
             {
@@ -426,13 +427,13 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
         public string GetClassName()
         {
-            if (Parent.EntryName.Contains('.'))
+            if (Parent.ExportInstancedFullPath.Contains('.'))
             {
-                return Path.GetExtension(Parent.EntryName); // Everything after the final .
+                return Path.GetExtension(Parent.ExportInstancedFullPath); // Everything after the final .
             }
 
             // It's just the name.
-            return Parent.EntryName;
+            return Parent.ExportInstancedFullPath;
         }
 
         /// <summary>
@@ -441,9 +442,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         /// <returns></returns>
         public string GetContainingPackage()
         {
-            if (Parent.EntryName.Contains('.'))
+            if (Parent.ExportInstancedFullPath.Contains('.'))
             {
-                return Parent.EntryName.Substring(0, Parent.EntryName.IndexOf('.'));
+                return Parent.ExportInstancedFullPath.Substring(0, Parent.ExportInstancedFullPath.IndexOf('.'));
             }
 
             return null;
@@ -454,12 +455,12 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         /// Validates this merge object
         /// </summary>
         /// <returns></returns>
-        public bool Validate()
+        public override void Validate()
         {
             // Cannot nest classes more than one package deep.
-            if (Parent.EntryName.Count(x => x == '.') > 1)
+            if (Parent.ExportInstancedFullPath.Count(x => x == '.') > 1)
             {
-                throw new Exception($"Validation failed on {nameof(ClassUpdate1)} {Parent.EntryName}: class cannot be nested more than one package deep.");
+                throw new Exception($"Validation failed on {nameof(ClassUpdate1)} {Parent.ExportInstancedFullPath}: class cannot be nested more than one package deep.");
             }
 
             // Ensure not a vanilla class
@@ -467,18 +468,15 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
             if (VanillaClasses.IsVanillaClass(className, OwningMM.Game))
             {
-                throw new Exception($"Validation failed on {nameof(ClassUpdate1)} {Parent.EntryName}: ClassUpdate cannot be used to modify any vanilla classes");
+                throw new Exception($"Validation failed on {nameof(ClassUpdate1)} {Parent.ExportInstancedFullPath}: ClassUpdate cannot be used to modify any vanilla classes");
             }
-
-            return true;
         }
-
     }
 
     /// <summary>
     /// Allows bringing in content from packages. Same as LEX Replace with References or Clone with References (if canmergeasnew is used) and destination does not exist.
     /// </summary>
-    public class AssetUpdate1
+    public class AssetUpdate1 : MergeModUpdateBase
     {
         /// <summary>
         /// Name of asset file
@@ -496,10 +494,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         /// Entry in the asset to use as porting source
         /// </summary>
         [JsonProperty(@"entryname")]
-        public string EntryName { get; set; }
-
-        [JsonIgnore] public MergeFileChange1 Parent;
-        [JsonIgnore] public MergeMod1 OwningMM => Parent.OwningMM;
+        public string AssetExportInstancedFullPath { get; set; }
 
         public bool ApplyUpdate(IMEPackage package, ref ExportEntry targetExport, Mod installingMod, Action<int> addMergeWeightCompleted, GameTarget target)
         {
@@ -520,11 +515,11 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             }
 
             using var sourcePackage = MEPackageHandler.OpenMEPackageFromStream(binaryStream, sourcePath);
-            var sourceEntry = sourcePackage.FindExport(EntryName);
+            var sourceEntry = sourcePackage.FindExport(AssetExportInstancedFullPath);
             if (sourceEntry == null)
             {
                 throw new Exception(M3L.GetString(M3L.string_interp_mergefile_cannotFindAssetEntryInAssetPackage,
-                    AssetName, EntryName));
+                    AssetName, AssetExportInstancedFullPath));
             }
 
             if (targetExport == null && CanMergeAsNew)
@@ -574,7 +569,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                 if (resultst.Any())
                 {
                     throw new Exception(M3L.GetString(M3L.string_interp_mergefile_errorsOccurredMergingAsset, AssetName,
-                        EntryName, string.Join('\n', resultst.Select(x => x.Message))));
+                        AssetExportInstancedFullPath, string.Join('\n', resultst.Select(x => x.Message))));
                 }
 
                 targetExport = newEntry as ExportEntry; // Update the reference target export.
@@ -593,23 +588,19 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                 if (resultst.Any())
                 {
                     throw new Exception(M3L.GetString(M3L.string_interp_mergefile_errorsOccurredMergingAsset, AssetName,
-                        EntryName, string.Join('\n', resultst.Select(x => x.Message))));
+                        AssetExportInstancedFullPath, string.Join('\n', resultst.Select(x => x.Message))));
                 }
             }
 
             addMergeWeightCompleted?.Invoke(MergeFileChange1.WEIGHT_ASSETUPDATE);
             return true;
         }
-
-        public void Validate()
-        {
-        }
     }
 
     /// <summary>
     /// Single function compilation
     /// </summary>
-    public class ScriptUpdate1
+    public class ScriptUpdate1 : MergeModUpdateBase
     {
         /// <summary>
         /// Name of text file containing the script
@@ -619,9 +610,6 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
         [JsonProperty(@"scripttext")]
         public string ScriptText { get; set; }
-
-        [JsonIgnore] public MergeFileChange1 Parent;
-        [JsonIgnore] public MergeMod1 OwningMM => Parent.OwningMM;
 
         public bool ApplyUpdate(IMEPackage package, ExportEntry targetExport, MergeAssetCache1 assetsCache, Mod installingMod, GameTarget gameTarget, Action<int> addMergeWeightCompleted)
         {
@@ -641,17 +629,12 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             addMergeWeightCompleted?.Invoke(MergeFileChange1.WEIGHT_SCRIPTUPDATE);
             return true;
         }
-
-        public void Validate()
-        {
-
-        }
     }
 
     /// <summary>
     /// Allows updating or extending single items on a class
     /// </summary>
-    public class AddToClassOrReplace1
+    public class AddToClassOrReplace1 : MergeModUpdateBase
     {
         /// <summary>
         /// Name of text file containing the script
@@ -663,9 +646,6 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         [Deprecated("This is only used in M3Mv1. Do not use in any v2 or newer code!", DeprecationType.Deprecate, 2)]
         [JsonProperty(@"scripts")]
         public string[] Scripts { get; set; }
-
-        [JsonIgnore] public MergeFileChange1 Parent;
-        [JsonIgnore] public MergeMod1 OwningMM => Parent.OwningMM;
 
         public bool ApplyUpdate(IMEPackage package, ExportEntry targetExport, MergeAssetCache1 assetsCache, GameTarget gameTarget, Action<int> addMergeWeightCompleted)
         {
@@ -703,11 +683,6 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             return true;
         }
 
-        public void Validate()
-        {
-
-        }
-
         public string GetScriptText(string scriptname)
         {
             if (OwningMM.MergeModVersion >= 2)
@@ -720,7 +695,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         }
     }
 
-    public class SequenceSkipUpdate1
+    public class SequenceSkipUpdate1 : MergeModUpdateBase
     {
         /// <summary>
         /// The MD5 of the target entry. This is to ensure this doesn't apply to a modified object as this could easily break the game.
@@ -734,9 +709,6 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         /// </summary>
         [JsonProperty(@"outboundlinknametouse")]
         public string OutboundLinkNameToUse { get; set; }
-
-        [JsonIgnore] public MergeFileChange1 Parent;
-        [JsonIgnore] public MergeMod1 OwningMM => Parent.OwningMM;
 
         public bool ApplyUpdate(IMEPackage package, ExportEntry targetExport, Mod installingMod, Action<int> addMergeWeightCompleted)
         {
@@ -752,11 +724,6 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
             addMergeWeightCompleted?.Invoke(MergeFileChange1.WEIGHT_SEQSKIPUPDATE);
             return true;
-        }
-
-        public void Validate()
-        {
-
         }
     }
 }

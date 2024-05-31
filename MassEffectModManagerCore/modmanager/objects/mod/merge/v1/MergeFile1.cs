@@ -16,17 +16,42 @@ using Newtonsoft.Json;
 
 namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 {
-    public class MergeFile1
+    public class MergeFile1 : IMergeModCommentable
     {
+
+        /// <summary>
+        /// The target file, e.g. SFXGame.pcc
+        /// </summary>
         [JsonProperty(@"filename")]
         public string FileName { get; set; }
 
+        /// <summary>
+        /// The changes to apply to the files
+        /// </summary>
         [JsonProperty(@"changes")]
         public List<MergeFileChange1> MergeChanges { get; set; }
-        [JsonProperty(@"applytoalllocalizations")] public bool ApplyToAllLocalizations { get; set; }
 
-        [JsonIgnore] public MergeMod1 Parent;
+        /// <summary>
+        /// If changes should be applied to all localized versions of the target file
+        /// </summary>
+        [JsonProperty(@"applytoalllocalizations")] 
+        public bool ApplyToAllLocalizations { get; set; }
 
+        /// <summary>
+        /// The comment on this field. Optional.
+        /// </summary>
+        [JsonProperty("comment")]
+        public string Comment { get; set; }
+
+        /// <summary>
+        /// Parent of this file
+        /// </summary>
+        [JsonIgnore] 
+        public MergeMod1 Parent;
+
+        /// <summary>
+        /// The owning mod for this merge file (same as parent)
+        /// </summary>
         [JsonIgnore]
         public MergeMod1 OwningMM => Parent;
 

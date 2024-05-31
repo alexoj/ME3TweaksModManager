@@ -4,6 +4,7 @@ using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Packages;
 using ME3TweaksCore.Targets;
 using ME3TweaksModManager.me3tweakscoreextended;
+using ME3TweaksModManager.modmanager.objects.mod.merge.v1;
 using Newtonsoft.Json;
 
 namespace ME3TweaksModManager.modmanager.objects.mod.merge
@@ -60,4 +61,43 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         /// <returns></returns>
         IEnumerable<string> GetMergeFileTargetFiles();
     }
+
+    public interface IMergeModCommentable
+    {
+        /// <summary>
+        /// The comment on this field. Optional.
+        /// </summary>
+        [JsonProperty("comment")]
+        public string Comment { get; set; }
+    }
+
+    /// <summary>
+    /// Interface for all merge types
+    /// </summary>
+    public abstract class MergeModUpdateBase : IMergeModCommentable
+    {
+        /// <summary>
+        /// Validation method for update types. Throw an exception if validation fails.
+        /// </summary>
+        public virtual void Validate() { }
+
+        /// <summary>
+        /// The file info that this merge is taking place in
+        /// </summary>
+        [JsonIgnore] 
+        public MergeFileChange1 Parent;
+
+        /// <summary>
+        /// The encompassing merge mod object
+        /// </summary>
+        [JsonIgnore] 
+        public MergeMod1 OwningMM => Parent.OwningMM;
+
+        /// <summary>
+        /// The comment on this field. Optional.
+        /// </summary>
+        [JsonProperty("comment")]
+        public string Comment { get; set; }
+    }
+
 }
