@@ -84,6 +84,7 @@ namespace ME3TweaksModManager.modmanager.windows
         public ICommand MoveDownCommand { get; set; }
         public ICommand AutosortCommand { get; set; }
         public ICommand AddCustomMEMModCommand { get; set; }
+        public ICommand SortByMountPriorityCommand { get; set; }
 
         private void LoadCommands()
         {
@@ -95,6 +96,12 @@ namespace ME3TweaksModManager.modmanager.windows
             MoveDownCommand = new GenericCommand(MoveDown, CanMoveDown);
             AutosortCommand = new GenericCommand(Autosort, CanAutosort);
             AddCustomMEMModCommand = new GenericCommand(ShowMEMSelector, CanAddMEMMod);
+            SortByMountPriorityCommand = new GenericCommand(SortByMountPriority);
+        }
+
+        private void SortByMountPriority()
+        {
+            VisibleFilteredMods.SortDescending(x => x.EXP_GetModMountPriority());
         }
 
         private void ShowMEMSelector()
