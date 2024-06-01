@@ -123,7 +123,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
         {
             foreach (var ml in Multilists)
             {
-                ini[Header.ToString()][$@"multilist{ml.MultilistId}"] = string.Join(';', ml.Files.Select(x => x.Value));
+                var values = ml.Files.Where(x => !string.IsNullOrWhiteSpace(x.Value)).Select(x => x.Value);
+                ini[Header.ToString()][$@"multilist{ml.MultilistId}"] = string.Join(';', values);
             }
         }
     }
