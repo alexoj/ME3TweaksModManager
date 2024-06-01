@@ -2,16 +2,18 @@
   "$schema": "http://json-schema.org/draft-07/schema",
   "$id": "http://example.com/example.json",
   "type": "object",
-  "title": "M3 Merge Mod V2",
-  "description": "An M3 merge mod V2 manifest file",
+  "title": "M3 Merge Mod v2",
+  "description": "An M3 merge mod v2 manifest file",
   "default": {},
   "examples": [
     {
       "game": "ME1",
+      "comment": "Comment!",
       "files": [
         {
           "filename": "SFXGame.pcc",
           "applytoalllocalizations": true,
+          "comment": "Hello!",
           "changes": [
             {
               "entryname": "Default__SFXCameraMode_ExploreStorm",
@@ -19,15 +21,44 @@
                 {
                   "propertyname": "bIsCameraShakeEnabled",
                   "propertytype": "BoolProperty",
-                  "propertyvalue": "True"
+                  "propertyvalue": "True",
+                  "comment": "Comment!"
                 }
-              ],
+              ]
+            },
+            {
+              "entryname": "Default__SFXCameraMode_ExploreStorm",
               "scriptupdate": {
                 "scriptfilename": "Script.uc"
-              },
+              }
+            },
+            {
+              "entryname": "Default__SFXCameraMode_ExploreStorm",
               "assetupdate": {
                 "assetname": "MyAsset.pcc",
-                "entryname": "EntryNameInMyAsset"
+                "entryname": "EntryNameInMyAsset",
+                "comment": "Comment!"
+              }
+            },
+            {
+              "entryname": "Default__SFXCameraMode_ExploreStorm",
+              "comment": "Comment!",
+              "sequenceskipupdate": {
+                "entrymd5": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                "outboundlinknametouse": "Out",
+                "comment": "Comment!"
+              }
+            },
+            {
+              "entryname": "Default__SFXCameraMode_ExploreStorm",
+              "comment": "Comment!",
+              "disableconfigupdate": true
+            },
+            {
+              "entryname": "Default__SFXCameraMode_ExploreStorm",
+              "classupdate": {
+                "assetname": "MyClass.uc",
+                "comment": "Comment!"
               }
             }
           ]
@@ -58,6 +89,13 @@
         "LE3"
       ]
     },
+    "comment": {
+      "$id": "#/properties/comment",
+      "type": "string",
+      "title": "Comment",
+      "description": "Comment for this item. Not used at all by the mod manager",
+      "default": ""
+    },
     "files": {
       "$id": "#/properties/files",
       "type": "array",
@@ -70,6 +108,7 @@
           {
             "filename": "SFXGame.pcc",
             "applytoalllocalizations": true,
+            "comment": "Hello!",
             "changes": [
               {
                 "entryname": "Default__SFXCameraMode_ExploreStorm",
@@ -77,15 +116,39 @@
                   {
                     "propertyname": "bIsCameraShakeEnabled",
                     "propertytype": "BoolProperty",
-                    "propertyvalue": "True"
+                    "propertyvalue": "True",
+                    "comment": "Comment!"
                   }
-                ],
+                ]
+              },
+              {
+                "entryname": "Default__SFXCameraMode_ExploreStorm",
                 "scriptupdate": {
                   "scriptfilename": "Script.uc"
-                },
+                }
+              },
+              {
+                "entryname": "Default__SFXCameraMode_ExploreStorm",
                 "assetupdate": {
                   "assetname": "MyAsset.pcc",
-                  "entryname": "MyNewEntryName"
+                  "entryname": "EntryNameInMyAsset",
+                  "comment": "Comment!"
+                }
+              },
+              {
+                "entryname": "Default__SFXCameraMode_ExploreStorm",
+                "comment": "Comment!",
+                "sequenceskipupdate": {
+                  "entrymd5": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                  "outboundlinknametouse": "Out",
+                  "comment": "Comment!"
+                }
+              },
+              {
+                "entryname": "Default__SFXCameraMode_ExploreStorm",
+                "classupdate": {
+                  "assetname": "MyClass.uc",
+                  "comment": "Comment!"
                 }
               }
             ]
@@ -103,6 +166,7 @@
           {
             "filename": "SFXGame.pcc",
             "applytoalllocalizations": true,
+            "comment": "Hello!",
             "changes": [
               {
                 "entryname": "Default__SFXCameraMode_ExploreStorm",
@@ -110,16 +174,39 @@
                   {
                     "propertyname": "bIsCameraShakeEnabled",
                     "propertytype": "BoolProperty",
-                    "propertyvalue": "True"
+                    "propertyvalue": "True",
+                    "comment": "Comment!"
                   }
-                ],
+                ]
+              },
+              {
+                "entryname": "Default__SFXCameraMode_ExploreStorm",
                 "scriptupdate": {
-                  "scriptfilename": "Script.uc",
-                  "scripttext": "public static function bool MyEntireScript()"
-                },
+                  "scriptfilename": "Script.uc"
+                }
+              },
+              {
+                "entryname": "Default__SFXCameraMode_ExploreStorm",
                 "assetupdate": {
                   "assetname": "MyAsset.pcc",
-                  "entryname": "MyNewEntryName"
+                  "entryname": "EntryNameInMyAsset",
+                  "comment": "Comment!"
+                }
+              },
+              {
+                "entryname": "Default__SFXCameraMode_ExploreStorm",
+                "comment": "Comment!",
+                "sequenceskipupdate": {
+                  "entrymd5": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                  "outboundlinknametouse": "Out",
+                  "comment": "Comment!"
+                }
+              },
+              {
+                "entryname": "Default__SFXCameraMode_ExploreStorm",
+                "classupdate": {
+                  "assetname": "MyClass.uc",
+                  "comment": "Comment!"
                 }
               }
             ]
@@ -150,6 +237,13 @@
             "title": "Apply to all localizations",
             "type": "boolean"
           },
+          "comment": {
+            "$id": "#/properties/files/items/properties/comment",
+            "type": "string",
+            "title": "Comment",
+            "description": "Comment for this item. Not used at all by the mod manager",
+            "default": ""
+          },
           "changes": {
             "$id": "#/properties/files/items/properties/changes",
             "default": [],
@@ -162,16 +256,39 @@
                     {
                       "propertyname": "bIsCameraShakeEnabled",
                       "propertytype": "BoolProperty",
-                      "propertyvalue": "True"
+                      "propertyvalue": "True",
+                      "comment": "Comment!"
                     }
-                  ],
+                  ]
+                },
+                {
+                  "entryname": "Default__SFXCameraMode_ExploreStorm",
                   "scriptupdate": {
-                    "scriptfilename": "Script.uc",
-                    "scripttext": "public static function bool MyEntireScript()"
-                  },
+                    "scriptfilename": "Script.uc"
+                  }
+                },
+                {
+                  "entryname": "Default__SFXCameraMode_ExploreStorm",
                   "assetupdate": {
                     "assetname": "MyAsset.pcc",
-                    "entryname": "MyNewEntryName"
+                    "entryname": "EntryNameInMyAsset",
+                    "comment": "Comment!"
+                  }
+                },
+                {
+                  "entryname": "Default__SFXCameraMode_ExploreStorm",
+                  "comment": "Comment!",
+                  "sequenceskipupdate": {
+                    "entrymd5": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+                    "outboundlinknametouse": "Out",
+                    "comment": "Comment!"
+                  }
+                },
+                {
+                  "entryname": "Default__SFXCameraMode_ExploreStorm",
+                  "classupdate": {
+                    "assetname": "MyClass.uc",
+                    "comment": "Comment!"
                   }
                 }
               ]
@@ -183,38 +300,48 @@
             "items": {
               "$id": "#/properties/files/items/properties/changes/items/",
               "type": "object",
-              "title": "The first anyOf schema",
-              "description": "An explanation about the purpose of this instance.",
-              "default": {},
-              "examples": [
-                {
-                  "entryname": "Default__SFXCameraMode_ExploreStorm",
-                  "propertyupdates": [
-                    {
-                      "propertyname": "bIsCameraShakeEnabled",
-                      "propertytype": "BoolProperty",
-                      "propertyvalue": "True"
-                    }
-                  ],
-                  "scriptupdate": {
-                    "scriptfilename": "Script.uc"
-                  },
-                  "assetupdate": {
-                    "assetname": "MyAsset.pcc",
-                    "entryname": "MyNewEntryName"
-                  }
-                }
-              ],
+              "title": "Change Item",
+              "description": "A single change that will be applied to this file",
+              "default": [],
               "required": [
                 "entryname"
               ],
               "oneOf": [
-                { "required": [ "scriptupdate" ] },
-                { "required": [ "addtoclassorreplace" ] },
-                { "required": [ "assetupdate" ] },
-                { "required": [ "disableconfigupdate" ] },
-                { "required": [ "propertyupdates" ] },
-                { "required": [ "sequenceskipupdate" ] }
+                {
+                  "required": [
+                    "scriptupdate"
+                  ]
+                },
+                {
+                  "required": [
+                    "addtoclassorreplace"
+                  ]
+                },
+                {
+                  "required": [
+                    "assetupdate"
+                  ]
+                },
+                {
+                  "required": [
+                    "disableconfigupdate"
+                  ]
+                },
+                {
+                  "required": [
+                    "propertyupdates"
+                  ]
+                },
+                {
+                  "required": [
+                    "sequenceskipupdate"
+                  ]
+                },
+                {
+                  "required": [
+                    "classupdate"
+                  ]
+                }
               ],
               "properties": {
                 "entryname": {
@@ -226,6 +353,13 @@
                   "examples": [
                     "Default__SFXCameraMode_ExploreStorm"
                   ]
+                },
+                "comment": {
+                  "$id": "#/properties/files/items/properties/changes/items/properties/comment",
+                  "type": "string",
+                  "title": "Comment",
+                  "description": "Comment for this item. Not used at all by the mod manager",
+                  "default": ""
                 },
                 "propertyupdates": {
                   "$id": "#/properties/files/items/properties/changes/items/properties/propertyupdates",
@@ -267,8 +401,16 @@
                       "propertytype"
                     ],
                     "oneOf": [
-                      { "required": [ "propertyvalue" ] },
-                      { "required": [ "propertyasset" ] }
+                      {
+                        "required": [
+                          "propertyvalue"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "propertyasset"
+                        ]
+                      }
                     ],
                     "properties": {
                       "propertyname": {
@@ -325,18 +467,31 @@
                           "ActorTag_2",
                           null
                         ]
+                      },
+                      "comment": {
+                        "$id": "#/properties/files/items/properties/changes/items/properties/propertyupdates/items/properties/comment",
+                        "type": "string",
+                        "title": "Comment",
+                        "description": "Comment for this item. Not used at all by the mod manager",
+                        "default": ""
                       }
                     },
                     "if": {
                       "properties": {
-                        "propertytype": { "const": "ArrayProperty" }
+                        "propertytype": {
+                          "const": "ArrayProperty"
+                        }
                       }
                     },
                     "then": {
-                      "required": [ "propertyasset" ]
+                      "required": [
+                        "propertyasset"
+                      ]
                     },
                     "else": {
-                      "required": [ "propertyvalue" ]
+                      "required": [
+                        "propertyvalue"
+                      ]
                     },
                     "additionalProperties": false
                   }
@@ -362,17 +517,27 @@
                       "scriptfilename": "Script.uc"
                     }
                   ],
-                  "required": [ "scriptfilename" ],
+                  "required": [
+                    "scriptfilename"
+                  ],
                   "properties": {
                     "scriptfilename": {
                       "$id": "#/properties/files/items/properties/changes/items/properties/scriptupdate/properties/scriptfilename",
                       "type": "string",
+                      "pattern": ".*\\.uc$",
                       "title": "Script filename",
                       "description": "The name of a plaintext file containing the updated script. It must be next to the .json file",
                       "default": "",
                       "examples": [
                         "Script.uc"
                       ]
+                    },
+                    "comment": {
+                      "$id": "#/properties/files/items/properties/changes/items/properties/scriptupdate/properties/comment",
+                      "type": "string",
+                      "title": "Comment",
+                      "description": "Comment for this item. Not used at all by the mod manager",
+                      "default": ""
                     }
                   },
                   "additionalProperties": false
@@ -385,10 +550,15 @@
                   "default": {},
                   "examples": [
                     {
-                      "scriptfilenames": [ "Script.uc", "AnotherScript.uc" ]
+                      "scriptfilenames": [
+                        "Script.uc",
+                        "AnotherScript.uc"
+                      ]
                     }
                   ],
-                  "required": [ "scriptfilenames" ],
+                  "required": [
+                    "scriptfilenames"
+                  ],
                   "properties": {
                     "scriptfilenames": {
                       "$id": "#/properties/files/items/properties/changes/items/properties/addtoclassorreplace/properties/scriptfilenames",
@@ -402,7 +572,20 @@
                           "Script.uc",
                           "AnotherScript.uc"
                         ]
-                      ]
+                      ],
+                      "items": {
+                        "$id": "#/properties/files/items/properties/changes/items/properties/addtoclassorreplace/properties/scriptfilenames/items",
+                        "type": "string",
+                        "pattern": ".*\\.uc$",
+                        "title": "Script filename"
+                      }
+                    },
+                    "comment": {
+                      "$id": "#/properties/files/items/properties/changes/items/properties/addtoclassorreplace/properties/comment",
+                      "type": "string",
+                      "title": "Comment",
+                      "description": "Comment for this item. Not used at all by the mod manager",
+                      "default": ""
                     }
                   },
                   "additionalProperties": false
@@ -417,7 +600,7 @@
                     {
                       "assetname": "MyAsset.pcc",
                       "entryname": "MyNewEntryName",
-                      "canmergeasnew":  true
+                      "canmergeasnew": true
                     }
                   ],
                   "required": [
@@ -454,6 +637,13 @@
                       "examples": [
                         "true"
                       ]
+                    },
+                    "comment": {
+                      "$id": "#/properties/files/items/properties/changes/items/properties/assetupdate/properties/comment",
+                      "type": "string",
+                      "title": "Comment",
+                      "description": "Comment for this item. Not used at all by the mod manager",
+                      "default": ""
                     }
                   },
                   "additionalProperties": false
@@ -483,6 +673,41 @@
                       "type": "string",
                       "title": "Outbound link name to use",
                       "description": "Which outbound link to skip through to",
+                      "default": ""
+                    },
+                    "comment": {
+                      "$id": "#/properties/files/items/properties/changes/items/properties/sequenceskipupdate/properties/comment",
+                      "type": "string",
+                      "title": "Comment",
+                      "description": "Comment for this item. Not used at all by the mod manager",
+                      "default": ""
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "classupdate": {
+                  "$id": "#/properties/files/items/properties/changes/items/properties/classupdate",
+                  "type": "object",
+                  "title": "Class Update",
+                  "description": "A method of updating a custom class in a basegame-only file",
+                  "default": {},
+                  "required": [
+                    "assetname"
+                  ],
+                  "properties": {
+                    "assetname": {
+                      "$id": "#/properties/files/items/properties/changes/items/properties/classupdate/properties/assetname",
+                      "type": "string",
+                      "pattern": ".*\\.uc$",
+                      "title": ".uc Class File",
+                      "description": "Name of .uc class file to merge into file",
+                      "default": ""
+                    },
+                    "comment": {
+                      "$id": "#/properties/files/items/properties/changes/items/properties/classupdate/properties/comment",
+                      "type": "string",
+                      "title": "Comment",
+                      "description": "Comment for this item. Not used at all by the mod manager",
                       "default": ""
                     }
                   },

@@ -128,7 +128,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
                     MergeAsset ma = new MergeAsset() { OwningMM = mm };
                     var assetName = mergeFileStream.ReadUnrealString(); // Uncompressed as it will be short.
-                    
+
                     // Uncompressed asset size
                     ma.FileSize = mergeFileStream.ReadInt32();
 
@@ -324,20 +324,13 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             M3Log.Information($@"M3MCompiler: Source json text: {manifestText}", Settings.LogModInstallation); // This is as close as I can get...
 
             // VALIDATE JSON SCHEMA
-            if (mergeModVersion != 2) // Testing format without schema currently
+            var schemaText =
+                new StreamReader(M3Utilities.ExtractInternalFileToStream(GetSchemaPath(mergeModVersion)))
+                    .ReadToEnd();
+            var schemaFailureMessages = JsonSchemaValidator.ValidateSchema(manifestText, schemaText);
+            if (schemaFailureMessages != null && schemaFailureMessages.Any())
             {
-#if !DEBUG
-DO NOT COMPILE THIS FOR RELEASE BUILDS
-#endif
-
-                var schemaText =
-                    new StreamReader(M3Utilities.ExtractInternalFileToStream(GetSchemaPath(mergeModVersion)))
-                        .ReadToEnd();
-                var schemaFailureMessages = JsonSchemaValidator.ValidateSchema(manifestText, schemaText);
-                if (schemaFailureMessages != null && schemaFailureMessages.Any())
-                {
-                    return schemaFailureMessages;
-                }
+                return schemaFailureMessages;
             }
 
             var mm = JsonConvert.DeserializeObject<MergeMod1>(manifestText);
