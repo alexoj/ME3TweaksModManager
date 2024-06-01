@@ -7,50 +7,96 @@
     d:DesignWidth="800"
     BorderThickness="1"
     BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer0BorderBrush}}">
-    <DockPanel
-        Margin="5,0,0,0">
-        <TextBlock
-            Text="{Binding MultilistId, StringFormat='Multilist (ID {0})'}"
-            FontWeight="Bold"
-            DockPanel.Dock="Top" />
-        <Button
+    <Border
+        Padding="5"
+        BorderThickness="1"
+        BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer1BorderBrush}}">
+
+        <DockPanel>
+            <StackPanel Orientation="Horizontal" 
+                    DockPanel.Dock="Top"
+                    VerticalAlignment="Center">
+                <Button
+                Width="20"
+                Height="18"
+                Padding="4"
+                Margin="0"
+                Command="{Binding DeleteListCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:MultilistEditorControl}}"
+                CommandParameter="{Binding}"
+                ToolTip="Delete multilist">
+                    <Button.Content>
+                        <StackPanel
+                        Orientation="Horizontal">
+                            <fa5:ImageAwesome
+                            Icon="Solid_Times"
+                            Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <!-- TODO: Localize this string -->
+                <TextBlock
+                    Margin="2,0,0,0"
+                    VerticalAlignment="Center"
+                Text="{Binding MultilistId, StringFormat='Multilist (ID {0})'}"
+                FontWeight="Bold" />
+            </StackPanel>
+            <Button
             Command="{Binding AddFileCommand, RelativeSource={RelativeSource FindAncestor, AncestorType=local:SingleMultilistEditorControl}}"
             HorizontalAlignment="Left"
             DockPanel.Dock="Top"
-            Margin="5,5,0,5">
-            <Button.Content>
-                <StackPanel
+            Margin="0,5,0,0">
+                <Button.Content>
+                    <StackPanel
                     Orientation="Horizontal">
-                    <fa5:ImageAwesome
+                        <fa5:ImageAwesome
                         Icon="Solid_Plus"
                         Width="12"
                         Height="12"
                         Margin="0,0,5,0"
                         Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
-                    <TextBlock
+                        <TextBlock
                         Text="{DynamicResource string_mde_addFileToThisMultilist}" />
-                </StackPanel>
-            </Button.Content>
-        </Button>
-        <ItemsControl
-            Margin="10,0,0,0"
+                    </StackPanel>
+                </Button.Content>
+            </Button>
+            <ItemsControl
+            Margin="10,5,0,0"
             ItemsSource="{Binding Files}"
             Style="{StaticResource ItemsControlVirtualizedStyle}">
-            <ItemsControl.ItemTemplate>
-                <DataTemplate
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate
                     DataType="{x:Type local:SingleMultilistEditorItem}">
-                    <DockPanel
+                        <DockPanel
                         Margin="0,0,0,3">
-                        <TextBlock
+                            <!-- TODO: LOCALIZE THIS STRING -->
+                            <TextBlock
                             DockPanel.Dock="Left"
                             Text="{Binding ItemIndex, StringFormat='Item {0}'}"
                             Width="150" />
-                        <TextBox
+                            <Button
+                            DockPanel.Dock="Right"
+                            Height="18"
+                            Margin="2,0,0,0"
+                            ToolTip="Delete file from multilist"
+                            Command="{Binding DeleteFileCommand, 
+                            RelativeSource={RelativeSource FindAncestor, AncestorType=local:SingleMultilistEditorControl}}"
+                            CommandParameter="{Binding}">
+                                <Button.Content>
+                                    <StackPanel
+                                    Orientation="Horizontal">
+                                        <fa5:ImageAwesome
+                                        Icon="Solid_Times"
+                                        Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            <TextBox
                             Text="{Binding Value}"
                             TextWrapping="Wrap" />
-                    </DockPanel>
-                </DataTemplate>
-            </ItemsControl.ItemTemplate>
-        </ItemsControl>
-    </DockPanel>
+                        </DockPanel>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </DockPanel>
+    </Border>
 </UserControl>

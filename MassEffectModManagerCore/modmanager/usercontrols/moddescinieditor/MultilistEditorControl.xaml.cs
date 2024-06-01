@@ -3,6 +3,7 @@ using System.Windows;
 using IniParser.Model;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCoreWPF.UI;
+using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.ui;
 
@@ -37,6 +38,32 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
         private void LoadCommands()
         {
             AddNewListCommand = new GenericCommand(AddNewList, CanAddNewList);
+            DeleteListCommand = new RelayCommand(DeleteMultilist);
+        }
+
+        public RelayCommand DeleteListCommand { get; set; }
+
+        private void DeleteMultilist(object obj)
+        {
+            if (obj is MDMultilist md)
+            {
+                var result = M3L.ShowDialog(Window.GetWindow(this),
+                                    $"Delete multilist {md.MultilistId}? This will reindex all multilists. Ensure you check and update any references to your multilists.",
+                                    "Confirm deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                if (result == MessageBoxResult.Yes)
+                {
+                    Multilists.Remove(md);
+                    ReindexLists();
+                }
+            }
+        }
+
+        private void ReindexLists()
+        {
+            for (int i = 0; i < Multilists.Count; i++)
+            {
+                Multilists[i].MultilistId = i + 1;
+            }
         }
 
         private bool CanAddNewList()
@@ -96,7 +123,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
         {
             foreach (var ml in Multilists)
             {
-                ini[Header.ToString()][$@"multilist{ml.MultilistId}"] = string.Join(';', ml.Files.Select(x=>x.Value));
+                ini[Header.ToString()][$@"multilist{ml.MultilistId}"] = string.Join(';', ml.Files.Select(x => x.Value));
             }
         }
     }
