@@ -1,11 +1,9 @@
-﻿using System.Linq;
-using System.Windows;
+﻿using System.Windows;
 using IniParser.Model;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCoreWPF.UI;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects;
-using ME3TweaksModManager.ui;
 
 namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
 {

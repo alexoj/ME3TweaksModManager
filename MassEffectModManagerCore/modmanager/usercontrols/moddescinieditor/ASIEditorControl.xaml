@@ -20,7 +20,7 @@
                 TextAlignment="Left" />
             <TextBlock
                 DockPanel.Dock="Top"
-                Text="DO NOT MODIFY SETTINGS ON THIS PAGE IF YOUR MOD DOES NOT NEED THEM. ASI MODS CAN EASILY MAKE THE GAME LESS STABLE."
+                Text="DO NOT MODIFY SETTINGS ON THIS PAGE IF YOUR MOD DOES NOT NEED ASI MODS. ASI MODS CAN EASILY MAKE THE GAME LESS STABLE. MODS THAT ADD THEM WITHOUT REASON MAY BE BLACKLISTED FROM IMPORT."
                 MaxWidth="500"
                 Foreground="Red"
                 FontWeight="Bold"
@@ -28,8 +28,7 @@
                 HorizontalAlignment="Left"
                 TextAlignment="Left" />
             <Button
-                Command="{Binding AddTextureModsJobCommand}"
-                Visibility="{Binding TextureModsJob, Converter={StaticResource NullVisibilityConverter}, ConverterParameter='Reversed'}"
+                Command="{Binding AddASICommand}"
                 HorizontalAlignment="Left"
                 DockPanel.Dock="Top"
                 Margin="0,5,0,5">
@@ -42,54 +41,10 @@
                         Margin="0,0,5,0"
                         Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
                     <TextBlock
-                        Text="{DynamicResource string_addTextureModReferencesTaskHeader}" />
+                        Text="Add ASI mod" />
                 </StackPanel>
             </Button>
-            <Button
-                Command="{Binding RemoveTextureModsJobCommand}"
-                Visibility="{Binding TextureModsJob, Converter={StaticResource NullVisibilityConverter}}"
-                HorizontalAlignment="Left"
-                DockPanel.Dock="Top"
-                Margin="0,5,0,5">
-                <StackPanel
-                    Orientation="Horizontal">
-                    <fa5:ImageAwesome
-                        Icon="Solid_Times"
-                        Width="12"
-                        Height="12"
-                        Margin="0,0,5,0"
-                        Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
-                    <TextBlock
-                        Text="{DynamicResource string_removeAllTextureModReferencesTaskHeader}" />
-                </StackPanel>
-            </Button>
-            <Button
-                Command="{Binding AutopopulateFilesCommand}"
-                Content="{DynamicResource string_autopopulate}"
-                HorizontalAlignment="Left"
-                DockPanel.Dock="Top"
-                Margin="0,5,0,5" />
-            <Button
-                Command="{Binding AddTextureModCommand}"
-                Visibility="{Binding TextureModsJob, Converter={StaticResource NullVisibilityConverter}}"
-                HorizontalAlignment="Left"
-                DockPanel.Dock="Top"
-                Margin="0,5,0,5">
-                <Button.Content>
-                    <StackPanel
-                        Orientation="Horizontal">
-                        <fa5:ImageAwesome
-                            Icon="Solid_Plus"
-                            Width="12"
-                            Height="12"
-                            Margin="0,0,5,0"
-                            Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
-                        <TextBlock
-                            Text="{DynamicResource string_addTextureMod}" />
-                    </StackPanel>
-                </Button.Content>
-            </Button>
-            <moddescinieditor:TextureModItemControl />
+            <moddescinieditor:ASIModItemControl />
         </DockPanel>
     </ScrollViewer>
 </moddescinieditor:ModdescEditorControlBase>

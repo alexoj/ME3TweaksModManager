@@ -78,5 +78,10 @@ namespace ME3TweaksModManager.modmanager.objects.mod.moddesc
             // Basic validation has passed. A second validation pass will be conducted before mod install.
             mod.ASIModsToInstall.Add(v);
         }
+
+        public override string ToString()
+        {
+            return $@"{nameof(M3ASIVersion)} GroupID: {ASIGroupID}, Version: {Version}";
+        }
     }
 }

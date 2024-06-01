@@ -8,6 +8,7 @@ using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.ME3Tweaks.ModManager.Interfaces;
+using ME3TweaksCore.NativeMods;
 using ME3TweaksCore.Objects;
 using ME3TweaksCore.Services.ThirdPartyModIdentification;
 using ME3TweaksModManager.modmanager.gameini;
@@ -245,6 +246,36 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                     {
                         var langCode = l.Key.Substring(l.Key.Length - 7, 3);
                         sb.AppendLine(@" - " + langCode);
+                    }
+                }
+
+                if (ASIModsToInstall.Any())
+                {
+                    sb.AppendLine("Installs the following ASI mods:");
+                    foreach (var asi in ASIModsToInstall)
+                    {
+                        var realasi = ASIManager.GetASIModVersion(Game, asi.ASIGroupID, asi.Version);
+                        if (realasi == null)
+                        {
+                            var str = $@" - {asi.ASIGroupID}";
+                            if (asi.Version != null)
+                            {
+                                str += $@" v{asi.Version}";
+                            }
+
+                            str += " (Invalid)";
+                            sb.AppendLine(str);
+                        }
+                        else
+                        {
+                            var str = $@" - {realasi.Name}";
+                            if (asi.Version != null)
+                            {
+                                str += $@" v{asi.Version}";
+                            }
+
+                            sb.AppendLine(str);
+                        }
                     }
                 }
 

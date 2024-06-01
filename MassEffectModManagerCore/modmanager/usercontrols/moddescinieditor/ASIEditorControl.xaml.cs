@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows;
 using IniParser.Model;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.NativeMods;
+using ME3TweaksCoreWPF.UI;
 using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.objects.mod.moddesc;
 
@@ -26,37 +14,67 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
     /// </summary>
     public partial class ASIEditorControl : ModdescEditorControlBase
     {
-        public ObservableCollectionExtended<ASIModVersionEditor> ASIMods { get; } = new();
+        public ObservableCollectionExtended<ASIModVersionEditor2> ASIMods { get; } = new();
         public ASIEditorControl()
         {
             InitializeComponent();
+            LoadCommands();
         }
 
+        private void LoadCommands()
+        {
+            AddASICommand = new GenericCommand(AddASI);
+            RemoveASICommand = new RelayCommand(RemoveASIMod);
+        }
+        public RelayCommand RemoveASICommand { get; set; }
+        public GenericCommand AddASICommand { get; set; }
+
+        private void AddASI()
+        {
+            ASIMods.Add(new ASIModVersionEditor2());
+        }
 
 
         public override void OnLoaded(object sender, RoutedEventArgs e)
         {
-            foreach (var m in EditingMod.ASIModsToInstall)
+            if (!HasLoaded)
             {
-                var info = ASIModVersionEditor.Create(EditingMod.Game, m);
-                if (info != null)
+                foreach (var m in EditingMod.ASIModsToInstall)
                 {
-                    ASIMods.Add(info);
+                    ASIMods.Add(new ASIModVersionEditor2()
+                    {
+                        ASIModID = m.ASIGroupID,
+                        ASIModVersion = m.Version,
+                        UseLatestVersion = m.Version == null
+                    });
                 }
+
+                HasLoaded = true;
             }
         }
 
         public override void Serialize(IniData ini)
         {
-            List<string> structs = new List<string>();
-            foreach (var asiMod in ASIMods)
+            var mods = ASIMods.Where(x => x.ASIModID > 0).Distinct().ToList();
+            if (mods.Any())
             {
-                structs.Add(asiMod.GenerateStruct());
-            }
+                List<string> structs = new List<string>();
+                foreach (var asiMod in mods)
+                {
+                    structs.Add(asiMod.GenerateStruct());
+                }
 
-            ini[Mod.MODDESC_HEADERKEY_ASIMODS][Mod.MODDESC_DESCRIPTOR_ASI_ASIMODSTOINSTALL] = $@"({string.Join(',', structs)})"; 
+                ini[Mod.MODDESC_HEADERKEY_ASIMODS][Mod.MODDESC_DESCRIPTOR_ASI_ASIMODSTOINSTALL] = $@"({string.Join(',', structs)})";
+            }
         }
 
+        public void RemoveASIMod(object obj)
+        {
+            if (obj is ASIModVersionEditor2 aed)
+            {
+                ASIMods.Remove(aed);
+            }
+        }
 
         public class ASIModVersionEditor : ASIModVersion
         {
@@ -79,7 +97,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
                     M3Log.Error($@"Unable to find ASI group {baseObj.ASIGroupID}");
                     return null; // Not found!
                 }
-
                 if (baseObj.Version != null)
                 {
                     v.ManifestMod = group.Versions.FirstOrDefault(x => x.Version == baseObj.Version);
