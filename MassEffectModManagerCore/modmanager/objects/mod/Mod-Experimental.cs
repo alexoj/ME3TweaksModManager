@@ -1,5 +1,7 @@
 ﻿using System.Threading;
 using LegendaryExplorerCore.GameFilesystem;
+using LegendaryExplorerCore.Misc;
+using ME3TweaksCore.GameFilesystem;
 
 namespace ME3TweaksModManager.modmanager.objects.mod
 {
@@ -50,6 +52,28 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 lowestMount = 0;
 
             return lowestMount;
+        }
+
+
+
+        public bool IsInstalledToTarget { get; set; }
+        
+        /// <summary>
+        /// Attempts to determine if a mod is installed to the given target. This is not reliable.
+        /// </summary>
+        /// <param name="target"></param>
+        public void DetermineIfInstalled(GameTarget target, CaseInsensitiveDictionary<MetaCMM> metaCMMs)
+        {
+            foreach (var metaCMM in metaCMMs)
+            {
+                if (metaCMM.Value.ModdescSourcePath == M3LoadedMods.GetRelativeModdescPath(this))
+                {
+                    IsInstalledToTarget = true;
+                    return;
+                }
+            }
+
+            IsInstalledToTarget = false;
         }
     }
 }

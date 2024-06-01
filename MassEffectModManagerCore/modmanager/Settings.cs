@@ -430,11 +430,19 @@ namespace ME3TweaksModManager.modmanager
             set => SetProperty(ref _oneTimeMessageLe1CoalescedOverwriteWarning, value);
         }
 
+        // Linux stuff.
         private static bool _skipDarkNet = false;
         public static bool SkipDarkNet
         {
             get => _skipDarkNet;
             set => SetProperty(ref _skipDarkNet, value);
+        }
+
+        public static bool _showInstalledModsInLibrary = true;
+        public static bool ShowInstalledModsInLibrary
+        {
+            get => _showInstalledModsInLibrary;
+            set => SetProperty(ref _showInstalledModsInLibrary, value);
         }
 
         public static readonly string SettingsPath = Path.Combine(M3Filesystem.GetAppDataFolder(), "settings.ini");

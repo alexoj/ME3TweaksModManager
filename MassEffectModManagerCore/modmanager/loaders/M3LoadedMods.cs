@@ -189,7 +189,7 @@ namespace ME3TweaksModManager.modmanager.loaders
         /// <summary>
         /// Reference to the main window, which is used to center dialogs.
         /// </summary>
-        private Window window { get; init; }
+        private MainWindow window { get; init; }
 
         /// <summary>
         /// The bottom left loading task. Can be null.
@@ -333,7 +333,7 @@ namespace ME3TweaksModManager.modmanager.loaders
 
                 if (scopedModsToReload != null && scopedModsToReload.Any())
                 {
-                    modDescsToLoad.ReplaceAll(scopedModsToReload.Select(x=>(MEGame.Unknown, x)));
+                    modDescsToLoad.ReplaceAll(scopedModsToReload.Select(x => (MEGame.Unknown, x)));
                 }
                 else
                 {
@@ -474,6 +474,19 @@ namespace ME3TweaksModManager.modmanager.loaders
                 else if (forceUpdateCheckOnCompletion && scopedModsToCheckForUpdates != null)
                 {
                     ModUpdater.Instance.CheckModsForUpdates(scopedModsToCheckForUpdates);
+                }
+
+                if (Settings.ShowInstalledModsInLibrary)
+                {
+                    var target = window.SelectedGameTarget;
+                    if (target != null)
+                    {
+                        var metaCMMs = target.GetMetaMappedInstalledDLC(false);
+                        foreach (var mod in AllLoadedMods.Where(x => x.Game == target.Game))
+                        {
+                            mod.DetermineIfInstalled(target, metaCMMs);
+                        }
+                    }
                 }
             };
             bw.RunWorkerCompleted += (a, b) =>
@@ -673,6 +686,18 @@ namespace ME3TweaksModManager.modmanager.loaders
             }
 
             throw new Exception(@"Unsupported extraction object type!");
+        }
+
+        public static string GetRelativeModdescPath(Mod mod)
+        {
+            if (mod.IsInArchive)
+                return ""; // There is no way this will be possible to compute.
+            return Path.GetRelativePath(GetCurrentModLibraryDirectory(), mod.ModDescPath);
+        }
+
+        public static void DetermineInstalledMods()
+        {
+
         }
     }
 }

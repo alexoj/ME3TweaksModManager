@@ -40,6 +40,11 @@ namespace ME3TweaksModManager.modmanager.loaders
                 }
             }
 
+            foreach (var m in updatableMods)
+            {
+                m.IsCheckingForUpdates = true;
+            }
+
             BackgroundTask bgTask = BackgroundTaskEngine.SubmitBackgroundJob(@"ModCheckForUpdates", M3L.GetString(M3L.string_checkingModsForUpdates), M3L.GetString(M3L.string_modUpdateCheckCompleted));
             void updateCheckProgressCallback(string newStr)
             {
@@ -130,7 +135,10 @@ namespace ME3TweaksModManager.modmanager.loaders
             {
                 bgTask.FinishedUIText = M3L.GetString(M3L.string_errorCheckingForModUpdates);
             }
-
+            foreach (var m in updatableMods)
+            {
+                m.IsCheckingForUpdates = false;
+            }
             BackgroundTaskEngine.SubmitJobCompletion(bgTask);
         }
 

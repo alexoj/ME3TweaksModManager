@@ -852,7 +852,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                 MetaCMM metacmm = new MetaCMM()
                 {
-                    ModdescSourcePath = InstallOptionsPackage.ModBeingInstalled.ModDescPath,
+                    ModdescSourcePath = M3LoadedMods.GetRelativeModdescPath(InstallOptionsPackage.ModBeingInstalled),
                     ModName = assignedDLCName ?? InstallOptionsPackage.ModBeingInstalled.ModName,
                     Version = InstallOptionsPackage.ModBeingInstalled.ModVersionString,
                     InstallTime = DateTime.Now,

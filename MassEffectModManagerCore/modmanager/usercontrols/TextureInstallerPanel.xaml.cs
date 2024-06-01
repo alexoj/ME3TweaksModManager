@@ -1,17 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Windows.Input;
-using AdonisUI.Controls;
+﻿using System.Windows.Input;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Helpers.MEM;
-using ME3TweaksModManager.modmanager.diagnostics;
-using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.windows;
 using ME3TweaksModManager.ui;
-using Microsoft.Win32;
-using PropertyChanged;
 using MEMIPCHandler = ME3TweaksCore.Helpers.MEM.MEMIPCHandler;
 using MessageBoxButton = System.Windows.MessageBoxButton;
 using MessageBoxImage = System.Windows.MessageBoxImage;
