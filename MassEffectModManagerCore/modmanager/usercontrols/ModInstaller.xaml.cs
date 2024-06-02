@@ -833,6 +833,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             {
                 addedDLCFolders.AddRange(v.Value.DLCFoldersBeingInstalled);
             }
+
+            var installedMetaCmms = new CaseInsensitiveDictionary<MetaCMM>();
             foreach (var addedDLCFolder in addedDLCFolders)
             {
                 // Write metacmm files
@@ -853,6 +855,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 MetaCMM metacmm = new MetaCMM()
                 {
                     ModdescSourcePath = M3LoadedMods.GetRelativeModdescPath(InstallOptionsPackage.ModBeingInstalled),
+                    ModdescSourceHash = InstallOptionsPackage.ModBeingInstalled.ModDescHash,
                     ModName = assignedDLCName ?? InstallOptionsPackage.ModBeingInstalled.ModName,
                     Version = InstallOptionsPackage.ModBeingInstalled.ModVersionString,
                     InstallTime = DateTime.Now,
@@ -867,6 +870,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                 // Write it out to disk
                 metacmm.WriteMetaCMM(metacmmPath, App.BuildNumber.ToString());
+
+                installedMetaCmms[addedDLCFolder] = metacmm;
             }
 
             //Stage: SFAR Installation
@@ -1102,6 +1107,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             {
                 e.Result = ModInstallCompletedStatus.INSTALL_SUCCESSFUL;
                 Action = M3L.GetString(M3L.string_installed);
+                InstallOptionsPackage.ModBeingInstalled.DetermineIfInstalled(InstallOptionsPackage.InstallTarget, installedMetaCmms);
             }
             else
             {
