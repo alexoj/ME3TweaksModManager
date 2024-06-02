@@ -64,6 +64,8 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         {
             foreach (var metaCMM in metaCMMs)
             {
+                if (metaCMM.Value == null)
+                    continue;
                 if (!string.IsNullOrWhiteSpace(metaCMM.Value.ModdescSourceHash) && metaCMM.Value.ModdescSourceHash == ModDescHash)
                 {
                     IsInstalledToTarget = true;
