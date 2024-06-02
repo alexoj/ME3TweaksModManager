@@ -380,6 +380,7 @@ namespace ME3TweaksModManager
                 }
 
                 Settings.StaticPropertyChanged += gf.NotifyGenerationChanged; // Notify of generation change
+                Settings.StaticPropertyChanged += SettingsChangeListener.OnSettingChanged;
                 gf.PropertyChanged += ModGameVisibilityChanged;
                 M3LoadedMods.Instance.GameFilters.Add(gf);
             }
@@ -2701,6 +2702,11 @@ namespace ME3TweaksModManager
             var syncContext = TaskScheduler.FromCurrentSynchronizationContext();
             LegendaryExplorerCoreLib.SetSynchronizationContext(syncContext);
             IsEnabled = false;
+
+            // Initialize ASI manager variables before the service loads
+            ASIManager.Options.DevMode = Settings.DeveloperMode;
+            // Beta is handled by ME3TweaksCore boot
+            
             Task.Run(() =>
             {
                 ME3TweaksCoreLib.Initialize(LibraryBoot.GetPackage());

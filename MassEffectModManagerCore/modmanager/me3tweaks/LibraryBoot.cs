@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using LegendaryExplorerCore.Helpers;
 using ME3TweaksCore;
 using ME3TweaksCore.Diagnostics;
 using ME3TweaksCore.Helpers;
-using ME3TweaksCore.NativeMods;
 using ME3TweaksCoreWPF.NativeMods;
 using ME3TweaksCoreWPF.Targets;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.me3tweaks.services;
 using ME3TweaksModManager.modmanager.objects.gametarget;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
 
 namespace ME3TweaksModManager.modmanager.me3tweaks

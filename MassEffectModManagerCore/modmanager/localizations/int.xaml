@@ -191,7 +191,7 @@
     <system:String xml:space="preserve" x:Key="string_interp_dialog_installingTextureMod">{0} files can be installed with ALOT Installer or Mass Effect Modder (MEM), both available in the tools menu.\n\nWARNING: These types of mods change game file pointers. They must be installed AFTER all other DLC/content mods. Installing content/DLC mods after will cause various issues in the game. Once these types of mods are installed, ME3Tweaks Mod Manager will refuse to install further mods without a restore of the game.</system:String>
     <system:String x:Key="string_interp_minorUpdateAvailableMessage">An updated version of ME3Tweaks Mod Manager Build {0} is available. Minor updates commonly fix small bugs in the program that do not merit a full re-release.</system:String>
     <system:String xml:space="preserve" x:Key="string_interp_dialogUnableToCreateModLibraryNoPermissions">Unable to create mod library directory: {0}\nChoose a mod directory that you have write permissions to.</system:String>
-    <system:String x:Key="string_interp_dialogCannotInstallModsWhileGameRunning">Cannot install mods while {0} is running. Note that Mass Effect 2 and 3 share executable names with their Legendary Edition/Original Trilogy counterparts, so those versions must also be closed.</system:String>
+    <system:String x:Key="string_interp_dialogCannotInstallModsWhileGameRunning">Cannot install mods while {0} is running.</system:String>
     <system:String x:Key="string_interp_failedToInstallMod">Failed to install {0}</system:String>
     <system:String x:Key="string_interp_installingMod">Installing {0}</system:String>
     <system:String x:Key="string_interp_installedMod">Installed {0}</system:String>
@@ -1790,7 +1790,7 @@
     <system:String x:Key="string_installLoader">Install loader</system:String>
     <system:String x:Key="string_unknownASIMod">Unknown ASI mod</system:String>
     <system:String x:Key="string_ASIManager">ASI Manager</system:String>
-    <system:String xml:space="preserve" x:Key="string_ASIManagerTopDescription">ASI mods are native code mods that are loaded at game startup. They allow modification of the game in ways that are beyond what you can do with package files. ASI mods should not be part of typical mod distributions and cannot be included in Mod Manager mods.&#10;Mod Manager will automatically install required ASI mods for mods that modify the ME3 Balance Changes and for ME1 DLC mods.</system:String>
+    <system:String xml:space="preserve" x:Key="string_ASIManagerTopDescription">ASI mods are native code mods that are loaded at game startup, and are often used for mod development. Mod Manager will automatically install ASI mods that are required for mods to work.</system:String>
     <system:String x:Key="string_installingEllipse">Installing...</system:String>
     <system:String x:Key="string_tooltip_viewSourceCodeForThisASIMod">View source code for this ASI mod</system:String>
     <system:String x:Key="string_viewSourceCode">View source code</system:String>
