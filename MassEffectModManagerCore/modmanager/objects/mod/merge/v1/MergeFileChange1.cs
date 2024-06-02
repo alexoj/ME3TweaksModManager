@@ -410,7 +410,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             }
 
             FileLib fl = MergeFileChange1.GetFileLibForMerge(package, Parent.ExportInstancedFullPath, assetsCache, gameTarget);
-            (_, MessageLog log) = UnrealScriptCompiler.CompileClass(package, classText, fl, export: package.FindExport(Parent.ExportInstancedFullPath, @"Class"), parent: container);
+            (_, MessageLog log) = UnrealScriptCompiler.CompileClass(package, classText, fl, export: package.FindExport(Parent.ExportInstancedFullPath, @"Class"), parent: container, intendedClassName: GetClassName());
             if (log.HasErrors)
             {
                 M3Log.Error($@"Error compiling class {Parent.ExportInstancedFullPath}:");
