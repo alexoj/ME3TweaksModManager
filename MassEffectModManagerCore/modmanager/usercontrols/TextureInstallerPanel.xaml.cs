@@ -1,13 +1,14 @@
-﻿using System.Windows.Input;
+﻿using System.Windows;
+using System.Windows.Input;
+using LegendaryExplorerCore.Misc;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Helpers.MEM;
+using ME3TweaksCore.Services.Shared.BasegameFileIdentification;
+using ME3TweaksModManager.me3tweakscoreextended;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.windows;
 using ME3TweaksModManager.ui;
-using MEMIPCHandler = ME3TweaksCore.Helpers.MEM.MEMIPCHandler;
-using MessageBoxButton = System.Windows.MessageBoxButton;
-using MessageBoxImage = System.Windows.MessageBoxImage;
-using MessageBoxResult = System.Windows.MessageBoxResult;
+
 
 namespace ME3TweaksModManager.modmanager.usercontrols
 {
@@ -67,6 +68,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         {
             //autocloses
         }
+
+        private const string BGFIS_TEXTURE_MODDED_SUFFIX = @"(Texture modded)";
+
 
         public override void OnPanelVisible()
         {
@@ -194,6 +198,27 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         M3Log.Warning(@"Texture safety checks are disabled! Do not trust the results of this installation");
                     }
 
+
+                    // Mod Manager 9: Inventory all basegame changes so we have a definitive source of files.
+                    SetNextStep("Inventorying game state before texture install");
+                    Target.PopulateModifiedBasegameFiles();
+                    int numDone = 0;
+                    var trackedFileToOriginalMD5Map = new CaseInsensitiveDictionary<string>(); // Map pre-texture modded -> pre-texture modded MD5
+                    foreach (var f in Target.ModifiedBasegameFiles)
+                    {
+                        var path = Path.Combine(Target.TargetPath, f.FilePath);
+                        var hash = MUtilities.CalculateHash(path);
+                        var existingInfo = BasegameFileIdentificationService.GetBasegameFileSource(Target, path, hash);
+                        if (existingInfo != null && !existingInfo.source.EndsWith(BGFIS_TEXTURE_MODDED_SUFFIX))
+                        {
+                            trackedFileToOriginalMD5Map[f.FilePath] = hash;
+                        }
+
+                        numDone++;
+                        PercentDone = (int)(numDone * 100.0 / Target.ModifiedBasegameFiles.Count);
+                    }
+
+                    // Install the textures.
                     SetNextStep(M3L.GetString(M3L.string_preparingForTextureInstall)); // same message
                     var installResult = MEMIPCHandler.InstallMEMFiles(Target, GetMEMMFLPath(), x => ActionText = x, x => PercentDone = x, setGamePath: false);
                     TelemetryInterposer.TrackEvent(@"Installed texture mods", new Dictionary<string, string>()
@@ -205,6 +230,27 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         // If 'installation' occurred (e.g. it got past scan) we need to reload the game target to ensure consistency in the UI
                         Result.ReloadTargets = installResult.IsInstallSession;
                     }
+
+                    // Mod Manager 9: Update basegame texture hashes.
+                    SetNextStep("Inventorying game state after texture install");
+                    var basegameFileDbUpdates = new List<BasegameFileRecord>();
+                    numDone = 0;
+                    foreach (var f in trackedFileToOriginalMD5Map)
+                    {
+                        var path = Path.Combine(Target.TargetPath, f.Key);
+                        var existingInfo = BasegameFileIdentificationService.GetBasegameFileSource(Target, path, f.Value);
+                        if (existingInfo != null) // This should never be null but we will check here anyways.
+                        {
+                            var newMd5 = MUtilities.CalculateHash(path);
+                            var newName = existingInfo.source += $@" {BGFIS_TEXTURE_MODDED_SUFFIX}";
+                            var mm = new BasegameFileRecord(f.Key, (int)new FileInfo(path).Length, Target.Game, newName, newMd5);
+                            basegameFileDbUpdates.Add(mm);
+                        }
+                        numDone++;
+                        PercentDone = (int)(numDone * 100.0 / Target.ModifiedBasegameFiles.Count);
+                    }
+
+                    BasegameFileIdentificationService.AddLocalBasegameIdentificationEntries(basegameFileDbUpdates);
                     b.Result = installResult;
                 }
                 else

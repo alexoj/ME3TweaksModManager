@@ -12,6 +12,7 @@ using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Packages;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Services.Backup;
+using ME3TweaksCore.Services.Shared.BasegameFileIdentification;
 using ME3TweaksCore.Services.ThirdPartyModIdentification;
 using ME3TweaksCore.Targets;
 using ME3TweaksCoreWPF;
@@ -536,6 +537,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     // 06/16/2022 - Change from not populating at all if texture modded
                     // to filtering out package files and tfc files since they will all be modified.
 
+                    // 06/01/2024 - Change to allow showing packages files if texture modded,
+                    // but only if they are tracked. Untracked will show nothing. I guess we
+                    // could technically track non-vanilla before texture install.
                     SelectedTarget?.PopulateModifiedBasegameFiles(restoreBasegamefileConfirmationCallback,
                         restoreSfarConfirmationCallback,
                         notifyStartingSfarRestoreCallback,
@@ -548,8 +552,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 SelectedTarget?.PopulateASIInfo();
                 SelectedTarget?.PopulateBinkInfo();
 
-                if (SelectedTarget != null && !SelectedTarget.TextureModded)
+                if (SelectedTarget != null)
                 {
+                    // Look for all changes
                     NamedBackgroundWorker nbw = new NamedBackgroundWorker(@"BasegameSourceIdentifier");
                     nbw.DoWork += (a, b) =>
                     {
