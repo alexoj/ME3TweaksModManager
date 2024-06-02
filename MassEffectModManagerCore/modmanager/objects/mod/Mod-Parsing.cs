@@ -543,7 +543,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         }
 
         /// <summary>
-        /// Hash of the moddesc file. Only populated when loading from archive.
+        /// Hash of the moddesc file.
         /// </summary>
         public string ModDescHash { get; set; }
 
@@ -565,6 +565,8 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             try
             {
                 loadMod(File.ReadAllText(filePath), expectedGame, blankLoad: blankLoad);
+                ModDescHash = MUtilities.CalculateHash(filePath);
+                ModDescSize = new FileInfo(filePath).Length;
             }
             catch (Exception e)
             {

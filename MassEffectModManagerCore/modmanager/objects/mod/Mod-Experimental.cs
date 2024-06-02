@@ -54,8 +54,6 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             return lowestMount;
         }
 
-
-
         public bool IsInstalledToTarget { get; set; }
         
         /// <summary>
@@ -66,7 +64,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         {
             foreach (var metaCMM in metaCMMs)
             {
-                if (metaCMM.Value.ModdescSourcePath == M3LoadedMods.GetRelativeModdescPath(this))
+                if (!string.IsNullOrWhiteSpace(metaCMM.Value.ModdescSourceHash) && metaCMM.Value.ModdescSourceHash == ModDescHash)
                 {
                     IsInstalledToTarget = true;
                     return;

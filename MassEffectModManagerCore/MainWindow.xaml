@@ -2083,13 +2083,23 @@
                                                     </EventTrigger>
                                                 </fa5:ImageAwesome.Triggers>
                                             </fa5:ImageAwesome>
-                                            <fa5:ImageAwesome 
+                                            <Grid
+                                                DockPanel.Dock="Right">
+                                                <fa5:ImageAwesome 
+                                                    Visibility="{Binding IsInstalledToTarget, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                    Width="16"
+                                                    Margin="2,0,2,0"
+                                                    Foreground="White"
+                                                    Icon="Solid_Circle"/>
+                                                <fa5:ImageAwesome 
                                                 Visibility="{Binding IsInstalledToTarget, Converter={StaticResource BoolToVisibilityConverter}}"
-                                                DockPanel.Dock="Right"
                                                 Width="16"
                                                 Margin="2,0,2,0"
-                                                Foreground="Green"
+                                                Foreground="{DynamicResource {x:Static adonisUi:Brushes.SuccessBrush}}"
                                                 Icon="Solid_CheckCircle"/>
+                                       
+                                            </Grid>
+
                                             <TextBlock
                                                 Text="{Binding ModName}" />
                                         </DockPanel>
