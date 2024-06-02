@@ -30,7 +30,7 @@ namespace ME3TweaksModManager.modmanager
     {
         public static string GetMMExecutableDirectory() => Path.GetDirectoryName(App.ExecutableLocation);
 
-        
+
         private static readonly string MEMendFileMarker = "ThisIsMEMEndOfFile";
         /// <summary>
         /// Checks if the specified file has been tagged as part of an ALOT Installation. This is not the version marker.
@@ -607,82 +607,9 @@ namespace ME3TweaksModManager.modmanager
             }
         }
 
-        // ME2 and ME3 have same exe names.
-        private static (bool isRunning, DateTime lastChecked) le1RunningInfo = (false, DateTime.MinValue.AddSeconds(5));
-        private static (bool isRunning, DateTime lastChecked) me1RunningInfo = (false, DateTime.MinValue.AddSeconds(5));
-        private static (bool isRunning, DateTime lastChecked) me2RunningInfo = (false, DateTime.MinValue.AddSeconds(5));
-        private static (bool isRunning, DateTime lastChecked) me3RunningInfo = (false, DateTime.MinValue.AddSeconds(5));
-        private static (bool isRunning, DateTime lastChecked) leLauncherRunningInfo = (false, DateTime.MinValue.AddSeconds(5));
-
-
-        private static int TIME_BETWEEN_PROCESS_CHECKS = 5;
 
         /// <summary>
-        /// Determines if a specific game is running. This method only updates every 3 seconds due to the huge overhead it has
-        /// </summary>
-        /// <returns>True if running, false otherwise</returns>
-        public static bool IsGameRunning(MEGame gameID)
-        {
-            (bool isRunning, DateTime lastChecked) runningInfo = (false, DateTime.MinValue.AddSeconds(5));
-            switch (gameID)
-            {
-                case MEGame.ME1:
-                    runningInfo = me1RunningInfo;
-                    break;
-                case MEGame.LE1:
-                    runningInfo = le1RunningInfo;
-                    break;
-                case MEGame.LE2:
-                case MEGame.ME2:
-                    runningInfo = me2RunningInfo;
-                    break;
-                case MEGame.LE3:
-                case MEGame.ME3:
-                    runningInfo = me3RunningInfo;
-                    break;
-                case MEGame.LELauncher:
-                    runningInfo = leLauncherRunningInfo;
-                    break;
-            }
-
-            var time = runningInfo.lastChecked.AddSeconds(TIME_BETWEEN_PROCESS_CHECKS);
-            //Debug.WriteLine(time + " vs " + DateTime.Now);
-            if (time > DateTime.Now)
-            {
-                //Debug.WriteLine("CACHED");
-                return runningInfo.isRunning; //cached
-            }
-            //Debug.WriteLine("IsRunning: " + gameID);
-
-            var processNames = MEDirectories.ExecutableNames(gameID).Select(x => Path.GetFileNameWithoutExtension(x));
-            runningInfo.isRunning = Process.GetProcesses().Any(x => processNames.Contains(x.ProcessName));
-            runningInfo.lastChecked = DateTime.Now;
-            switch (gameID)
-            {
-                case MEGame.ME1:
-                    me1RunningInfo = runningInfo;
-                    break;
-                case MEGame.LE1:
-                    le1RunningInfo = runningInfo;
-                    break;
-                case MEGame.ME2:
-                case MEGame.LE2:
-                    me2RunningInfo = runningInfo;
-                    break;
-                case MEGame.ME3:
-                case MEGame.LE3:
-                    me3RunningInfo = runningInfo;
-                    break;
-                case MEGame.LELauncher:
-                    leLauncherRunningInfo = runningInfo;
-                    break;
-            }
-
-            return runningInfo.isRunning;
-        }
-
-        /// <summary>
-        /// Checks if a process is running. This should not be used in bindings, as it's a very expensive call!
+        /// Checks if a process is running. This should not be used for game detection, as it also uses version info.
         /// </summary>
         /// <param name="processName"></param>
         /// <returns></returns>

@@ -67,11 +67,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private bool CanRestoreMPSFARs()
         {
-            return IsPanelOpen && SelectedTarget != null && SelectedTarget.Game != MEGame.Unknown && !M3Utilities.IsGameRunning(SelectedTarget.Game) && SelectedTarget.HasModifiedMPSFAR() && !SFARBeingRestored;
+            return IsPanelOpen && SelectedTarget != null && SelectedTarget.Game != MEGame.Unknown && !MUtilities.IsGameRunning(SelectedTarget.Game) && SelectedTarget.HasModifiedMPSFAR() && !SFARBeingRestored;
         }
         private bool CanRestoreSPSFARs()
         {
-            return IsPanelOpen && SelectedTarget.Game != MEGame.Unknown && !M3Utilities.IsGameRunning(SelectedTarget.Game) && SelectedTarget.HasModifiedSPSFAR() && !SFARBeingRestored;
+            return IsPanelOpen && SelectedTarget.Game != MEGame.Unknown && !MUtilities.IsGameRunning(SelectedTarget.Game) && SelectedTarget.HasModifiedSPSFAR() && !SFARBeingRestored;
         }
 
         private bool CanRemoveTarget() => SelectedTarget != null && SelectedTarget.Game != MEGame.Unknown && !SelectedTarget.RegistryActive;
@@ -99,7 +99,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private bool CanRestoreAllBasegame()
         {
-            return IsPanelOpen && SelectedTarget != null && SelectedTarget.Game != MEGame.Unknown && !M3Utilities.IsGameRunning(SelectedTarget.Game) && SelectedTarget?.ModifiedBasegameFiles.Count > 0 && !RestoreAllBasegameInProgress && BackupService.GetGameBackupPath(SelectedTarget.Game) != null; //check if ifles being restored
+            return IsPanelOpen && SelectedTarget != null && SelectedTarget.Game != MEGame.Unknown && !MUtilities.IsGameRunning(SelectedTarget.Game) && SelectedTarget?.ModifiedBasegameFiles.Count > 0 && !RestoreAllBasegameInProgress && BackupService.GetGameBackupPath(SelectedTarget.Game) != null; //check if ifles being restored
         }
 
         public string ModifiedFilesFilterText { get; set; }
@@ -283,7 +283,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private bool CanRestoreAllSFARs()
         {
-            return IsPanelOpen && SelectedTarget != null && SelectedTarget.Game != MEGame.Unknown && !M3Utilities.IsGameRunning(SelectedTarget.Game) && SelectedTarget.ModifiedSFARFiles.Count > 0 && !SFARBeingRestored;
+            return IsPanelOpen && SelectedTarget != null && SelectedTarget.Game != MEGame.Unknown && !MUtilities.IsGameRunning(SelectedTarget.Game) && SelectedTarget.ModifiedSFARFiles.Count > 0 && !SFARBeingRestored;
         }
 
         /// <summary>
@@ -297,7 +297,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             {
                 bool deleteConfirmationCallback(InstalledDLCMod mod)
                 {
-                    if (M3Utilities.IsGameRunning(SelectedTarget.Game))
+                    if (MUtilities.IsGameRunning(SelectedTarget.Game))
                     {
                         M3L.ShowDialog(Window.GetWindow(this),
                             M3L.GetString(M3L.string_interp_cannotDeleteModsWhileXIsRunning,
@@ -373,7 +373,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 SelectedTarget.PopulateTextureInstallHistory();
                 bool restoreBasegamefileConfirmationCallback(string filepath)
                 {
-                    if (M3Utilities.IsGameRunning(SelectedTarget.Game))
+                    if (MUtilities.IsGameRunning(SelectedTarget.Game))
                     {
                         M3L.ShowDialog(Window.GetWindow(this),
                             M3L.GetString(M3L.string_interp_cannotRestoreFilesWhileXIsRunning, SelectedTarget.Game.ToGameName()), M3L.GetString(M3L.string_gameRunning),
@@ -413,7 +413,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                 bool restoreSfarConfirmationCallback(string sfarPath)
                 {
-                    if (M3Utilities.IsGameRunning(SelectedTarget.Game))
+                    if (MUtilities.IsGameRunning(SelectedTarget.Game))
                     {
                         M3L.ShowDialog(Window.GetWindow(this),
                             M3L.GetString(M3L.string_interp_cannotRestoreFilesWhileXIsRunning,

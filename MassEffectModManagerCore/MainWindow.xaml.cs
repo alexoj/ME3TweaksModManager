@@ -988,7 +988,7 @@ namespace ME3TweaksModManager
 
         private bool CanInstallMEMFile()
         {
-            return SelectedGameTarget != null && SelectedGameTarget.Game.IsLEGame() && !M3Utilities.IsGameRunning(SelectedGameTarget.Game);
+            return SelectedGameTarget != null && SelectedGameTarget.Game.IsLEGame() && !MUtilities.IsGameRunning(SelectedGameTarget.Game);
         }
 
         private void DecompileCoalesced(object obj)
@@ -2296,7 +2296,7 @@ namespace ME3TweaksModManager
             if (obj is string str && Enum.TryParse(str, out MEGame game))
             {
                 var target = GetCurrentTarget(game);
-                if (target != null && !M3Utilities.IsGameRunning(game))
+                if (target != null && !MUtilities.IsGameRunning(game))
                 {
                     return File.Exists(M3Utilities.GetBinkFile(target));
                 }
@@ -2311,7 +2311,7 @@ namespace ME3TweaksModManager
             {
                 var target = GetCurrentTarget(game);
                 if (target == null) return; //can't toggle this
-                if (M3Utilities.IsGameRunning(game))
+                if (MUtilities.IsGameRunning(game))
                 {
                     M3L.ShowDialog(this,
                         M3L.GetString(M3L.string_interp_dialogCannotInstallBinkWhileGameRunning, game.ToGameName()),
@@ -2555,7 +2555,7 @@ namespace ME3TweaksModManager
         private void ApplyMod(Mod mod, GameTargetWPF forcedTarget = null, BatchMod batchMod = null,
             bool? installCompressed = null, Action<bool, bool> installCompletedCallback = null)
         {
-            if (!M3Utilities.IsGameRunning(mod.Game))
+            if (!MUtilities.IsGameRunning(mod.Game))
             {
                 if (forcedTarget == null && SelectedGameTarget == null)
                 {

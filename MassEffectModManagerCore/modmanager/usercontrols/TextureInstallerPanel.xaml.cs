@@ -242,7 +242,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         if (existingInfo != null) // This should never be null but we will check here anyways.
                         {
                             var newMd5 = MUtilities.CalculateHash(path);
-                            var newName = existingInfo.source += $@" {BGFIS_TEXTURE_MODDED_SUFFIX}";
+                            var newName = existingInfo.source += $@" - {BGFIS_TEXTURE_MODDED_SUFFIX}";
                             var mm = new BasegameFileRecord(f.Key, (int)new FileInfo(path).Length, Target.Game, newName, newMd5);
                             basegameFileDbUpdates.Add(mm);
                         }
