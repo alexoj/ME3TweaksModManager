@@ -3,6 +3,7 @@ using System.Windows;
 using System.Windows.Input;
 using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Misc;
+using LegendaryExplorerCore.Helpers;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.NativeMods;
 using ME3TweaksCoreWPF.UI;
@@ -466,7 +467,9 @@ namespace ME3TweaksModManager.modmanager.windows
 
             SavedPath = queue.Save(true);
 
-            if (!destExists && InitialFileName != null)
+
+            // File name was changed
+            if (InitialFileName != null && !Path.GetFileName(queueSavePath).CaseInsensitiveEquals(InitialFileName))
             {
                 File.Delete(Path.Combine(M3LoadedMods.GetBatchInstallGroupsDirectory(), InitialFileName));
             }

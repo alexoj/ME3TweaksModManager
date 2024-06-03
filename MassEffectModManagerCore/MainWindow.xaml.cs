@@ -3204,8 +3204,7 @@ namespace ME3TweaksModManager
                             }
                         }
 
-                        EndorseSelectedModCommand.RaiseCanExecuteChanged();
-                        //CommandManager.InvalidateRequerySuggested();
+                        CommandManager.InvalidateRequerySuggested();
                     }
                     else
                     {

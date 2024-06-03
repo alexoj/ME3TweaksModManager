@@ -2,6 +2,7 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
+using System.Windows.Input;
 using IniParser.Model;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCoreWPF.UI;
@@ -86,7 +87,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
         {
             if (e.PropertyName == nameof(MDCustomDLCParameter.SourcePath) || e.PropertyName == nameof(MDCustomDLCParameter.DestDLCName))
             {
-                AddCustomDLCCommand.RaiseCanExecuteChanged();
+                CommandManager.InvalidateRequerySuggested();
             }
         }
 

@@ -56,11 +56,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         private void LoadCommands()
         {
             CloseCommand = new GenericCommand(ClosePanel);
-            CreateNewGroupCommand = new GenericCommand(CreateNewGroup);
+            CreateNewGroupCommand = new GenericCommand(CreateNewGroup, () => !IsLoading);
             InstallGroupCommand = new GenericCommand(InstallGroup, CanInstallGroup);
-            EditGroupCommand = new GenericCommand(EditGroup, BatchQueueSelected);
-            DeleteGroupCommand = new GenericCommand(DeleteGroup, BatchQueueSelected);
-            DuplicateGroupCommand = new GenericCommand(DuplicateGroup, BatchQueueSelected);
+            EditGroupCommand = new GenericCommand(EditGroup, CanOperateOnBatchQueue);
+            DeleteGroupCommand = new GenericCommand(DeleteGroup, CanOperateOnBatchQueue);
+            DuplicateGroupCommand = new GenericCommand(DuplicateGroup, CanOperateOnBatchQueue);
             TriggerDataReloadCommand = new GenericCommand(ReloadModData, CanTriggerReload);
             DeployQueueCommand = new GenericCommand(DeployQueue, CanDeployQueue);
         }
@@ -164,7 +164,10 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             if (newPath != null)
             {
                 //file was saved, reload
-                parseBatchFiles(newPath);
+                Task.Run(() =>
+                {
+                    parseBatchFiles(newPath);
+                });
             }
 
 
@@ -174,7 +177,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 #endif
         }
 
-        private bool BatchQueueSelected() => SelectedBatchQueue != null;
+        private bool CanOperateOnBatchQueue() => SelectedBatchQueue != null && !IsLoading;
 
         private void InstallGroup()
         {
@@ -222,7 +225,10 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 if (newPath != null)
                 {
                     //file was saved, reload
-                    parseBatchFiles(newPath);
+                    Task.Run(() =>
+                    {
+                        parseBatchFiles(newPath);
+                    });
                 }
             }
         }
@@ -250,12 +256,13 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         public void OnIsLoadingChanged()
         {
             ClipperHelper.ShowHideVerticalContent(LoadingStatusPanel, IsLoading);
+            Application.Current.Dispatcher.Invoke(CommandManager.InvalidateRequerySuggested); // Refresh bindings... if only you could invoke directly.
         }
 
         public override void OnPanelVisible()
         {
             InitializeComponent();
-           
+
             if (RefreshContentsOnVisible)
             {
                 ReloadModData();
@@ -264,11 +271,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             {
                 Task.Run(() =>
                 {
-                    IsLoading = true;
                     parseBatchFiles();
-                }).ContinueWithOnUIThread(x =>
-                {
-                    IsLoading = false;
                 });
             }
 
@@ -344,6 +347,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private void parseBatchFiles(string pathToHighlight = null)
         {
+            IsLoading = true;
+
             #region MIGRATION
             // Mod Manager 8.0.1 moved these to the mod library
             var batchDirOld = M3LoadedMods.GetBatchInstallGroupsDirectoryPre801();
@@ -364,6 +369,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     }
                 }
             }
+            IsLoading = true;
             #endregion
 
             AvailableBatchQueues.ClearEx();
@@ -377,7 +383,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 {
                     try
                     {
-
                         var queue = BatchLibraryInstallQueue.LoadInstallQueue(file);
                         if (queue != null && queue.Game.IsEnabledGeneration())
                         {
@@ -399,6 +404,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     }
                 }
             }
+
+            IsLoading = false;
         }
 
         public GameTargetWPF SelectedGameTarget { get; set; }
