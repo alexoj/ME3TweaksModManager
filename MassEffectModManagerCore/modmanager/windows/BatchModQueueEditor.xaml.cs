@@ -45,6 +45,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
         public string GroupName { get; set; }
         public string GroupDescription { get; set; }
+        public string InitialFileName { get; set; }
 
         /// <summary>
         /// Then newly saved path, for showing in the calling window's UI
@@ -66,6 +67,7 @@ namespace ME3TweaksModManager.modmanager.windows
             {
                 SelectedGame = queueToEdit.Game;
                 GroupName = queueToEdit.ModName;
+                InitialFileName = queueToEdit.BackingFilename;
                 GroupDescription = queueToEdit.QueueDescription;
                 ModsInGroup.ReplaceAll(queueToEdit.ModsToInstall);
                 ModsInGroup.AddRange(queueToEdit.ASIModsToInstall);
@@ -408,18 +410,19 @@ namespace ME3TweaksModManager.modmanager.windows
 
         private void SaveAndClose()
         {
-            SaveModern();
-            TelemetryInterposer.TrackEvent(@"Saved Batch Group", new Dictionary<string, string>()
+            if (SaveModern())
             {
-                {@"Group name", GroupName},
-                {@"Group size", ModsInGroup.Count.ToString()},
-                {@"Game", SelectedGame.ToString()}
-            });
-            Close();
-            //OnClosing(new DataEventArgs(savePath));
+                TelemetryInterposer.TrackEvent(@"Saved Batch Group", new Dictionary<string, string>()
+                {
+                    { @"Group name", GroupName },
+                    { @"Group size", ModsInGroup.Count.ToString() },
+                    { @"Game", SelectedGame.ToString() }
+                });
+                Close();
+            }
         }
 
-        private void SaveModern()
+        private bool SaveModern()
         {
             var queue = new BatchLibraryInstallQueue();
             queue.Game = SelectedGame;
@@ -450,7 +453,24 @@ namespace ME3TweaksModManager.modmanager.windows
             }
             queue.TextureModsToInstall.ReplaceAll(texturemods);
 
-            SavedPath = queue.Save(true); // Todo: add warning if this overrides another object
+            var queueSavePath = queue.GetSaveName(queue.ModName, true);
+            var destExists = File.Exists(queueSavePath);
+            if (destExists && Path.GetFileName(queueSavePath) != InitialFileName) // If InitialFileName is null this will indicate new group saving over existing rather than a rename
+            {
+                var continueRes = M3L.ShowDialog(this,
+                                    $"An existing install group with the name '{queue.ModName}' already exists. Saving will overwrite that group.\n\nContinue to save this group?",
+                                    "File already exists", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (continueRes != MessageBoxResult.Yes)
+                    return false;
+            }
+
+            SavedPath = queue.Save(true);
+
+            if (!destExists && InitialFileName != null)
+            {
+                File.Delete(Path.Combine(M3LoadedMods.GetBatchInstallGroupsDirectory(), InitialFileName));
+            }
+            return true;
         }
 
         /// <summary>
@@ -483,7 +503,7 @@ namespace ME3TweaksModManager.modmanager.windows
                 }
             }
 
-            var savePath = "";// getSaveName(GroupName);
+            var savePath = "";// GetSaveName(GroupName);
             File.WriteAllText(savePath, sb.ToString());
             SavedPath = savePath;
 #endif

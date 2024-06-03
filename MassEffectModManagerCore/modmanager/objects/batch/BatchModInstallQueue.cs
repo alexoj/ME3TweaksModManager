@@ -372,7 +372,7 @@ namespace ME3TweaksModManager.modmanager.objects.batch
             // Commit
             var json = JsonConvert.SerializeObject(this, Formatting.Indented);
 
-            var savePath = getSaveName(newName ?? ModName, canOverwrite);
+            var savePath = GetSaveName(newName ?? ModName, canOverwrite);
             File.WriteAllText(savePath, json);
 
             SerializeOnly_MEMFilePaths = null; // Clear
@@ -384,7 +384,7 @@ namespace ME3TweaksModManager.modmanager.objects.batch
         /// </summary>
         /// <param name="groupName"></param>
         /// <returns></returns>
-        private string getSaveName(string groupName, bool canOverwrite)
+        public string GetSaveName(string groupName, bool canOverwrite)
         {
             var batchfolder = M3LoadedMods.GetBatchInstallGroupsDirectory();
             var newFname = MUtilities.SanitizePath(groupName);
@@ -499,5 +499,4 @@ namespace ME3TweaksModManager.modmanager.objects.batch
             }
         }
     }
-
 }
