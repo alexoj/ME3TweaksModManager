@@ -79,7 +79,7 @@
 		<None Remove="images\me3tweaks.png" />
 		<None Remove="images\modmaker.png" />
 		<None Remove="images\nexusmods_scenethemed.png" />
-		<None Remove="images\origin.png" />
+		<None Remove="images\ea.png" />
 		<None Remove="images\steam.png" />
 		<None Remove="images\terminal.png" />
 		<None Remove="images\unknown.png" />
@@ -232,7 +232,7 @@
 
 	<ItemGroup>
 		<Resource Include="images\gameicons\*.ico" />
-		<Resource Include="images\origin.png" />
+		<Resource Include="images\ea.png" />
 		<EmbeddedResource Include="modmanager\executables\vpat.exe" />
 		<Resource Include="modmanager\localizations\icons\*.png" />
 		<Resource Include="modmanager\nexusmodsintegration\nexusmods_icon.png" />
