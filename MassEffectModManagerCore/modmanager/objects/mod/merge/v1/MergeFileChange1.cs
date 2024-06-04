@@ -502,11 +502,10 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         public bool ApplyUpdate(IMEPackage package, ref ExportEntry targetExport, Mod installingMod, Action<int> addMergeWeightCompleted, GameTarget target)
         {
             // targetExport CAN BE NULL starting with ModDesc 8.1 mods!
-            string sourcePath = null;
             OwningMM.Assets[AssetName].EnsureAssetLoaded();
             var binaryStream = new MemoryStream(OwningMM.Assets[AssetName].AssetBinary);
 
-            using var sourcePackage = MEPackageHandler.OpenMEPackageFromStream(binaryStream, sourcePath);
+            using var sourcePackage = MEPackageHandler.OpenMEPackageFromStream(binaryStream, AssetName);
             var sourceEntry = sourcePackage.FindExport(AssetExportInstancedFullPath);
             if (sourceEntry == null)
             {
