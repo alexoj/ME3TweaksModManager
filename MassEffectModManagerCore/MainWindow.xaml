@@ -530,19 +530,6 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
-                        Header="{DynamicResource string_checkModsForUpdates}"
-                        Command="{Binding CheckAllModsForUpdatesCommand}"
-                        ToolTip="{DynamicResource string_tooltip_checksForUpdatesToModsThatSupportCheckingForUpdates}">
-                        <MenuItem.Icon>
-                            <fa5:ImageAwesome
-                                Style="{StaticResource EnableDisableImageStyle}"
-                                Icon="Solid_Retweet"
-                                Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
-                                Height="16"
-                                Width="16" />
-                        </MenuItem.Icon>
-                    </MenuItem>
-                    <MenuItem
                         Header="{DynamicResource string_ASIModManager}"
                         Command="{Binding OpenASIManagerCommand}"
                         ToolTip="{DynamicResource string_ASIManagerTooltip}">
@@ -588,6 +575,34 @@
                     <MenuItem
                         Header="{DynamicResource string_libraryManagement}"
                         Style="{StaticResource MenuItemHeaderStyle}" />
+                    <MenuItem
+                        Header="{DynamicResource string_checkModsForUpdates}"
+                        Command="{Binding CheckAllModsForUpdatesCommand}"
+                        ToolTip="{DynamicResource string_tooltip_checksForUpdatesToModsThatSupportCheckingForUpdates}">
+                        <MenuItem.Icon>
+                            <fa5:ImageAwesome
+                                Style="{StaticResource EnableDisableImageStyle}"
+                                Icon="Solid_Retweet"
+                                Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
+                                Height="16"
+                                Width="16" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <MenuItem
+                        Header="Show which mods can check for updates"
+                        ToolTip="Adds an icon to mods in the library that indicate if they can check for updates.&#10;This only will stay enabled for this session"
+                        IsCheckable="True"
+                        IsChecked="{Binding Path=(modmanager:Settings.SessionOnly_ShowWhichModsCanCheckForUpdates), Mode=TwoWay}"
+                        StaysOpenOnClick="True">
+                        <MenuItem.Icon>
+                            <fa5:ImageAwesome
+                                Icon="Solid_CloudMeatball"
+                                Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
+                                Height="16"
+                                Width="16"
+                                RenderOptions.BitmapScalingMode="HighQuality" />
+                        </MenuItem.Icon>
+                    </MenuItem>
                     <MenuItem
                         Header="{DynamicResource string_Openmodslibrarydirectory}"
                         Click="OpenModsDirectory_Click"
@@ -660,7 +675,7 @@
                         <MenuItem.Icon>
                             <fa5:ImageAwesome
                                 Style="{StaticResource EnableDisableImageStyle}"
-                                Icon="Solid_Search"
+                                Icon="Solid_ExclamationTriangle"
                                 Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
                                 Height="16"
                                 Width="16"
@@ -1414,6 +1429,10 @@
                     <MenuItem
                         Header="Diagnostic tool: Open all packages from current target game"
                         Command="{Binding BetaDiagToolOpenAllPackagesCommand}"/>
+                    <MenuItem
+                        Header="Beta setting: Show mod installation status in library"
+                        ToolTip="WARNING: THIS WILL NOT BE RELIABLE FOR ALL MODS"
+                        IsChecked="{Binding Path=(modmanager:Settings.ShowInstalledModsInLibrary)}" />
                 </MenuItem>
                 <MenuItem
                     Header="{DynamicResource string_debug}"
@@ -2085,6 +2104,20 @@
                                                 Width="16"
                                                 Height="16"
                                                 Margin="0,0,5,0" />
+                                            <fa5:ImageAwesome 
+                                                DockPanel.Dock="Right"
+                                                Width="16"
+                                                Height="16"
+                                                Margin="2,0,0,0"
+                                                Foreground="{DynamicResource {x:Static adonisUi:Brushes.AccentInteractionBorderBrush}}"
+                                                Icon="Solid_Cloud">
+                                                <fa5:ImageAwesome.Visibility>
+                                                    <MultiBinding Converter="{StaticResource MultiBoolToVisibilityConverter}">
+                                                        <Binding Path="(modmanager:Settings.SessionOnly_ShowWhichModsCanCheckForUpdates)"/>
+                                                        <Binding Path="IsUpdatable" />
+                                                    </MultiBinding>
+                                                </fa5:ImageAwesome.Visibility>
+                                            </fa5:ImageAwesome>
                                             <fa5:ImageAwesome 
                                                 Visibility="{Binding IsCheckingForUpdates, Converter={StaticResource BoolToVisibilityConverter}}"
                                                 DockPanel.Dock="Right"

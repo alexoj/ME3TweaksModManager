@@ -34,6 +34,7 @@
     <converters1:LanguageSupportedVisibilityConverter x:Key="LanguageSupportedVisibilityConverter"/>
     <converters1:GameToTextureModdedIconConverter x:Key="GameToTextureModdedIconConverter"/>
     <converters1:ImageTooltipVerticalOffsetConverter x:Key="ImageTooltipVerticalOffsetConverter" />
+    <converters1:MultiBoolToVisibilityConverter x:Key="MultiBoolToVisibilityConverter"/>
 
     <Style x:Key="TargetSelectorContainerStyle" TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

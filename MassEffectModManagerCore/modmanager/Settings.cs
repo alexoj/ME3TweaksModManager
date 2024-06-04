@@ -438,11 +438,22 @@ namespace ME3TweaksModManager.modmanager
             set => SetProperty(ref _skipDarkNet, value);
         }
 
-        public static bool _showInstalledModsInLibrary = true;
+        public static bool _showInstalledModsInLibrary;
         public static bool ShowInstalledModsInLibrary
         {
             get => _showInstalledModsInLibrary;
             set => SetProperty(ref _showInstalledModsInLibrary, value);
+        }
+
+        private static bool _sessionOnly_ShowWhichModsCanCheckForUpdates;
+
+        /// <summary>
+        /// Session only setting: Show the icon for mods being able to update
+        /// </summary>
+        public static bool SessionOnly_ShowWhichModsCanCheckForUpdates
+        {
+            get => _sessionOnly_ShowWhichModsCanCheckForUpdates;
+            set => SetProperty(ref _sessionOnly_ShowWhichModsCanCheckForUpdates, value);
         }
 
         public static readonly string SettingsPath = Path.Combine(M3Filesystem.GetAppDataFolder(), "settings.ini");
@@ -535,6 +546,11 @@ namespace ME3TweaksModManager.modmanager
                 // Only read if value is set so we don't have a blank
                 LE1MiniConsoleKey = LoadSettingString(settingsIni, "ConfigMerge", "LE1MiniConsoleKey", null);
             }
+
+            // BETA OPTIONS
+            ShowInstalledModsInLibrary = LoadSettingBool(settingsIni, "ModManager", "ShowInstalledModsInLibrary", false);
+            
+
             Loaded = true;
         }
 
@@ -730,6 +746,7 @@ namespace ME3TweaksModManager.modmanager
                 SaveSettingBool(settingsIni, "ModManager", "EnableLE1CoalescedMerge", EnableLE1CoalescedMerge);
                 SaveSettingBool(settingsIni, "ModManager", "EnableLE12DAMerge", EnableLE12DAMerge);
                 SaveSettingBool(settingsIni, "ModManager", "ForcePullContentNextBoot", ForcePullContentNextBoot);
+                SaveSettingBool(settingsIni, "ModManager", "ShowInstalledModsInLibrary", ShowInstalledModsInLibrary);
 
                 SaveSettingBool(settingsIni, "ModMaker", "AutoAddControllerMixins", ModMakerControllerModOption);
                 SaveSettingBool(settingsIni, "ModMaker", "AutoInjectCustomKeybinds", ModMakerAutoInjectCustomKeybindsOption);
