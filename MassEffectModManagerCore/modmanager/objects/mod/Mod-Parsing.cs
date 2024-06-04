@@ -1705,8 +1705,38 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                         }
                     }
                 }
-
             }
+
+            // For performance reasons we do not validate TLK merge keys in m3za files
+            // except at install time as we would have to extract m3za and read its header.
+            // During development mods will use loose xml files which we validate here
+
+
+            if (ModDescTargetVersion >= 9.0 && Game == MEGame.LE1)
+            {
+                // Validate TLK option keys
+                var tlkJob = GetJob(ModJob.JobHeader.GAME1_EMBEDDED_TLK);
+                var custDlcJob = GetJob(ModJob.JobHeader.CUSTOMDLC);
+                if (tlkJob != null && custDlcJob != null)
+                {
+                    var tlkJobPath = FilesystemInterposer.PathCombine(IsInArchive, ModPath, Mod.Game1EmbeddedTlkFolderName);
+                    var m3zaPath = FilesystemInterposer.PathCombine(IsInArchive, tlkJobPath, Mod.Game1EmbeddedTlkCompressedFilename);
+                    if (!FilesystemInterposer.FileExists(m3zaPath, Archive))
+                    {
+                        foreach (var alt in custDlcJob.AlternateDLCs.Where(x => x.Operation == AlternateDLC.AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY))
+                        {
+                            var keyPath = FilesystemInterposer.PathCombine(IsInArchive, tlkJobPath, alt.LE1TLKOptionKey);
+                            if (!FilesystemInterposer.DirectoryExists(keyPath))
+                            {
+                                M3Log.Error($@"Alternate {alt.FriendlyName} specifies a '{AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY}' value that references folder in {Mod.Game1EmbeddedTlkFolderName} that does not exist");
+                                LoadFailedReason = $"Alternate {alt.FriendlyName} specifies a '{AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY}' value that references folder in {Mod.Game1EmbeddedTlkFolderName} that does not exist";
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+
             #endregion
 
             #region Texture Mod References

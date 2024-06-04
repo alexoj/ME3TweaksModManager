@@ -38,6 +38,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 if (ModDescTargetVersion >= 9.0)
                 {
                     // Mod Manager 9: Filter files based on option keys
+
+                    // Verify option keys first
+                    compressTlkMergeData.VerifyOptionKeys(this);
                     allFilenames = compressTlkMergeData.GetFileListing(LE1TLKMergeChosenOptionKeys);
                 }
                 else
@@ -48,6 +51,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             }
             else if (LE1TLKMergeChosenOptionKeys != null) // Has filtering
             {
+
                 List<string> filteredFiles = new List<string>();
                 foreach (var f in allFilenames)
                 {
@@ -56,7 +60,6 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                         var parentName = Directory.GetParent(f).Name;
                         if (parentName != Mod.Game1EmbeddedTlkFolderName)
                         {
-                            // It's under a folder - it's option keyed
                             if (LE1TLKMergeChosenOptionKeys.Contains(parentName))
                             {
                                 filteredFiles.Add(f);
@@ -71,6 +74,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
 
                 allFilenames = filteredFiles;
             }
+            
 
             // Map of package name -> TLK filenames to install into it
             var dict = new Dictionary<string, List<string>>();

@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LegendaryExplorerCore.Compression;
 using LegendaryExplorerCore.Helpers;
+using ME3TweaksModManager.modmanager.objects.alternates;
 using ME3TweaksModManager.modmanager.objects.mod;
 
 namespace ME3TweaksModManager.modmanager.objects.tlk
@@ -408,6 +409,25 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Verifies all option keys are valid
+        /// </summary>
+        /// <param name="mod"></param>
+        public void VerifyOptionKeys(Mod mod)
+        {
+            var custJob = mod.GetJob(ModJob.JobHeader.CUSTOMDLC);
+            if (custJob == null)
+                return;
+
+            foreach (var alt in custJob.AlternateDLCs.Where(x => x.Operation == AlternateDLC.AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY))
+            {
+                if (!OptionKeys.Contains(alt.OptionKey))
+                {
+                    throw new Exception($"Mod validation failed: CombinedTLKMergeData.m3za does not contain referenced TLK option key '{alt.LE1TLKOptionKey}', which is referenced by AlternateDLC object {alt.FriendlyName}. Please contact the developer.");
+                }
+            }
         }
     }
 }
