@@ -287,9 +287,19 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 }
                 else if (job.Header == ModJob.JobHeader.GAME1_EMBEDDED_TLK)
                 {
-                    #region Installation: GAME_EMBEDDED TLK
-                    // We don't parse this here
-                    #endregion
+                    LE1TLKMergeChosenOptionKeys = LE1TLKMergeAllOptionKeys != null ? new List<string>() : null;
+
+                    // Look in CustomDLC job for alternates there.
+                    // Technically this could be done under this header, but it'd be a lot of work I don't really want to do
+                    // to port another job with alternates
+                    if (ModDescTargetVersion >= 9.0 && options.SelectedOptions.TryGetValue(ModJob.JobHeader.CUSTOMDLC, out var custDlcOptions))
+                    {
+                        var custOptions = custDlcOptions.OfType<AlternateDLC>().ToList(); ;
+                        foreach (var option in custOptions.Where(x => x.Operation == AlternateDLC.AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY))
+                        {
+                            LE1TLKMergeChosenOptionKeys.Add(option.LE1TLKOptionKey);
+                        }
+                    }
                 }
                 else if (job.Header == ModJob.JobHeader.HEADMORPHS)
                 {

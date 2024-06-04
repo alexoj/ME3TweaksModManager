@@ -2218,7 +2218,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod
 
                 if (headerJob.Game1TLKXmls == null)
                 {
-                    var files = FilesystemInterposer.DirectoryGetFiles(sourceDirectory, @"*.xml", SearchOption.TopDirectoryOnly, Archive).Select(x => x.Substring((ModPath.Length > 0 ? (ModPath.Length + 1) : 0) + jobDirLength).TrimStart('\\')).ToList();
+                    var searchType = ModDescTargetVersion >= 9.0 ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+                    var files2 = FilesystemInterposer.DirectoryGetFiles(sourceDirectory, @"*.xml", searchType, Archive);
+                    var files = FilesystemInterposer.DirectoryGetFiles(sourceDirectory, @"*.xml", searchType, Archive).Select(x => x.Substring((ModPath.Length > 0 ? (ModPath.Length + 1) : 0) + jobDirLength).TrimStart('\\')).ToList();
                     if (!files.Any())
                     {
                         M3Log.Error($@"Mod specifies {ModJob.JobHeader.GAME1_EMBEDDED_TLK} task header, but no xmls file were found in the {Mod.Game1EmbeddedTlkFolderName} directory. Remove this task header if you are not using it, or add valid xml files to the {Mod.Game1EmbeddedTlkFolderName} directory.");
@@ -2237,8 +2239,27 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                             return false;
                         }
 
+                        // Assign in loop to populate variable in the event any of them exist
                         headerJob.Game1TLKXmls ??= new List<string>(files.Count);
-                        headerJob.Game1TLKXmls.Add(Path.GetFileName(file));
+                        headerJob.Game1TLKXmls.Add(file);
+
+                        // Load option key value if we find one.
+                        if (ModDescTargetVersion >= 9.0)
+                        {
+                            if (file.Contains('/') || file.Contains('\\'))
+                            {
+                                var parent = FilesystemInterposer.DirectoryGetParent(file, IsInArchive);
+                                if (parent != sourceDirectory)
+                                {
+                                    LE1TLKMergeAllOptionKeys ??= new List<string>();
+                                    var optionName = Path.GetFileName(parent);
+                                    if (!LE1TLKMergeAllOptionKeys.Contains(optionName))
+                                    {
+                                        LE1TLKMergeAllOptionKeys.Add(optionName);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }

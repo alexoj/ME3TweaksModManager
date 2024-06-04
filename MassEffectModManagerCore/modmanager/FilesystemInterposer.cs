@@ -145,7 +145,7 @@ namespace ME3TweaksModManager.modmanager
         }
 
         /// <summary>
-        /// Checks if a directory exists. This method will use archive-style filepaths if isInArchive is specified.
+        /// Returns the parent path of the given path. This method will use archive-style filepaths if isInArchive is specified.
         /// </summary>
         /// <param name="path">Path to find parent for</param>
         /// <param name="isInArchive">Specifies if this is an archive filesystem</param>

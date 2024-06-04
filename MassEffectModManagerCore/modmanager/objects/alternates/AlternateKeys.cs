@@ -51,6 +51,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
         public static readonly string ALTDLC_KEY_DESTDLC = @"ModDestDLC";
         public static readonly string ALTDLC_KEY_REQUIREDRELATIVEFILEPATHS = @"RequiredFileRelativePaths";
         public static readonly string ALTDLC_KEY_REQUIREDFILESIZES = @"RequiredFileSizes";
+        public static readonly string ALTDLC_LE1TLK_OPTIONKEY = @"LE1TLKOptionKey";
 
     }
 }

@@ -48,7 +48,7 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
         private Dictionary<string, TLKMergeCompressedInfo> CompressedInfo = new();
 
         /// <summary>
-        /// List of option keys
+        /// List of option keys (used during serialization and to determine key name)
         /// </summary>
         private List<string> OptionKeys = new(0);
 
@@ -61,9 +61,29 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
         /// Gets the list of filenames of the xmls
         /// </summary>
         /// <returns></returns>
-        public IReadOnlyList<string> GetFileListing()
+        public IReadOnlyList<string> GetFileListing(List<string> enabledOptionsKeys = null)
         {
-            return CompressedInfo.Keys.ToList();
+            if (enabledOptionsKeys == null)
+                return CompressedInfo.Keys.ToList();
+
+            // If option keys are specified we will filter items out that are not marked as enabled
+            List<string> files = new List<string>();
+            foreach (var item in CompressedInfo)
+            {
+                if (item.Value.optionKeyId == OPTIONKEY_NONE)
+                {
+                    files.Add(item.Key);
+                    continue;
+                }
+
+                if (enabledOptionsKeys.Contains(OptionKeys[item.Value.optionKeyId]))
+                {
+                    files.Add(item.Key);
+                    continue;
+                }
+            }
+
+            return files;
         }
 
         /// <summary>

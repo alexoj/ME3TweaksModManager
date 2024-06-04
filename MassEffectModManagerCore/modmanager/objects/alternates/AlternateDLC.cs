@@ -27,10 +27,10 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             OP_ADD_CUSTOMDLC,
             OP_ADD_FOLDERFILES_TO_CUSTOMDLC,
             OP_ADD_MULTILISTFILES_TO_CUSTOMDLC,
-            //// <summary>
-            //// On mod install, an ini file(s) is merged into the DLCs. This is game dependent.
-            //// </summary>
-            //OP_MERGE_INI,
+            /// <summary>
+            /// LE1 ONLY: When the option is enabled, the specified option key in an LE1 TLK merge job is enabled.
+            /// </summary>
+            OP_ENABLE_TLKMERGE_OPTIONKEY,
             OP_NOTHING
         }
 
@@ -67,6 +67,12 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
         /// In-mod path that the AlternateDLCFolder will apply to
         /// </summary>
         public string DestinationDLCFolder { get; private set; }
+        
+        /// <summary>
+        /// Used only for LE1 TLK jobs - the option key to enable
+        /// </summary>
+        public string LE1TLKOptionKey { get; set; }
+
 
         /// <summary>
         /// Used by COND_SIZED_FILE_PRESENT
@@ -218,7 +224,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                 }
             }
 
-            if (Operation != AltDLCOperation.OP_NOTHING)
+            if (Operation != AltDLCOperation.OP_NOTHING && Operation != AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY)
             {
                 int multilistid = -1;
                 if (Operation == AltDLCOperation.OP_ADD_MULTILISTFILES_TO_CUSTOMDLC)
@@ -357,6 +363,20 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                 // Validate multilist dlc
             }
 
+            if (Operation == AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY)
+            {
+                if (properties.TryGetValue(AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY, out string optionKey))
+                {
+                    LE1TLKOptionKey = optionKey; // This cannot be verified until the m3za file is loaded. We will throw an error on load there.
+                }
+                else
+                {
+                    M3Log.Error($@"Alternate DLC ({FriendlyName}) uses operation {AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY}, which requires setting descriptor '{AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY}' to a value that maps to a foldername in the {ModJob.JobHeader.GAME1_EMBEDDED_TLK} job folder.");
+                    LoadFailedReason = $"Alternate DLC ({FriendlyName}) uses operation {AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY}, which requires setting descriptor '{AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY}' to a value that maps to a foldername in the {ModJob.JobHeader.GAME1_EMBEDDED_TLK} job folder.";
+                    return;
+                }
+            }
+
             var dlcReqs = properties.TryGetValue(AlternateKeys.ALTSHARED_KEY_DLCREQUIREMENTS, out string _dlcReqs) ? _dlcReqs.Split(';') : null;
             if (dlcReqs != null)
             {
@@ -480,25 +500,11 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
 
         public override bool IsManual => Condition == AltDLCCondition.COND_MANUAL;
 
-        //public override bool UINotApplicable
-        //{
-        //    get
-        //    {
-        //        if (IsManual)
-        //        {
-        //            return !UIIsSelectable; //SetupInitialSelection() will set this. If it's false, it means this is not applicable, so set UI to reflect that
-        //        }
-        //        else
-        //        {
-        //            return !IsSelected;
-        //        }
-        //    }
-        //}
-
         internal bool HasRelativeFiles()
         {
             if (Operation == AltDLCOperation.INVALID_OPERATION) return false;
             if (Operation == AltDLCOperation.OP_NOTHING) return false;
+            if (Operation == AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY) return false;
             return AlternateDLCFolder != null || MultiListSourceFiles != null;
         }
 
@@ -648,6 +654,11 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                 {AlternateKeys.ALTDLC_KEY_REQUIREDFILESIZES, RequiredSpecificFiles.Values.ToList()}, // List of relative sizes
                 {AlternateKeys.ALTSHARED_KEY_DLCREQUIREMENTS, DLCRequirementsForManual},
             };
+
+            if (mod.Game == MEGame.LE1)
+            {
+                parameterDictionary.Add(AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY, LE1TLKOptionKey);
+            }
 
             BuildSharedParameterMap(mod, parameterDictionary);
             ParameterMap.ReplaceAll(MDParameter.MapIntoParameterMap(parameterDictionary));
