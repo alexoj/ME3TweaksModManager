@@ -54,6 +54,9 @@ namespace ME3TweaksModManager.modmanager.loaders
         /// </summary>
         public static event EventHandler ModsReloaded;
 
+        private static bool LoadedOT;
+        private static bool LoadedLE;
+
         public static string GetModDirectoryForGame(MEGame game)
         {
             if (game == MEGame.ME1) return GetME1ModsDirectory();
@@ -227,6 +230,12 @@ namespace ME3TweaksModManager.modmanager.loaders
 
                 SuppressFilterMods = false;
                 FilterMods();
+
+                if (Settings.GenerationSettingOT && !LoadedOT)
+                {
+                    LoadedOT = true;
+                    LoadMods(gamesToLoad: new[] { MEGame.ME1, MEGame.ME2, MEGame.ME3 });
+                }
             }
             else if (e.PropertyName == nameof(Settings.GenerationSettingLE))
             {
@@ -237,6 +246,12 @@ namespace ME3TweaksModManager.modmanager.loaders
                 }
                 SuppressFilterMods = false;
                 FilterMods();
+
+                if (Settings.GenerationSettingLE && !LoadedLE)
+                {
+                    LoadedLE = true;
+                    LoadMods(gamesToLoad: new[] { MEGame.LE1, MEGame.LE2, MEGame.LE3, MEGame.LELauncher });
+                }
             }
         }
 
@@ -378,6 +393,8 @@ namespace ME3TweaksModManager.modmanager.loaders
 
                     if (Settings.GenerationSettingOT)
                     {
+                        if (gamesToLoad == null)
+                            LoadedOT = true;
                         if (gamesToLoad == null || gamesToLoad.Contains(MEGame.ME1))
                             modDescsToLoad.AddRange(me1modDescsToLoad);
                         if (gamesToLoad == null || gamesToLoad.Contains(MEGame.ME2))
@@ -385,9 +402,15 @@ namespace ME3TweaksModManager.modmanager.loaders
                         if (gamesToLoad == null || gamesToLoad.Contains(MEGame.ME3))
                             modDescsToLoad.AddRange(me3modDescsToLoad);
                     }
+                    else
+                    {
+                        LoadedOT = false;
+                    }
 
                     if (Settings.GenerationSettingLE)
                     {
+                        if (gamesToLoad == null)
+                            LoadedLE = true;
                         if (gamesToLoad == null || gamesToLoad.Contains(MEGame.LE1))
                             modDescsToLoad.AddRange(le1modDescsToLoad);
                         if (gamesToLoad == null || gamesToLoad.Contains(MEGame.LE2))
@@ -396,6 +419,10 @@ namespace ME3TweaksModManager.modmanager.loaders
                             modDescsToLoad.AddRange(le3modDescsToLoad);
                         if (gamesToLoad == null || gamesToLoad.Contains(MEGame.LELauncher))
                             modDescsToLoad.AddRange(leLaunchermodDescsToLoad);
+                    }
+                    else
+                    {
+                        LoadedLE = false;
                     }
                 }
 
