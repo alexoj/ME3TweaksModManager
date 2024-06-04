@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Forms.Design;
 using LegendaryExplorerCore.Compression;
 using LegendaryExplorerCore.Helpers;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.objects.mod;
-using Microsoft.AppCenter.Ingestion.Models;
 
 namespace ME3TweaksModManager.modmanager.objects.tlk
 {
-    public readonly record struct TLKMergeCompressedInfo(int dataStartOffset, int decompressedSize, int compressedSize);
+    // V2: Add optionKeyId
+    public readonly record struct TLKMergeCompressedInfo(int dataStartOffset, int decompressedSize, int compressedSize, int optionKeyId);
 
     /// <summary>
     /// Container for LZMA compressed string data, used for TLK merge feature in ME1/LE1
@@ -24,7 +17,8 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
     {
         private const string COMPRESSED_MAGIC = @"CTMD";
 
-        private const byte COMPRESSED_VERSION = 0x1;
+        private const byte HIGHEST_SUPPORTED_COMPRESSED_VERSION = 0x2;
+        private const byte OPTIONKEY_NONE = 0xFF;
 
         // Compressed data is LZMA
         // Data is stored in this format:
@@ -52,6 +46,11 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
         /// The header information for the archive
         /// </summary>
         private Dictionary<string, TLKMergeCompressedInfo> CompressedInfo = new();
+
+        /// <summary>
+        /// List of option keys
+        /// </summary>
+        private List<string> OptionKeys = new(0);
 
         /// <summary>
         /// The compressed data block, read from the compressed file
@@ -148,10 +147,16 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
 
             if (streamData.ReadStringASCII(4) != COMPRESSED_MAGIC)
             {
-                throw new Exception(@"CompressedTLKMergeFile has invalid magic number!");
+                throw new Exception("CompressedTLKMergeFile has invalid magic number!");
             }
 
             c.Version = streamData.ReadByte();
+
+            if (c.Version > HIGHEST_SUPPORTED_COMPRESSED_VERSION)
+            {
+                // We do not support this version
+                throw new Exception($"This build of Mod Manager cannot read versions of M3ZA files higher than {HIGHEST_SUPPORTED_COMPRESSED_VERSION}, the version being opened is {c.Version}");
+            }
 
             // The header is compressed - we must decompress the header to read it
             var decompSize = streamData.ReadUInt32();
@@ -162,8 +167,27 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
             for (int i = 0; i < fileCount; i++)
             {
                 var name = header.ReadStringUnicodeNull();
-                var info = new TLKMergeCompressedInfo(header.ReadInt32(), header.ReadInt32(), header.ReadInt32());
+                var dataStartOffset = header.ReadInt32();
+                var decompressedSize = header.ReadInt32();
+                var compressedSize = header.ReadInt32();
+                var optionKeyId = OPTIONKEY_NONE;
+                if (c.Version >= 2)
+                {
+                    optionKeyId = (byte)header.ReadByte();
+                }
+
+                var info = new TLKMergeCompressedInfo(dataStartOffset, decompressedSize, compressedSize, optionKeyId);
                 c.CompressedInfo[name] = info;
+            }
+
+            // Read option key names
+            if (c.Version >= 2)
+            {
+                int num = header.ReadByte();
+                for (int i = 0; i < num; i++)
+                {
+                    c.OptionKeys.Add(header.ReadStringUnicodeNull());
+                }
             }
 
             var dataBlockSize = streamData.ReadInt32();
@@ -172,6 +196,8 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
                 c.LoadedCompressedData = new byte[dataBlockSize];
                 streamData.Read(c.LoadedCompressedData, 0, dataBlockSize);
             }
+
+
 
             return c;
         }
@@ -182,7 +208,7 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
         /// </summary>
         /// <param name="inputDirectory"></param>
         /// <returns></returns>
-        public static MemoryStream CreateCompressedTlkMergeFile(string inputDirectory, Action<uint, uint> compressingCallback = null)
+        public static MemoryStream CreateCompressedTlkMergeFile(Mod mod, string inputDirectory, Action<uint, uint> compressingCallback = null)
         {
             MemoryStream ms = new MemoryStream();
 
@@ -198,12 +224,17 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
             // Contains position for start of offset data (long long)
             Dictionary<string, long> headerOffsetMap = new Dictionary<string, long>();
 
-            var files = Directory.GetFiles(inputDirectory, @"*.xml", SearchOption.TopDirectoryOnly);
+            var searchOption = mod.ModDescTargetVersion >= 9 ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
+            var files = Directory.GetFiles(inputDirectory, @"*.xml", searchOption);
+            List<string> optionKeys = new List<string>();
+
+
 
             // Write out the header.
             ms.WriteStringASCII(COMPRESSED_MAGIC); // Magic; Compressed Tlk Merge Data
-            ms.WriteByte(COMPRESSED_VERSION); // For changing parser in the future.
-
+            var version = GetM3ZAVersionForModDesc(mod.ModDescTargetVersion);
+            ms.WriteByte(version); // For changing parser in the future.
 
             // Compressed header since there might be a LOT of string data (3000+)
 
@@ -217,6 +248,19 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
                 header.WriteUInt32(0); // Data offset
                 header.WriteInt32(0); // Decompressed Data Size
                 header.WriteInt32(0); // Compressed Data Size
+                if (version >= 2)
+                {
+                    header.WriteByte(GetOptionKeyIndex(optionKeys, inputDirectory, f));
+                }
+            }
+
+            if (version >= 2)
+            {
+                header.WriteByte((byte)optionKeys.Count);
+                for (int i = 0; i < optionKeys.Count; i++)
+                {
+                    header.WriteStringUnicodeNull(optionKeys[i]);
+                }
             }
 
 
@@ -258,7 +302,53 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
             compressedData.Position = 0;
             compressedData.CopyTo(ms);
 
+#if DEBUG
+            // Verify back.
+            var pos = ms.Position;
+            ms.Position = 0;
+            var cmi = ReadCompressedTlkMergeFile(ms, true);
+            ms.Position = pos;
+#endif
+
             return ms;
+        }
+
+        /// <summary>
+        /// Returns the option key index for the given filepath out of the list of option keys. Adds a key if needed
+        /// </summary>
+        /// <param name="optionKeys"></param>
+        /// <param name="rootPath"></param>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        private static byte GetOptionKeyIndex(List<string> optionKeys, string rootPath, string filePath)
+        {
+            var containingFolder = Directory.GetParent(filePath);
+            if (rootPath == containingFolder.FullName)
+                return OPTIONKEY_NONE;
+
+            var idx = optionKeys.IndexOf(containingFolder.Name);
+            if (idx == -1)
+            {
+                idx = optionKeys.Count;
+                optionKeys.Add(containingFolder.Name);
+            }
+
+            return (byte)idx;
+        }
+
+        /// <summary>
+        /// Returns the M3ZA version used for a various moddesc versions
+        /// </summary>
+        /// <param name="moddescVersion"></param>
+        /// <returns></returns>
+        private static byte GetM3ZAVersionForModDesc(double moddescVersion)
+        {
+
+            if (moddescVersion < 9.0)
+                return 1;
+
+            // Update this method if we change M3ZA parser!
+            return HIGHEST_SUPPORTED_COMPRESSED_VERSION;
         }
 
         public TLKMergeCompressedInfo GetFileInfo(string file)

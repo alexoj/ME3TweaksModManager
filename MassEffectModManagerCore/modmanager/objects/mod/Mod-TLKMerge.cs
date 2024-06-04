@@ -38,6 +38,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 filenames = compressTlkMergeData.GetFileListing();
             }
 
+            // Build map of files based on items in the m3za file
             foreach (var tlkM in filenames)
             {
                 var packageName = tlkM.Substring(0, tlkM.IndexOf('.'));
