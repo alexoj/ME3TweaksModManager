@@ -199,7 +199,7 @@
     <system:String x:Key="string_gameExecutable">Game executable</system:String>
     <system:String x:Key="string_interp_dialogCannotInstallBinkWhileGameRunning">Cannot modify bink files while {0} is running.</system:String>
     <!-- 0 = Name of game (Mass Effect (2/3)) -->
-    <system:String xml:space="preserve" x:Key="string_tooltip_launchCurrentlySelectedTarget">Launch the currently selected target.&#10;If this is an Origin copy, the game may reboot to the Origin target</system:String>
+    <system:String xml:space="preserve" x:Key="string_tooltip_launchCurrentlySelectedTarget">Launch the currently selected target.&#10;If this is an EA App copy, the game may reboot to the EA App target</system:String>
     <system:String x:Key="string_tooltip_applyThisModToTheGame">Apply this mod to the game</system:String>
     <system:String x:Key="string_tooltip_currentTarget">Current modding target</system:String>
     <system:String x:Key="string_tooltip_filterME1">Click to toggle showing mods for Mass Effect</system:String>
@@ -323,8 +323,8 @@
     <system:String xml:space="preserve" x:Key="string_tooltip_autoInjectCustomKeybinds">Automatically inject a custom me3-BioInput.xml file if available in the keybindsoverride directory. Define custom keybinds in the Custom Keybinds Injector in the Tools menu. Do not select this option if you use a controller.</system:String>
     <system:String  x:Key="string_customKeybindsInjectorMenuItem">Custom Keybinds Injector (ME3)</system:String>
     <system:String  x:Key="string_tooltip_installsCustomKeybindsOfYourDesignIntoTheGame">Installs Custom Keybinds of your design into the game</system:String>
-    <system:String  x:Key="string_originIngameOverlayDisabler">Origin in-game overlay disabler</system:String>
-    <system:String  x:Key="string_tooltip_oigDisabler">Installs a file that forcibly disables Origin in-game overlay</system:String>
+    <system:String  x:Key="string_originIngameOverlayDisabler">EA App in-game overlay disabler</system:String>
+    <system:String  x:Key="string_tooltip_oigDisabler">Installs a file that forcibly disables EA App in-game overlay</system:String>
     <system:String x:Key="string_selectMod">Select mod</system:String>
     <!-- When no mod is selected -->
     <system:String x:Key="string_noTarget">No target</system:String>
@@ -361,8 +361,8 @@
     <system:String x:Key="string_interp_allInstallableFiles">All installable files for {0}</system:String>
     <!-- 0={mod name} -->
     <system:String x:Key="string_description_allInstallableFiles">The following files are what this mod can potentially install into the game. Note that some of them may only be installed if certain options are chosen.</system:String>
-    <system:String x:Key="string_setting_launchThroughOrigin">Launch Origin-based games through Origin</system:String>
-    <system:String x:Key="string_setting_tooltip_launchThroughOrigin">Launches Origin-based games through the Origin client, ensuring licensing and playtime is tracked. This only affects ME1/ME2 Origin versions, as ME3 requires it</system:String>
+    <system:String x:Key="string_setting_launchThroughOrigin">Launch EA App-based games through EA App</system:String>
+    <system:String x:Key="string_setting_tooltip_launchThroughOrigin">Launches EA App-based games through the EA App client, ensuring licensing and playtime is tracked. This only affects ME1/ME2 EA App versions, as ME3 requires it</system:String>
     <system:String x:Key="string_loadingTargets">Loading targets</system:String>
     <!-- Shown when app is booting up and game targets are being inspected -->
     <system:String x:Key="string_configureNxmHandlerOnBoot">Configure nxm:// handler on boot</system:String>
@@ -2338,7 +2338,7 @@
     <system:String x:Key="string_collectingME3SessionLog">Collecting ME3 session log</system:String>
     <system:String x:Key="string_gettingTextureInfo">Getting texture mod installation info</system:String>
 
-    <!-- Origin in-game overlay disabler-->
+    <!-- EA App in-game overlay disabler-->
     <system:String x:Key="string_overlayDisablerInstalled">Overlay disabler installed</system:String>
     <system:String x:Key="string_uninstallDisabler">Uninstall disabler</system:String>
     <system:String x:Key="string_otherD3d9dllInstalledOverlayDisabled">Other d3d9.dll installed, overlay disabled</system:String>
@@ -2346,10 +2346,10 @@
     <system:String x:Key="string_overlayDisablerNotInstalled">Overlay disabler not installed</system:String>
     <system:String x:Key="string_installDisabler">Install disabler</system:String>
     <system:String x:Key="string_noTargetSelected">No target selected</system:String>
-    <system:String x:Key="string_noOriginBasedGameTargets">No Origin based game targets</system:String>
-    <system:String x:Key="string_origin">Origin</system:String>
-    <system:String xml:space="preserve" x:Key="string_oigPanelHeader">Origin in-game overlay is known to cause significant performance loss in the Mass Effect games. While it can be turned off in the Origin settings, this setting does not work for the Steam version of Mass Effect 3. You can install a proxy d3d9.dll that will disable forcibly disable the overlay per game target.&#10;&#10;Using other d3d9 proxies, such as Reshade, will also disable the overlay.</system:String>
-    <system:String x:Key="string_noOriginBasedTargetsInstalledForThisGame">No Origin-based targets are installed for this game</system:String>
+    <system:String x:Key="string_noOriginBasedGameTargets">No EA App based game targets</system:String>
+    <system:String x:Key="string_origin">EA App</system:String>
+    <system:String xml:space="preserve" x:Key="string_oigPanelHeader">EA App in-game overlay is known to cause significant performance loss in the Mass Effect games. While it can be turned off in the EA App settings, this setting does not work for the Steam version of Mass Effect 3. You can install a proxy d3d9.dll that will disable forcibly disable the overlay per game target.&#10;&#10;Using other d3d9 proxies, such as Reshade, will also disable the overlay.</system:String>
+    <system:String x:Key="string_noOriginBasedTargetsInstalledForThisGame">No EA App-based targets are installed for this game</system:String>
 
     <!-- Moddescini Editor-->
     <system:String x:Key="string_toolUnderDevelopment">This tool is in development and may or may not work. Use at your own risk!</system:String>
