@@ -13,6 +13,7 @@ using ME3TweaksModManager.modmanager.memoryanalyzer;
 using ME3TweaksModManager.modmanager.nexusmodsintegration;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.batch;
+using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.objects.mod.texture;
 using ME3TweaksModManager.modmanager.usercontrols.moddescinieditor;
 using ME3TweaksModManager.modmanager.windows;
@@ -532,6 +533,14 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         public void RefreshContentsOnDisplay()
         {
             RefreshContentsOnVisible = true;
+        }
+
+        private void DownloadMod_Click(object sender, MouseButtonEventArgs e)
+        {
+            if (SelectedUnavailableModLink != Mod.DefaultWebsite)
+            {
+                M3Utilities.OpenWebpage(SelectedUnavailableModLink);
+            }
         }
     }
 }

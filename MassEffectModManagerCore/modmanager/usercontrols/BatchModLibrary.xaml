@@ -197,6 +197,7 @@
                                             <TextBlock
                                                 Text="{Binding Mod.ModVersionString}"
                                                 FontStyle="Italic"
+                                                Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
                                                 Padding="2,0" />
                                         </Border>
                                     </StackPanel>
@@ -228,7 +229,25 @@
                                         <TextBlock
                                             Text="{Binding OptionsRecordedString}"
                                             FontStyle="Italic"
-                                            Padding="2,0" />
+                                            Padding="2,0">
+                                            <TextBlock.Style>
+                                                <Style
+                                                    TargetType="TextBlock">
+                                                    <Setter
+                                                        Property="Foreground"
+                                                        Value="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                                                    <Style.Triggers>
+                                                        <DataTrigger
+                                                            Binding="{Binding ChosenOptionsDesync}"
+                                                            Value="True">
+                                                            <Setter
+                                                                Property="Foreground"
+                                                                Value="White" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
                                         <Border.Style>
                                             <Style
                                                 TargetType="Border">
@@ -280,20 +299,19 @@
                         VerticalAlignment="Bottom"
                         Constraint="Width"
                         DockPanel.Dock="Bottom">
-                        <TextBlock
-                            ToolTip="{DynamicResource string_tooltip_bml_downloadMod}"
-                            ui:Clipper.WidthFraction="1"
-                            ui:Clipper.HeightFraction="0"
-                            Name="VisitWebsitePanel"
-                            HorizontalAlignment="Center"
-                            VerticalAlignment="Bottom">
-              <Hyperlink
-                                RequestNavigate="RequestNavigate"
-                                NavigateUri="{Binding SelectedUnavailableModLink, TargetNullValue='https://example.com'}">
-                <TextBlock
-                                    Text="{DynamicResource string_downloadMod}" />
-              </Hyperlink>
-            </TextBlock>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Background="Transparent" Cursor="Hand" MouseDown="DownloadMod_Click" ui:Clipper.WidthFraction="1" ui:Clipper.HeightFraction="0"                                 Name="VisitWebsitePanel">
+                            <fa5:ImageAwesome Icon="Solid_Download" Height="12" Margin="4,0" Foreground="{DynamicResource {x:Static adonisUi:Brushes.HyperlinkBrush}}"/>
+                            <TextBlock
+                                ToolTip="{DynamicResource string_tooltip_bml_downloadMod}"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Bottom">
+                              <Hyperlink RequestNavigate="RequestNavigate"
+                                                NavigateUri="{Binding SelectedUnavailableModLink, TargetNullValue='https://example.com'}">
+                                <TextBlock Text="{DynamicResource string_downloadMod}" />
+                              </Hyperlink>
+                            </TextBlock>
+                        </StackPanel>
+
                     </ui:Clipper>
                 </Grid>
             </DockPanel>
