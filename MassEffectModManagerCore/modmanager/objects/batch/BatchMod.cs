@@ -97,12 +97,17 @@ namespace ME3TweaksModManager.modmanager.objects.batch
         {
             get
             {
-                if (Mod != null && Mod.InstallationJobs.Sum(x => x.GetAllAlternates().Count) == 0) return M3L.GetString(M3L.string_batchModHasNoConfigOptionsUIText);
+                if (IsStandalone) return M3L.GetString(M3L.string_batchModHasNoConfigOptionsUIText);
                 if (!HasChosenOptions) return M3L.GetString(M3L.string_notConfigured);
                 if (ChosenOptionsDesync) return M3L.GetString(M3L.string_reconfigurationRequired);
                 return M3L.GetString(M3L.string_interp_configuredTimestamp, ConfigurationTime.ToString(@"d"));
             }
         }
+
+        /// <summary>
+        /// If a content mod has no configurable options
+        /// </summary>
+        public bool IsStandalone => Mod != null && Mod.InstallationJobs.Sum(x => x.GetAllAlternates().Count) == 0;
 
         /// <summary>
         /// The UI bound tooltip string to show if options were chosen or not
@@ -154,7 +159,7 @@ namespace ME3TweaksModManager.modmanager.objects.batch
                 {
                     Mod = m;
                     var localHash = MUtilities.CalculateHash(Mod.ModDescPath);
-                    ChosenOptionsDesync = Hash != null && localHash != Hash;
+                    ChosenOptionsDesync = Hash != null && localHash != Hash && !IsStandalone;
                     //if (ChosenOptionsDesync)
                     //{
                     //    Debugger.Break();
