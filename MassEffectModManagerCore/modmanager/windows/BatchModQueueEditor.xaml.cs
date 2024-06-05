@@ -102,6 +102,15 @@ namespace ME3TweaksModManager.modmanager.windows
             SortByMountPriorityCommand = new GenericCommand(SortByMountPriority);
         }
 
+        private void LeftSideMod_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            // Double click to install feature.
+            // Code is written in nested if statement to make breakpoint easier.
+            if (sender is FrameworkElement fwe && fwe.DataContext is Mod)
+            {
+                AddModToInstallGroup();
+            }
+        }
         private void SortByMountPriority()
         {
             VisibleFilteredMods.SortDescending(x => x.EXP_GetModMountPriority());

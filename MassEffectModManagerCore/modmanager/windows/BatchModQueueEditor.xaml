@@ -140,12 +140,12 @@
                                     <Setter
                                     Property="HorizontalContentAlignment"
                                     Value="Stretch" />
+                                    <EventSetter Event="MouseDoubleClick" Handler="LeftSideMod_MouseDown"/>
                                 </Style>
                             </ListBox.ItemContainerStyle>
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
-                                    <StackPanel
-                                    Orientation="Horizontal">
+                                    <StackPanel Orientation="Horizontal">
                                         <Image
                                         Source="{Binding Game, Converter={StaticResource GameToImageIconConverter}, ConverterParameter=16}"
                                         Width="16"
