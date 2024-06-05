@@ -13,8 +13,14 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 using Flurl.Http;
+using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Packages;
+using ME3TweaksCore.GameFilesystem;
+using ME3TweaksCore.Helpers;
+using ME3TweaksCore.Services.Shared.BasegameFileIdentification;
 using ME3TweaksModManager.modmanager.diagnostics;
+using ME3TweaksModManager.modmanager.objects.gametarget;
+using ME3TweaksModManager.modmanager.objects.mod.merge;
 using SevenZip;
 
 namespace ME3TweaksModManager.modmanager.helpers
@@ -1346,6 +1352,62 @@ namespace ME3TweaksModManager.modmanager.helpers
                 Serilog.Log.Error(@"  At line {0} column {1} in {2}: {3} {4}{3}{5}  ",
                     stackFrame.GetFileLineNumber(), stackFrame.GetFileColumnNumber(),
                     stackFrame.GetMethod(), Environment.NewLine, stackFrame.GetFileName());
+            }
+        }
+    }
+
+    public static class GameTargetExtensions
+    {
+        /// <summary>
+        /// Returns a GameState object populated with basegame-only hashes and metacmm files about a target.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        public static GameState GetInfoRequiredToDetermineIfInstalled(this GameTarget target)
+        {
+            try
+            {
+                // Collect merge target hashes. This will not be good for performance.
+                var mergeTargets = MergeModLoader.GetAllowedMergeTargetFilenames(target.Game, true);
+                var currentHashes = new CaseInsensitiveDictionary<string>();
+                foreach (var f in mergeTargets)
+                {
+                    var targetFile = Path.Combine(target.GetCookedPath(), f);
+                    if (File.Exists(targetFile))
+                    {
+                        var hash = MUtilities.CalculateHash(targetFile);
+                        currentHashes[Path.GetRelativePath(target.TargetPath, targetFile)] = hash;
+                    }
+                }
+
+                // Collect MetaCMM data from DLC folders.
+                var metaCMMs = target.GetMetaMappedInstalledDLC(false);
+
+                // Collect known tracked hashes for merge targets.
+                var trackedHashInfo = BasegameFileIdentificationService.GetEntriesForFiles(target.Game, currentHashes.Keys.ToList());
+
+                var currentKnownHashes = new CaseInsensitiveDictionary<BasegameFileRecord>();
+                foreach (var tracked in trackedHashInfo)
+                {
+                    foreach (var trackedInstance in tracked.Value)
+                    {
+                        if (trackedInstance.hash == currentHashes[tracked.Key])
+                        {
+                            currentKnownHashes[tracked.Key] = trackedInstance; // This hash is the one we want to use
+                        }
+                    }
+                }
+                return new GameState()
+                {
+                    Target = target,
+                    BasegameHashes = currentKnownHashes,
+                    DLCMetaCMMs = metaCMMs
+                };
+            }
+            catch (Exception ex)
+            {
+                M3Log.Exception(ex, $@"Error getting gamestate for target {target.TargetPath}:");
+                return GameState.Default;
             }
         }
     }

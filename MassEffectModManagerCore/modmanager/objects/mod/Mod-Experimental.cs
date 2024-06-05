@@ -2,6 +2,8 @@
 using LegendaryExplorerCore.GameFilesystem;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCore.GameFilesystem;
+using ME3TweaksCore.Services.Shared.BasegameFileIdentification;
+using ME3TweaksModManager.modmanager.objects.gametarget;
 
 namespace ME3TweaksModManager.modmanager.objects.mod
 {
@@ -55,19 +57,32 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         }
 
         public bool IsInstalledToTarget { get; set; }
-        
+
         /// <summary>
         /// Attempts to determine if a mod is installed to the given target. This is not reliable.
         /// </summary>
         /// <param name="target"></param>
-        public void DetermineIfInstalled(GameTarget target, CaseInsensitiveDictionary<MetaCMM> metaCMMs)
+        public void DetermineIfInstalled(GameState state)
         {
-            foreach (var metaCMM in metaCMMs)
+            if (!Settings.ShowInstalledModsInLibrary)
+                return;
+
+            foreach (var metaCMM in state.DLCMetaCMMs)
             {
                 if (metaCMM.Value == null)
                     continue;
                 if (!string.IsNullOrWhiteSpace(metaCMM.Value.ModdescSourceHash) && metaCMM.Value.ModdescSourceHash == ModDescHash)
                 {
+                    IsInstalledToTarget = true;
+                    return;
+                }
+            }
+
+            foreach (var file in state.BasegameHashes)
+            {
+                if (file.Value.moddeschashes.Any(x => x == ModDescHash))
+                {
+                    // At least one merge file was composed of this moddesc hash.
                     IsInstalledToTarget = true;
                     return;
                 }

@@ -2,6 +2,7 @@
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Packages.CloningImportingAndRelinking;
+using ME3TweaksCore.Objects;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects.mod.merge.v1;
 
@@ -83,8 +84,8 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         /// <summary>
         /// Gets the list of allowed files that a mergemod can target for a game.
         /// </summary>
-        /// <returns>List of filanmes (with extensions). Startup may have _INT on the end!</returns>
-        public static List<string> GetAllowedMergeTargetFilenames(MEGame game)
+        /// <returns>List of filenames (with extensions). Startup may have _INT on the end!</returns>
+        public static List<string> GetAllowedMergeTargetFilenames(MEGame game, bool withAllLocalizationVariations = false)
         {
             var safeFiles = EntryImporter.FilesSafeToImportFrom(game).ToList();
             if (game == MEGame.ME1)
@@ -95,6 +96,24 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
             {
                 safeFiles.Add(@"EntryMenu.pcc"); // ME2+
             }
+
+            // Game3 doesn't use localized startup files at all
+            if (!game.IsGame3() && withAllLocalizationVariations)
+            {
+                var locList = new List<string>();
+                foreach (var f in safeFiles)
+                {
+                    var baseFile = f.StripUnrealLocalization();
+                    locList.Add(baseFile);
+                    foreach (var lang in GameLanguage.GetLanguagesForGame(game))
+                    {
+                        locList.Add(baseFile.SetUnrealLocalization(game, lang.Localization));
+                    }
+                }
+
+                return locList;
+            }
+
             return safeFiles;
         }
 
@@ -125,7 +144,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
                     return mdVer >= 9.0 ? 2 : 1;
                 }
             }
-         
+
             return AskUserForVersion(window);
         }
 

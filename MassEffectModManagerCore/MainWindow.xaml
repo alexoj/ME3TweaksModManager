@@ -1432,6 +1432,8 @@
                     <MenuItem
                         Header="Beta setting: Show mod installation status in library"
                         ToolTip="WARNING: THIS WILL NOT BE RELIABLE FOR ALL MODS"
+                        IsCheckable="True"
+                        StaysOpenOnClick="True"
                         IsChecked="{Binding Path=(modmanager:Settings.ShowInstalledModsInLibrary)}" />
                 </MenuItem>
                 <MenuItem
@@ -1445,6 +1447,10 @@
                         Header="{DynamicResource string_reloadSelectedMod}"
                         Click="RouteDebugCall"
                         Name="ReloadSelectedMod_MenuItem" />
+                    <MenuItem
+                        Header="Run DetermineIfInstalled"
+                        Click="RouteDebugCall"
+                        Name="DebugDetermineIfInstalled_MenuItem" />
                     <MenuItem
                         Header="{DynamicResource string_debugPrintAllReferencedFiles}"
                         Name="DebugPrintReferencedFiles_MenuItem"

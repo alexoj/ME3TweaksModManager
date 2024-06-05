@@ -63,7 +63,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         /// <param name="loadedFiles"></param>
         /// <param name="associatedMod"></param>
         /// <param name="mergeWeightDelegate">Callback to submit completed weight for progress tracking</param>
-        /// <param name="addTrackedFileDelegate">Callback to submit a new text string to display</param>
+        /// <param name="addTrackedFileDelegate">Callback to submit a new text string to display in BasefileFileIdentificationService</param>
         /// <exception cref="Exception"></exception>
         public void ApplyChanges(GameTarget gameTarget, CaseInsensitiveDictionary<string> loadedFiles, Mod associatedMod, Action<int> mergeWeightDelegate, CaseInsensitiveConcurrentDictionary<string> originalFileMD5Map, Action<string, string> addTrackedFileDelegate = null)
         {

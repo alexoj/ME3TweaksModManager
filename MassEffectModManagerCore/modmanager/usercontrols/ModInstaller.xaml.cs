@@ -14,6 +14,7 @@ using LegendaryExplorerCore.Coalesced.Config;
 using LegendaryExplorerCore.Compression;
 using LegendaryExplorerCore.GameFilesystem;
 using LegendaryExplorerCore.Gammtek.Extensions;
+using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Packages;
@@ -38,6 +39,7 @@ using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.memoryanalyzer;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.alternates;
+using ME3TweaksModManager.modmanager.objects.gametarget;
 using ME3TweaksModManager.modmanager.objects.installer;
 using ME3TweaksModManager.modmanager.objects.tlk;
 using ME3TweaksModManager.modmanager.usercontrols.interfaces;
@@ -485,7 +487,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         var destFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"BioWare", @"Mass Effect", @"Config", originalMapping.Key);
                         if (InstallOptionsPackage.ModBeingInstalled.IsInArchive)
                         {
-                            int archiveIndex = InstallOptionsPackage.ModBeingInstalled.Archive.ArchiveFileNames.IndexOf(sourceFile, StringComparer.InvariantCultureIgnoreCase);
+                            int archiveIndex = Extensions.IndexOf(InstallOptionsPackage.ModBeingInstalled.Archive.ArchiveFileNames, sourceFile, StringComparer.InvariantCultureIgnoreCase);
                             fullPathMappingArchive[archiveIndex] = destFile; //used for extraction indexing
                             if (archiveIndex == -1)
                             {
@@ -519,7 +521,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                         if (InstallOptionsPackage.ModBeingInstalled.IsInArchive)
                         {
-                            int archiveIndex = InstallOptionsPackage.ModBeingInstalled.Archive.ArchiveFileNames.IndexOf(sourceFile, StringComparer.InvariantCultureIgnoreCase);
+                            int archiveIndex = Extensions.IndexOf(InstallOptionsPackage.ModBeingInstalled.Archive.ArchiveFileNames, sourceFile, StringComparer.InvariantCultureIgnoreCase);
                             fullPathMappingArchive[archiveIndex] = destFile; //used for extraction indexing
                             if (archiveIndex == -1)
                             {
@@ -556,7 +558,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         {
                             sourceFile = FilesystemInterposer.PathCombine(InstallOptionsPackage.ModBeingInstalled.IsInArchive, InstallOptionsPackage.ModBeingInstalled.ModPath, sfarJob.Job.JobDirectory, fileToInstall.Value.FilePath);
                         }
-                        int archiveIndex = InstallOptionsPackage.ModBeingInstalled.Archive.ArchiveFileNames.IndexOf(sourceFile, StringComparer.InvariantCultureIgnoreCase);
+                        int archiveIndex = Extensions.IndexOf(InstallOptionsPackage.ModBeingInstalled.Archive.ArchiveFileNames, sourceFile, StringComparer.InvariantCultureIgnoreCase);
                         if (archiveIndex == -1)
                         {
                             M3Log.Error($@"Archive Index is -1 for file {sourceFile}. This will probably throw an exception!");
@@ -660,7 +662,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             }
 
             var basegameFilesInstalled = new List<string>();
-            var basegameCloudDBUpdates = new List<BasegameFileRecord>();
+            var basegameIdentificationServiceRecords = new List<BasegameFileRecord>();
             void FileInstalledIntoSFARCallback(Dictionary<string, Mod.InstallSourceFile> sfarMapping, string targetPath)
             {
                 numdone++;
@@ -914,11 +916,17 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         var mm = new M3BasegameFileRecord(file, (int)new FileInfo(file).Length, InstallOptionsPackage.InstallTarget, InstallOptionsPackage.ModBeingInstalled);
                         var existingInfo = BasegameFileIdentificationService.GetBasegameFileSource(InstallOptionsPackage.InstallTarget, file, originalmd5);
                         var newTextToAppend = $@"{InstallOptionsPackage.ModBeingInstalled.ModName} {InstallOptionsPackage.ModBeingInstalled.ModVersionString}";
-                        if (existingInfo != null && !existingInfo.source.Contains(newTextToAppend))
+                        mm.moddeschashes ??= new();
+                        if (existingInfo != null)
                         {
-                            mm.source = $@"{existingInfo.source} + {newTextToAppend}";
+                            if (!existingInfo.source.Contains(newTextToAppend))
+                            {
+                                mm.source = $@"{existingInfo.source} + {newTextToAppend}";
+                            }
+                            mm.moddeschashes.AddRange(existingInfo.moddeschashes);
                         }
-                        basegameCloudDBUpdates.Add(mm);
+                        mm.moddeschashes.Add(InstallOptionsPackage.ModBeingInstalled.ModDescHash);
+                        basegameIdentificationServiceRecords.Add(mm);
                     }
                 }
             }
@@ -983,7 +991,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                             try
                             {
                                 var tlkXmlFile = tlkFileMap.Value[i];
-                                InstallOptionsPackage.ModBeingInstalled.InstallTLKMerge(tlkXmlFile, compressedTlkData, gameMap, i == tlkFileMap.Value.Count - 1, cache, InstallOptionsPackage.InstallTarget, InstallOptionsPackage.ModBeingInstalled, x => basegameCloudDBUpdates.Add(x));
+                                InstallOptionsPackage.ModBeingInstalled.InstallTLKMerge(tlkXmlFile, compressedTlkData, gameMap, i == tlkFileMap.Value.Count - 1, cache, InstallOptionsPackage.InstallTarget, InstallOptionsPackage.ModBeingInstalled, x => basegameIdentificationServiceRecords.Add(x));
                             }
                             catch (Exception e)
                             {
@@ -1107,7 +1115,16 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             {
                 e.Result = ModInstallCompletedStatus.INSTALL_SUCCESSFUL;
                 Action = M3L.GetString(M3L.string_installed);
-                InstallOptionsPackage.ModBeingInstalled.DetermineIfInstalled(InstallOptionsPackage.InstallTarget, installedMetaCmms);
+                if (Settings.ShowInstalledModsInLibrary)
+                {
+                    var gs = new GameState()
+                    {
+                        Target = InstallOptionsPackage.InstallTarget,
+                        DLCMetaCMMs = installedMetaCmms,
+                        BasegameHashes = basegameIdentificationServiceRecords.ToCaseInsensitiveDictionary(x => x.file, x => x)
+                    };
+                    InstallOptionsPackage.ModBeingInstalled.DetermineIfInstalled(gs);
+                }
             }
             else
             {
@@ -1119,12 +1136,12 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             sw.Stop();
             Debug.WriteLine($@"Installer took {sw.ElapsedMilliseconds}ms");
             //Submit basegame tracking in async way
-            if (basegameFilesInstalled.Any() || basegameCloudDBUpdates.Any())
+            if (basegameFilesInstalled.Any() || basegameIdentificationServiceRecords.Any())
             {
                 try
                 {
-                    var files = new List<BasegameFileRecord>(basegameFilesInstalled.Count + basegameCloudDBUpdates.Count);
-                    files.AddRange(basegameCloudDBUpdates);
+                    var files = new List<BasegameFileRecord>(basegameFilesInstalled.Count + basegameIdentificationServiceRecords.Count);
+                    files.AddRange(basegameIdentificationServiceRecords);
                     foreach (var file in basegameFilesInstalled)
                     {
                         var entry = new M3BasegameFileRecord(file, (int)new FileInfo(file).Length, InstallOptionsPackage.InstallTarget, InstallOptionsPackage.ModBeingInstalled);
