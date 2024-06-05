@@ -1,4 +1,5 @@
-﻿using System.Xml.Linq;
+﻿using System.Diagnostics;
+using System.Xml.Linq;
 using LegendaryExplorerCore.Compression;
 using LegendaryExplorerCore.TLK;
 using LegendaryExplorerCore.TLK.ME1;
@@ -18,7 +19,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         public List<string> LE1TLKMergeAllOptionKeys;
 
         /// <summary>
-        /// List of chosen option keys for TLK merge (LE1). A null value means we don't have any option keys defined, and we should not filter TLK merges
+        /// List of chosen option keys for TLK merge (LE1).
         /// </summary>
         public List<string> LE1TLKMergeChosenOptionKeys;
 
@@ -32,7 +33,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             if (allFilenames == null && compressTlkMergeData == null)
                 throw new Exception(@"CoalesceTLKMergeFiles() must have a non null parameter!");
 
-            if (allFilenames == null)
+            if (allFilenames == null) // will be null if loading from compressed data
             {
                 // The guard at start of method will ensure compressed data is never null
                 if (ModDescTargetVersion >= 9.0)
@@ -49,7 +50,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                     allFilenames = compressTlkMergeData.GetFileListing();
                 }
             }
-            else if (LE1TLKMergeChosenOptionKeys != null) // Has filtering
+            else if (LE1TLKMergeAllOptionKeys != null) // Has filtering, disk based
             {
 
                 List<string> filteredFiles = new List<string>();
@@ -74,7 +75,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
 
                 allFilenames = filteredFiles;
             }
-            
+
 
             // Map of package name -> TLK filenames to install into it
             var dict = new Dictionary<string, List<string>>();
@@ -82,14 +83,15 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             // Build map of files
             foreach (var tlkM in allFilenames)
             {
-                var packageName = tlkM.Substring(0, tlkM.IndexOf('.'));
+                var subStr = Path.GetFileName(tlkM);
+                var packageName = subStr.Substring(0, subStr.IndexOf('.'));
                 List<string> l;
                 if (!dict.TryGetValue(packageName, out l))
                 {
                     l = new List<string>();
                     dict[packageName] = l;
                 }
-                l.Add(tlkM);
+                l.Add(tlkM); // Use full tlk path here.
             }
 
             return dict;
@@ -207,8 +209,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             if (stringNodes.Any())
             {
                 // Open package
-                var packageName = tlkXmlName.Substring(0, tlkXmlName.IndexOf('.'));
-                var exportPath = Path.GetFileNameWithoutExtension(tlkXmlName.Substring(packageName.Length + 1));
+                var tlkPackageStr = Path.GetFileName(tlkXmlName);
+                var packageName = tlkPackageStr.Substring(0, tlkPackageStr.IndexOf('.'));
+                var exportPath = Path.GetFileNameWithoutExtension(tlkPackageStr.Substring(packageName.Length + 1));
 
                 string packagePath = null; ;
 
@@ -245,6 +248,10 @@ namespace ME3TweaksModManager.modmanager.objects.mod
 
                     var strRefs = talkFile.StringRefs.ToList();
                     int numDone = 0;
+                    if (strRefs.Any())
+                    {
+                        M3Log.Information($@"Installing {tlkXmlName} into {Path.GetRelativePath(target.TargetPath, package.FilePath)} {exportPath}", Settings.LogModInstallation);
+                    }
                     foreach (var node in stringNodes)
                     {
                         var tlkId = int.Parse(node.Element(@"id").Value);

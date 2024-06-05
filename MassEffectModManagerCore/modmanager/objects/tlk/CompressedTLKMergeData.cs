@@ -431,7 +431,7 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
 
             foreach (var alt in custJob.AlternateDLCs.Where(x => x.Operation == AlternateDLC.AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY))
             {
-                if (!OptionKeys.Contains(alt.OptionKey))
+                if (!OptionKeys.Contains(alt.LE1TLKOptionKey))
                 {
                     throw new Exception($"Mod validation failed: CombinedTLKMergeData.m3za does not contain referenced TLK option key '{alt.LE1TLKOptionKey}', which is referenced by AlternateDLC object {alt.FriendlyName}. Please contact the developer.");
                 }

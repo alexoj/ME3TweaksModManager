@@ -287,7 +287,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 }
                 else if (job.Header == ModJob.JobHeader.GAME1_EMBEDDED_TLK)
                 {
-                    LE1TLKMergeChosenOptionKeys = LE1TLKMergeAllOptionKeys != null ? new List<string>() : null;
+                    LE1TLKMergeChosenOptionKeys = new List<string>();
 
                     // Look in CustomDLC job for alternates there.
                     // Technically this could be done under this header, but it'd be a lot of work I don't really want to do

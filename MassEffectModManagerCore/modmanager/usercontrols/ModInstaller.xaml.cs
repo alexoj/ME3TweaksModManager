@@ -662,7 +662,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             }
 
             var basegameFilesInstalled = new List<string>();
-            var basegameIdentificationServiceRecords = new List<BasegameFileRecord>();
+            var basegameIdentificationServiceRecords = new CaseInsensitiveDictionary<BasegameFileRecord>();
             void FileInstalledIntoSFARCallback(Dictionary<string, Mod.InstallSourceFile> sfarMapping, string targetPath)
             {
                 numdone++;
@@ -926,7 +926,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                             mm.moddeschashes.AddRange(existingInfo.moddeschashes);
                         }
                         mm.moddeschashes.Add(InstallOptionsPackage.ModBeingInstalled.ModDescHash);
-                        basegameIdentificationServiceRecords.Add(mm);
+                        basegameIdentificationServiceRecords[Path.GetRelativePath(InstallOptionsPackage.InstallTarget.TargetPath, file)] = mm;
                     }
                 }
             }
@@ -973,7 +973,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 var gameMap = MELoadedFiles.GetFilesLoadedInGame(InstallOptionsPackage.InstallTarget.Game, gameRootOverride: InstallOptionsPackage.InstallTarget.TargetPath);
                 int doneMerges = 0;
                 int totalTlkMerges = mergeFiles.Count;
-                PackageCache cache = new PackageCache();
+                PackageCache cache = new PackageCache() { CacheMaxSize = 12};
 
                 // 06/05/2022 Change to parallel
                 Exception parallelException = null;
@@ -991,7 +991,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                             try
                             {
                                 var tlkXmlFile = tlkFileMap.Value[i];
-                                InstallOptionsPackage.ModBeingInstalled.InstallTLKMerge(tlkXmlFile, compressedTlkData, gameMap, i == tlkFileMap.Value.Count - 1, cache, InstallOptionsPackage.InstallTarget, InstallOptionsPackage.ModBeingInstalled, x => basegameIdentificationServiceRecords.Add(x));
+                                InstallOptionsPackage.ModBeingInstalled.InstallTLKMerge(tlkXmlFile, compressedTlkData, gameMap, i == tlkFileMap.Value.Count - 1, cache, InstallOptionsPackage.InstallTarget, InstallOptionsPackage.ModBeingInstalled, x => basegameIdentificationServiceRecords[x.file] = x);
                             }
                             catch (Exception e)
                             {
@@ -1121,7 +1121,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     {
                         Target = InstallOptionsPackage.InstallTarget,
                         DLCMetaCMMs = installedMetaCmms,
-                        BasegameHashes = basegameIdentificationServiceRecords.ToCaseInsensitiveDictionary(x => x.file, x => x)
+                        BasegameHashes = basegameIdentificationServiceRecords
                     };
                     InstallOptionsPackage.ModBeingInstalled.DetermineIfInstalled(gs);
                 }
@@ -1135,13 +1135,12 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             M3Log.Information(@"<<<<<<< Finishing modinstaller");
             sw.Stop();
             Debug.WriteLine($@"Installer took {sw.ElapsedMilliseconds}ms");
-            //Submit basegame tracking in async way
             if (basegameFilesInstalled.Any() || basegameIdentificationServiceRecords.Any())
             {
                 try
                 {
                     var files = new List<BasegameFileRecord>(basegameFilesInstalled.Count + basegameIdentificationServiceRecords.Count);
-                    files.AddRange(basegameIdentificationServiceRecords);
+                    files.AddRange(basegameIdentificationServiceRecords.Values);
                     foreach (var file in basegameFilesInstalled)
                     {
                         var entry = new M3BasegameFileRecord(file, (int)new FileInfo(file).Length, InstallOptionsPackage.InstallTarget, InstallOptionsPackage.ModBeingInstalled);
@@ -1463,7 +1462,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 M3Log.Error(@"An error occurred during mod installation.");
                 M3Log.Error(App.FlattenException(e.Error));
                 telemetryResult = ModInstallCompletedStatus.INSTALL_FAILED_EXCEPTION_IN_MOD_INSTALLER;
-                M3L.ShowDialog(mainwindow, M3L.GetString(M3L.string_interp_dialog_errorOccuredDuringInstallation, App.FlattenException(e.Error)), M3L.GetString(M3L.string_error));
+                M3L.ShowDialog(mainwindow, M3L.GetString(M3L.string_interp_dialog_errorOccuredDuringInstallation, App.FlattenException(e.Error)), M3L.GetString(M3L.string_error), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
