@@ -205,13 +205,14 @@ namespace ME3TweaksModManager.modmanager.objects
                         if (ModFile.SizeInBytes != null && ModFile.SizeInBytes.Value > DOWNLOAD_TO_MEMORY_SIZE_CAP && M3Utilities.GetDiskFreeSpaceEx(M3Filesystem.GetModDownloadCacheDirectory(), out var free, out var total, out var totalFree))
                         {
                             // Check free disk space.
-                            if (totalFree < ModFile.SizeInBytes * 1.2) // 20% buffer.
+                            var spaceRequiredWithBuffer = ModFile.SizeInBytes * 1.2;// 20% buffer.
+                            if (totalFree < spaceRequiredWithBuffer) 
                             //if (totalFree < ModFile.SizeInBytes * 100000.0) // Debug code
                             {
-                                M3Log.Error($@"There is not enough free space on {Path.GetPathRoot(M3Filesystem.GetModDownloadCacheDirectory())} to download {ModFile.FileName}. We need {FileSize.FormatSize(ModFile.SizeInBytes.Value)} but only {FileSize.FormatSize(totalFree)} is available.");
+                                M3Log.Error($@"There is not enough free space on {Path.GetPathRoot(M3Filesystem.GetModDownloadCacheDirectory())} to download {ModFile.FileName}. We need {FileSize.FormatSize((long)spaceRequiredWithBuffer)} but only {FileSize.FormatSize(totalFree)} is available.");
                                 Initialized = true;
                                 ProgressIndeterminate = false;
-                                OnModDownloadError?.Invoke(this, M3L.GetString(M3L.string_interp_notEnoughFreeSpaceForDownload, Path.GetPathRoot(M3Filesystem.GetModDownloadCacheDirectory()), ModFile.FileName, FileSize.FormatSize(ModFile.SizeInBytes.Value), FileSize.FormatSize(totalFree)));
+                                OnModDownloadError?.Invoke(this, M3L.GetString(M3L.string_interp_notEnoughFreeSpaceForDownload, Path.GetPathRoot(M3Filesystem.GetModDownloadCacheDirectory()), ModFile.FileName, FileSize.FormatSize((long)spaceRequiredWithBuffer), FileSize.FormatSize(totalFree)));
                                 return;
                             }
                         }
