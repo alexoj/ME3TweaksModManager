@@ -76,7 +76,15 @@ namespace ME3TweaksModManager.modmanager.windows
                 VisibleFilteredMods.RemoveRange(queueToEdit.ModsToInstall.Select(x => x.Mod));
                 VisibleFilteredASIMods.RemoveRange(queueToEdit.ASIModsToInstall.Select(x => x.AssociatedMod?.OwningMod));
                 VisibleFilteredMEMMods.RemoveRange(queueToEdit.TextureModsToInstall);
+
+                // Experimental: Load mount priority value here for UI
+                foreach (var mod in queueToEdit.ModsToInstall.Where(x => x.Mod != null))
+                {
+                    mod.Mod.EXP_GetModMountPriority();
+                }
             }
+
+            
         }
 
         public ICommand CancelCommand { get; set; }
@@ -99,7 +107,12 @@ namespace ME3TweaksModManager.modmanager.windows
             MoveDownCommand = new GenericCommand(MoveDown, CanMoveDown);
             AutosortCommand = new GenericCommand(Autosort, CanAutosort);
             AddCustomMEMModCommand = new GenericCommand(ShowMEMSelector, CanAddMEMMod);
-            SortByMountPriorityCommand = new GenericCommand(SortByMountPriority);
+            SortByMountPriorityCommand = new GenericCommand(SortByMountPriority, CanSortByMountPriority);
+        }
+
+        private bool CanSortByMountPriority()
+        {
+            return ModsInGroup.Any(x => x is BatchMod m && m.Mod != null);
         }
 
         private void LeftSideMod_MouseDown(object sender, MouseButtonEventArgs e)
@@ -113,7 +126,19 @@ namespace ME3TweaksModManager.modmanager.windows
         }
         private void SortByMountPriority()
         {
-            VisibleFilteredMods.SortDescending(x => x.EXP_GetModMountPriority());
+            var shouldContinue = M3L.ShowDialog(this,
+                "Sorting will re-order all content mods in your install group. This is an experimental feature and may not properly order your mods.",
+                "Experimental feature", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes;
+            if (!shouldContinue)
+                return;
+
+            var contentMods = ModsInGroup.OfType<BatchMod>().Where(x => x.Mod != null)
+                .OrderByDescending(x => x.Mod.EXP_GetModMountPriority()).ToList(); // Just order it here too. Its reversed ordered as the order reverses again when we insert it
+            ModsInGroup.RemoveRange(contentMods);
+            foreach (var m in contentMods)
+            {
+                ModsInGroup.Insert(0, m);
+            }
         }
 
         private void ShowMEMSelector()

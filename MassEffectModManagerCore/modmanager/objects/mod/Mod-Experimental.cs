@@ -1,8 +1,4 @@
-﻿using System.Threading;
-using LegendaryExplorerCore.GameFilesystem;
-using LegendaryExplorerCore.Misc;
-using ME3TweaksCore.GameFilesystem;
-using ME3TweaksCore.Services.Shared.BasegameFileIdentification;
+﻿using LegendaryExplorerCore.GameFilesystem;
 using ME3TweaksModManager.modmanager.objects.gametarget;
 
 namespace ME3TweaksModManager.modmanager.objects.mod
@@ -12,11 +8,19 @@ namespace ME3TweaksModManager.modmanager.objects.mod
     {
 
         /// <summary>
+        /// Mount Priority value cached from the first call to GetModMountPriority. If a mount priority could not be determined, the value will be 0.
+        /// </summary>
+        public int UIMountPriority { get; set; }
+
+        /// <summary>
         /// Attempts to determine a mod's mount priority. This will return 0 on mods without DLC folders and will not be reliable for multi-DLC mods.
         /// </summary>
         /// <returns></returns>
         public int EXP_GetModMountPriority()
         {
+            if (UIMountPriority != 0)
+                return UIMountPriority;
+
             if (IsInArchive)
                 throw new Exception("Cannot get a mod's mount priority while it is in an archive! This is a bug.");
 
@@ -53,6 +57,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             if (lowestMount == int.MaxValue)
                 lowestMount = 0;
 
+            UIMountPriority = lowestMount;
             return lowestMount;
         }
 
