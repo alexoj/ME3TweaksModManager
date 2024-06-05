@@ -782,8 +782,7 @@ namespace ME3TweaksModManager
                 {
                     if (issues.Count > 0)
                     {
-                        ListDialog ld = new ListDialog(issues, "Package check found issues",
-                            "The following packages failed to open:", this);
+                        ListDialog ld = new ListDialog(issues, "Package check found issues", "The following packages failed to open:", this);
                         ld.Show();
                     }
                 });

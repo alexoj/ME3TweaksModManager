@@ -50,6 +50,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 {MODDESC_DESCRIPTOR_MODINFO_BANNERIMAGENAME, new MDParameter(@"string", BannerImageName, BannerImageName, new [] {@""}, @"") {Header = MODDESC_HEADERKEY_MODINFO, AllowedValuesPopulationFunc = PopulateImageFileOptions}}, // Uses image population function // do not localize
                 {MODDESC_DESCRIPTOR_MODINFO_SORTALTERNATES, new MDParameter(@"string", MODDESC_DESCRIPTOR_MODINFO_SORTALTERNATES, SortAlternateOptions ? @"" : MODDESC_VALUE_FALSE, new [] {@"", MODDESC_VALUE_TRUE, MODDESC_VALUE_FALSE}, @"") {Header = MODDESC_HEADERKEY_MODINFO}}, //don't put checkedbydefault in if it is not set to true. // do not localize
                 {MODDESC_DESCRIPTOR_MODINFO_REQUIRESENHANCEDBINK, new MDParameter(@"string", MODDESC_DESCRIPTOR_MODINFO_REQUIRESENHANCEDBINK, !RequiresEnhancedBink ? @"" : MODDESC_VALUE_TRUE, new [] {@"", MODDESC_VALUE_TRUE, MODDESC_VALUE_FALSE}, @"") {Header = MODDESC_HEADERKEY_MODINFO}}, // don't populate if not used // do not localize
+                {MODDESC_DESCRIPTOR_MODINFO_BATCHINSTALL_REVERSESORT, new MDParameter(@"string", MODDESC_DESCRIPTOR_MODINFO_BATCHINSTALL_REVERSESORT, !BatchInstallUseReverseMountSort ? @"" : MODDESC_VALUE_TRUE, new [] {@"", MODDESC_VALUE_TRUE, MODDESC_VALUE_FALSE}, @"") {Header = MODDESC_HEADERKEY_MODINFO}}, // don't populate if not used // do not localize
             };
 
 

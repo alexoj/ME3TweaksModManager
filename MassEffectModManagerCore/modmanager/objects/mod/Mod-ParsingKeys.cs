@@ -24,25 +24,26 @@
 
         // [ModInfo]
         public static readonly string MODDESC_HEADERKEY_MODINFO = @"ModInfo";
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_GAME = @"game";                                    // Game this mod is for. If null, ME3 is assumed.
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_NAME = @"modname";                                 // The name of the mod
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_DEVELOPER = @"moddev";                             // The developer of the mod
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_SITE = @"modsite";                                 // The site associated with the mod. Using a NexusMods link nets additional parsing of the nexuscode from it
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_DESCRIPTION = @"moddesc";                          // The description of the mod. <br> can be used to make linebreaks.
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_UNOFFICIAL = @"unofficial";                        // If this mod is unofficially supported. Mods imported directly from the game will be marked with this.
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_UPDATECODE = @"updatecode";                        // The ME3Tweaks Updater Service update code.
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_VERSION = @"modver";                               // The version of the mod. Prior to Mod Manage 6.0 this was a float. 6.0 and above use semantic.
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_REQUIREDDLC = @"requireddlc";                      // DLC that must be present in order to install this mod.
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_MODMAKERID = @"modid";                             // ModMaker unique identifier for the mod
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_MODMAKERSERVERVERSION = @"compiledagainst";        // Version of ModMaker that was used to compile the server manifest that was then used to generate this mod
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_NEXUSMODSDOMAINID = @"nexuscode";                  // The unique mod id for the game's NexusMods domain
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_REQUIRESAMD = @"amdprocessoronly";                 // OT - If this mod can only install on AMD processors
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_COMPRESSPACKAGESBYDEFAULT = @"prefercompressed";   // OT - If mods should install compressed by default
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_SORTALTERNATES = @"sortalternates";                // If alternates should be automatically sorted
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_BANNERIMAGENAME = @"bannerimagename";              // The filename of the banner image in M3Images
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_LEGACY_COALESCED = @"modcoal";                     // cmmver 2.0 only: If the mod modifies the basegame ME3 Coalesced.bin file
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_POSTINSTALLTOOL = @"postinstalltool";              // The internal tool name to launch after mod install completes
-        public static readonly string MODDESC_DESCRIPTOR_MODINFO_REQUIRESENHANCEDBINK = @"requiresenhancedbink";    // LE - If this mod MUST have the enhanced bink dll to work
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_GAME = @"game";                                          // Game this mod is for. If null, ME3 is assumed.
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_NAME = @"modname";                                       // The name of the mod
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_DEVELOPER = @"moddev";                                   // The developer of the mod
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_SITE = @"modsite";                                       // The site associated with the mod. Using a NexusMods link nets additional parsing of the nexuscode from it
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_DESCRIPTION = @"moddesc";                                // The description of the mod. <br> can be used to make linebreaks.
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_UNOFFICIAL = @"unofficial";                              // If this mod is unofficially supported. Mods imported directly from the game will be marked with this.
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_UPDATECODE = @"updatecode";                              // The ME3Tweaks Updater Service update code.
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_VERSION = @"modver";                                     // The version of the mod. Prior to Mod Manage 6.0 this was a float. 6.0 and above use semantic.
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_REQUIREDDLC = @"requireddlc";                            // DLC that must be present in order to install this mod.
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_MODMAKERID = @"modid";                                   // ModMaker unique identifier for the mod
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_MODMAKERSERVERVERSION = @"compiledagainst";              // Version of ModMaker that was used to compile the server manifest that was then used to generate this mod
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_NEXUSMODSDOMAINID = @"nexuscode";                        // The unique mod id for the game's NexusMods domain
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_REQUIRESAMD = @"amdprocessoronly";                       // OT - If this mod can only install on AMD processors
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_COMPRESSPACKAGESBYDEFAULT = @"prefercompressed";         // OT - If mods should install compressed by default
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_SORTALTERNATES = @"sortalternates";                      // If alternates should be automatically sorted
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_BANNERIMAGENAME = @"bannerimagename";                    // The filename of the banner image in M3Images
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_LEGACY_COALESCED = @"modcoal";                           // cmmver 2.0 only: If the mod modifies the basegame ME3 Coalesced.bin file
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_POSTINSTALLTOOL = @"postinstalltool";                    // The internal tool name to launch after mod install completes
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_REQUIRESENHANCEDBINK = @"requiresenhancedbink";          // LE - If this mod MUST have the enhanced bink dll to work
+        public static readonly string MODDESC_DESCRIPTOR_MODINFO_BATCHINSTALL_REVERSESORT = @"batchinstallreversesort";   // cmmver9 - If batch installer should sort this by highest mount priority instead of lowest (used by multi-dlc mods that ship patches to other mods)
 
         // [BASEGAME] and Official DLC task headers (ME3)
         public static readonly string MODDESC_DESCRIPTOR_JOB_DIR = @"moddir";                                    // Directory in the mod manager folder that this job is operating on. A dot '.' is a valid value if you do not actually use files but a directory is required.

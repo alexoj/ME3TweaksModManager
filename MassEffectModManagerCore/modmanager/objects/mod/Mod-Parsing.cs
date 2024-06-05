@@ -398,6 +398,11 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         public bool RequiresEnhancedBink { get; set; }
 
         /// <summary>
+        /// If this mod should use the highest mount priority instead of the lowest when sorting in batch installer
+        /// </summary>
+        public bool BatchInstallUseReverseMountSort { get; set; }
+
+        /// <summary>
         /// List of DLC requirements for this mod to be able to install
         /// </summary>
         public List<DLCRequirement> RequiredDLC { get; set; } = new List<DLCRequirement>();
@@ -2046,6 +2051,15 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 }
             }
 
+            if (ModDescTargetVersion >= 9.0)
+            {
+                if (bool.TryParse(iniData[Mod.MODDESC_HEADERKEY_MODINFO][MODDESC_DESCRIPTOR_MODINFO_BATCHINSTALL_REVERSESORT], out var useReverseSort))
+                {
+                    BatchInstallUseReverseMountSort = useReverseSort;
+                    M3Log.Information(@"This mod will use the highest mount priority instead of the lowest in batch mod sorting", Settings.LogModStartup && useReverseSort);
+                }
+            }
+
             // SECURITY CHECK
             #region TASK SILOING CHECK
             // Lordy this is gonna be messy
@@ -2382,7 +2396,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                     {
                         foreach (var conditionaldlc in altdlc.ConditionalDLC) // Conditional DLC are not available for COND_MANUAL
                         {
-                            autoConfigs.Add(conditionaldlc.TrimStart('-', '+'));
+                            autoConfigs.Add(conditionaldlc.DLCName.Key);
                         }
                     }
                     else if (altdlc.Condition == AlternateDLC.AltDLCCondition.COND_MANUAL && altdlc.DLCRequirementsForManual != null && altdlc.DLCRequirementsForManual.Any())
@@ -2397,7 +2411,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 {
                     foreach (var conditionaldlc in altfile.ConditionalDLC)
                     {
-                        autoConfigs.Add(conditionaldlc.TrimStart('-', '+'));
+                        autoConfigs.Add(conditionaldlc.DLCName.Key);
                     }
                 }
             }

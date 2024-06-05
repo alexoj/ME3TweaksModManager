@@ -22,13 +22,18 @@ namespace ME3TweaksModManager.modmanager.objects
         public string Key { get; set; }
 
         /// <summary>
+        /// Value the PMK was loaded from. Only works with the string constructor.
+        /// </summary>
+        public string OriginalValue { get; set; }
+
+        /// <summary>
         /// String representation of this key
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
             string str = "";
-            if (IsPlus != null) str += IsPlus.Value ? "+" : "-";
+            if (IsPlus != null) str += IsPlus.Value ? @"+" : @"-";
             str += Key;
             return str;
         }
@@ -36,12 +41,15 @@ namespace ME3TweaksModManager.modmanager.objects
         public PlusMinusKey() { }
 
         /// <summary>
-        /// Constructor that sets a positive/negative with a value.
+        /// Constructor that sets a positive/negative/unset with a value.
         /// </summary>
         /// <param name="isPlus"></param>
         /// <param name="key"></param>
-        public PlusMinusKey(bool isPlus, string key)
+        public PlusMinusKey(bool? isPlus, string key)
         {
+            // NOT RELIABLE FOR DEBUGGING!!
+            OriginalValue = key;
+
             IsPlus = isPlus;
             Key = key;
         }
@@ -54,6 +62,8 @@ namespace ME3TweaksModManager.modmanager.objects
         /// <param name="fullValue">Full value including an optional +/- prefix</param>
         public PlusMinusKey(string fullValue)
         {
+            OriginalValue = fullValue;
+
             var keyOp = fullValue[0];
             if (keyOp == '+') IsPlus = true;
             if (keyOp == '-') IsPlus = false;

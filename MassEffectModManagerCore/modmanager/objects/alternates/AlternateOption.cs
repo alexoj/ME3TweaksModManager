@@ -9,6 +9,7 @@ using System.Windows.Media.Imaging;
 using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
+using ME3TweaksCore.GameFilesystem;
 using ME3TweaksCoreWPF.Targets;
 using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.localizations;
@@ -79,7 +80,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
         /// <summary>
         /// The list of DLC to be checked against with the specified condition (defined in subclasses of AlternateOption)
         /// </summary>
-        public readonly List<string> ConditionalDLC = new List<string>();
+        public readonly List<ConditionalDLC> ConditionalDLC = new();
 
         #region UI-Specific
 
@@ -236,7 +237,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             get
             {
                 if (_optionKey != null) return _optionKey;
-                // Generate one one based on the name of the alternate.
+                // Generate one based on the name of the alternate.
                 var keydata = FriendlyName;
                 // 08/24/2022: 8.0.1 beta 2: Add group name to better differentiate key.
                 if (!string.IsNullOrWhiteSpace(GroupName)) keydata += GroupName;
@@ -733,6 +734,35 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             //{
             DependsOnText = condition.Trim();
             //}
+
+            return true;
+        }
+
+        /// <summary>
+        /// Checks if this alternate meets the conditional DLC requirements for option keys in other mods.
+        /// </summary>
+        /// <param name="metaInfo"></param>
+        /// <returns></returns>
+        public bool CheckConditionalDLCOptionKeys(CaseInsensitiveDictionary<MetaCMM> metaInfo)
+        {
+            // We also check for option keys in the metacmms
+            foreach (var condDLC in ConditionalDLC.Where(x => x.OptionKeyDependencies.Any()))
+            {
+                var meta = metaInfo[condDLC.DLCName.Key]; // We know at this point that this key will exist
+                foreach (var okd in condDLC.OptionKeyDependencies)
+                {
+                    if (okd.IsPlus == true && !meta.OptionKeysSelectedAtInstallTime.Contains(okd.Key, StringComparer.InvariantCultureIgnoreCase))
+                    {
+                        // Option that must have been chosen was not. We cannot choose this option.
+                        return false;
+                    }
+                    if (okd.IsPlus == false && meta.OptionKeysSelectedAtInstallTime.Contains(okd.Key, StringComparer.InvariantCultureIgnoreCase))
+                    {
+                        // Option that must not have been chosen in another mod was chosen. We cannot chose this option.
+                        return false;
+                    }
+                }
+            }
 
             return true;
         }

@@ -844,12 +844,13 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                 // Collect data for meta cmm
                 InstallOptionsPackage.ModBeingInstalled.HumanReadableCustomDLCNames.TryGetValue(Path.GetFileName(addedDLCFolder), out var assignedDLCName);
-                var alternates = InstallOptionsPackage.SelectedOptions.SelectMany(x => x.Value);
+                var alternates = InstallOptionsPackage.SelectedOptions.SelectMany(x => x.Value).ToList();
                 IEnumerable<string> optionsChosen = alternates.Where(x => !string.IsNullOrWhiteSpace(x.FriendlyName)).Select(x =>
                 {
                     if (x.GroupName != null) return $@"{x.GroupName}: {x.FriendlyName}";
                     return x.FriendlyName;
                 });
+
 
                 // Build meta cmm
                 var metacmmPath = Path.Combine(addedDLCFolder, @"_metacmm.txt");
@@ -862,6 +863,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     Version = InstallOptionsPackage.ModBeingInstalled.ModVersionString,
                     InstallTime = DateTime.Now,
                     NexusUpdateCode = InstallOptionsPackage.ModBeingInstalled.NexusModID,
+                    OptionKeysSelectedAtInstallTime = alternates.Select(x => x.OptionKey).ToList()
                 };
 
                 // Metacmm uses observable collections because in some apps it's binded to the interface

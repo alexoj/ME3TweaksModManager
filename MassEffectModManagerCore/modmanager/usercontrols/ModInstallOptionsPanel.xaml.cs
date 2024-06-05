@@ -424,19 +424,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     if (altfile.IsManual) AllOptionsAreAutomatic = false;
                 }
             }
-
-
-
-
-            //if (o.AlternateOptions.Count == 1)
-            //{
-            //    // Single mode
-            //}
-            //else
-            //{
-            //    // Multi mode
-            //}
-
         }
 
         private void SortOptions()
@@ -779,36 +766,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 InstallBatchChosenOptions(chosenDefaultOptions);
                 return;
             }
-
-            // 8.0.1 beta 1 version
-            /*   if (false)
-               {
-                   // 3. Set our selected options
-                   foreach (var group in AlternateGroups) // For every group...
-                   {
-                       if (group.IsMultiSelector)
-                       {
-                           // We only need to select one from multi
-                           var chosenOption =
-                               group.AlternateOptions.FirstOrDefault(option =>
-                                   BatchMod.UserChosenOptions.Contains(option.OptionKey));
-                           if (chosenOption == null)
-                           {
-                               Debugger.Break();
-                           }
-
-                           group.SelectNewOption(chosenOption);
-                       }
-                       else
-                       {
-                           // Single mode
-                           group.SelectedOption.UIIsSelected =
-                               BatchMod.UserChosenOptions.Any(oKey => oKey == group.SelectedOption.OptionKey);
-                       }
-                   }
-
-            */
-
 
             // 4. Validate that the selected options match the ones we know about in the batchmod object
             if (!isReverting)

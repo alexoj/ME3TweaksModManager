@@ -16,9 +16,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         /// Attempts to determine a mod's mount priority. This will return 0 on mods without DLC folders and will not be reliable for multi-DLC mods.
         /// </summary>
         /// <returns></returns>
-        public int EXP_GetModMountPriority()
+        public int EXP_GetModMountPriority(bool isForUI = true)
         {
-            if (UIMountPriority != 0)
+            if (isForUI && UIMountPriority != 0)
                 return UIMountPriority;
 
             if (IsInArchive)
@@ -34,8 +34,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             // We will take the mod's LOWEST mount priority
             // A multi-dlc mod may have additional dlc folders as patches or extra content. It likely will have a higher
             // mount. So we will take the lowest one
+            // If mod has special flag set it will use highest. this is for multi-dlc mods that ship their own patche set
 
-            int lowestMount = int.MaxValue;
+            int mountValuetoUse = isForUI && BatchInstallUseReverseMountSort ? int.MinValue : int.MaxValue;
             foreach (var fm in custDLC.CustomDLCFolderMapping)
             {
                 var dlcPath = Path.Combine(ModPath, fm.Key);
@@ -44,7 +45,14 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 try
                 {
                     var mount = MELoadedDLC.GetMountPriority(dlcPath, Game);
-                    lowestMount = Math.Min(mount, lowestMount);
+                    if (isForUI && BatchInstallUseReverseMountSort)
+                    {
+                        mountValuetoUse = Math.Max(mount, mountValuetoUse);
+                    }
+                    else
+                    {
+                        mountValuetoUse = Math.Min(mount, mountValuetoUse);
+                    }
                 }
                 catch (Exception ex)
                 {
@@ -54,11 +62,15 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             }
 
             // If no mount value was set, return the default value of 0
-            if (lowestMount == int.MaxValue)
-                lowestMount = 0;
+            if (mountValuetoUse == (isForUI && BatchInstallUseReverseMountSort ? int.MinValue : int.MaxValue))
+                mountValuetoUse = 0;
 
-            UIMountPriority = lowestMount;
-            return lowestMount;
+            if (isForUI)
+            {
+                UIMountPriority = mountValuetoUse;
+            }
+
+            return mountValuetoUse;
         }
 
         public bool IsInstalledToTarget { get; set; }

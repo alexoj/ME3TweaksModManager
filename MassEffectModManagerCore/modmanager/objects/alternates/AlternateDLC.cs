@@ -4,7 +4,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using LegendaryExplorerCore.GameFilesystem;
+using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Packages;
+using ME3TweaksCore.GameFilesystem;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCoreWPF;
 using ME3TweaksCoreWPF.Targets;
@@ -67,7 +69,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
         /// In-mod path that the AlternateDLCFolder will apply to
         /// </summary>
         public string DestinationDLCFolder { get; private set; }
-        
+
         /// <summary>
         /// Used only for LE1 TLK jobs - the option key to enable
         /// </summary>
@@ -149,7 +151,8 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             //OP_NOTHING can have conditions
             if (properties.TryGetValue(AlternateKeys.ALTSHARED_KEY_CONDITIONALDLC, out string conditionalDlc))
             {
-                var conditionalList = StringStructParser.GetSemicolonSplitList(conditionalDlc);
+                var supportsPlusMinus = Condition == AltDLCCondition.COND_SPECIFIC_DLC_SETUP;
+                var conditionalList = StringStructParser.GetSemicolonSplitList(conditionalDlc).Select(x => new ConditionalDLC(modForValidating, x, supportsPlusMinus));
                 foreach (var dlc in conditionalList)
                 {
                     if (Condition == AltDLCCondition.COND_MANUAL)
@@ -173,44 +176,43 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                     {
 
                         //check +/-
-                        if (!dlc.StartsWith(@"-") && !dlc.StartsWith(@"+"))
+                        if (dlc.DLCName.IsPlus == null)
                         {
-                            M3Log.Error($@"An item in Alternate DLC's ({FriendlyName}) ConditionalDLC doesn't start with + or -. When using the condition {Condition}, you must precede DLC names with + or -. Bad value: {dlc}");
+                            M3Log.Error($@"An item in Alternate DLC's ({FriendlyName}) ConditionalDLC doesn't start with + or -. When using the condition {Condition}, you must precede DLC names with + or -. Bad value: {dlc.DLCName.OriginalValue}");
                             LoadFailedReason = M3L.GetString(M3L.string_interp_validation_altdlc_specificDlcSetupMissingPlusMinus, FriendlyName, Condition, dlc);
                             return;
                         }
 
-                        var prefix = dlc.Substring(0, 1);
-                        var realname = dlc.Substring(1);
-
                         //official headers
-                        if (Enum.TryParse(realname, out ModJob.JobHeader header) && ModJob.GetHeadersToDLCNamesMap(modForValidating.Game).TryGetValue(header, out var foldername))
+                        if (Enum.TryParse(dlc.DLCName.Key, out ModJob.JobHeader header) && ModJob.GetHeadersToDLCNamesMap(modForValidating.Game).TryGetValue(header, out var foldername))
                         {
-                            ConditionalDLC.Add(prefix + foldername);
+                            dlc.DLCName.Key = foldername; // Remapped from header to folder name e.g. LEVIATHAN => DLC_CON_EXP001
+                            ConditionalDLC.Add(dlc);
                             continue;
                         }
 
                         //dlc mods
-                        if (!realname.StartsWith(@"DLC_"))
+                        if (!dlc.DLCName.Key.StartsWith(@"DLC_"))
                         {
-                            M3Log.Error($@"An item in Alternate DLC's ({FriendlyName}) ConditionalDLC doesn't start with DLC_ or is not official header (after the +/- required by {Condition}). Bad value: {dlc}");
+                            M3Log.Error($@"An item in Alternate DLC's ({FriendlyName}) ConditionalDLC doesn't start with DLC_ or is not official header (after the +/- required by {Condition}). Bad value: {dlc.DLCName.OriginalValue}");
                             LoadFailedReason = M3L.GetString(M3L.string_interp_validation_altdlc_specificDlcSetupInvalidDlcName, FriendlyName, Condition, dlc);
                             return;
                         }
                         else
                         {
-                            ConditionalDLC.Add(prefix + realname);
+                            ConditionalDLC.Add(dlc);
                         }
                     }
                     else
                     {
-                        if (Enum.TryParse(dlc, out ModJob.JobHeader header) && ModJob.GetHeadersToDLCNamesMap(modForValidating.Game).TryGetValue(header, out var foldername))
+                        if (Enum.TryParse(dlc.DLCName.Key, out ModJob.JobHeader header) && ModJob.GetHeadersToDLCNamesMap(modForValidating.Game).TryGetValue(header, out var foldername))
                         {
-                            ConditionalDLC.Add(foldername);
+                            dlc.DLCName.Key = foldername; // Remapped from header to folder name e.g. LEVIATHAN => DLC_CON_EXP001
+                            ConditionalDLC.Add(dlc);
                             continue;
                         }
 
-                        if (!dlc.StartsWith(@"DLC_"))
+                        if (!dlc.DLCName.Key.StartsWith(@"DLC_"))
                         {
                             M3Log.Error($@"An item in Alternate DLC's ({FriendlyName}) ConditionalDLC doesn't start with DLC_ or is not official header");
                             LoadFailedReason = M3L.GetString(M3L.string_interp_validation_altdlc_conditionalDLCInvalidValue, FriendlyName);
@@ -392,6 +394,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                     //official headers
                     if (Enum.TryParse(testreq.Key, out ModJob.JobHeader header) && ModJob.GetHeadersToDLCNamesMap(modForValidating.Game).TryGetValue(header, out var foldername))
                     {
+                        testreq.Key = foldername; // Reampping
                         reqList.Add(testreq);
                         continue;
                     }
@@ -516,26 +519,33 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             {
                 UIIsSelected = CheckedByDefault;
                 // Mod Manager 8: DLC Requirements was moved to SetupSelectability.
-
                 return;
             }
 
-            var installedDLC = target.GetInstalledDLC();
+            var metaInfo = target.GetMetaMappedInstalledDLC();
             switch (Condition)
             {
                 case AltDLCCondition.COND_DLC_NOT_PRESENT:
                 case AltDLCCondition.COND_ANY_DLC_NOT_PRESENT:
-                    UIIsSelected = !ConditionalDLC.All(i => installedDLC.Contains(i, StringComparer.CurrentCultureIgnoreCase));
+                    UIIsSelected = !ConditionalDLC.All(i => metaInfo.ContainsKey(i.DLCName.Key));
                     break;
                 case AltDLCCondition.COND_DLC_PRESENT:
                 case AltDLCCondition.COND_ANY_DLC_PRESENT:
-                    UIIsSelected = ConditionalDLC.Any(i => installedDLC.Contains(i, StringComparer.CurrentCultureIgnoreCase));
+                    UIIsSelected = ConditionalDLC.Any(i => metaInfo.ContainsKey(i.DLCName.Key));
+                    if (UIIsSelected && mod.ModDescTargetVersion >= 9.0)
+                    {
+                        UIIsSelected = CheckConditionalDLCOptionKeys(metaInfo);
+                    }
                     break;
                 case AltDLCCondition.COND_ALL_DLC_NOT_PRESENT:
-                    UIIsSelected = !ConditionalDLC.Any(i => installedDLC.Contains(i, StringComparer.CurrentCultureIgnoreCase));
+                    UIIsSelected = !ConditionalDLC.Any(i => metaInfo.ContainsKey(i.DLCName.Key));
                     break;
                 case AltDLCCondition.COND_ALL_DLC_PRESENT:
-                    UIIsSelected = ConditionalDLC.All(i => installedDLC.Contains(i, StringComparer.CurrentCultureIgnoreCase));
+                    UIIsSelected = ConditionalDLC.All(i => metaInfo.ContainsKey(i.DLCName.Key));
+                    if (UIIsSelected && mod.ModDescTargetVersion >= 9.0)
+                    {
+                        UIIsSelected = CheckConditionalDLCOptionKeys(metaInfo);
+                    }
                     break;
                 case AltDLCCondition.COND_SPECIFIC_SIZED_FILES:
                     {
@@ -559,17 +569,20 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                         {
                             if (selected)
                             {
-                                bool existenceRule = condDlc.Substring(0, 1) == @"+";
-                                var dlcfoldername = condDlc.Substring(1);
-
-                                if (existenceRule)
+                                if (condDlc.DLCName.IsPlus == true)
                                 {
-                                    selected &= installedDLC.Contains(dlcfoldername, StringComparer.CurrentCultureIgnoreCase);
+                                    selected &= metaInfo.ContainsKey(condDlc.DLCName.Key);
+                                    if (selected && mod.ModDescTargetVersion >= 9.0)
+                                    {
+                                        // Can only check for option keys for mods that are installed.
+                                        selected = CheckConditionalDLCOptionKeys(metaInfo);
+                                    }
                                 }
                                 else
                                 {
-                                    selected &= !installedDLC.Contains(dlcfoldername, StringComparer.CurrentCultureIgnoreCase);
+                                    selected &= !metaInfo.ContainsKey(condDlc.DLCName.Key);
                                 }
+                                
                             }
                         }
 
@@ -581,6 +594,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             UIIsSelectable = false; //autos
             //IsSelected; //autos
         }
+
 
         internal override bool UpdateSelectability(IEnumerable<AlternateOption> allOptionsDependedOn, Mod mod, GameTargetWPF target)
         {
