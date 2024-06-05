@@ -393,7 +393,15 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
                 int total = CompressedInfo.Count;
                 foreach (var fileInfo in CompressedInfo)
                 {
-                    var outF = Path.Combine(outputDirectory, fileInfo.Key);
+                    string outF = Path.Combine(outputDirectory, fileInfo.Key);
+                    if (fileInfo.Value.optionKeyId != OPTIONKEY_NONE)
+                    {
+                        // subfolder
+                        var outFolder = Path.Combine(outputDirectory, OptionKeys[fileInfo.Value.optionKeyId]);
+                        Directory.CreateDirectory(outFolder);
+                        outF = Path.Combine(outFolder, fileInfo.Key);
+                    }
+
                     using var outS = File.Open(outF, FileMode.Create, FileAccess.Write);
                     M3Log.Information($@"M3ZA: Decompressing {fileInfo.Key} to {outF}");
                     DecompressFileToStream(fileInfo.Key, compressedDataBlock, outS);
