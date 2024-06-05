@@ -1367,6 +1367,23 @@ namespace ME3TweaksModManager.modmanager.helpers
         {
             try
             {
+                // Service must be loaded for this to work! We will wait up to 5 seconds.
+                for (int i = 0; i < 5; i++)
+                {
+                    if (BasegameFileIdentificationService.ServiceLoaded)
+                        break;
+
+                    // Wait one second for service to come back
+                    M3Log.Information(@"GameState: Waiting for Basegame File Identification Service to load...");
+                    Thread.Sleep(1000);
+                }
+
+                if (!BasegameFileIdentificationService.ServiceLoaded)
+                {
+                    M3Log.Warning(@"GameState: Basegame File Identification Service is still not loaded. We are skipping determining if mods are installed");
+                    return GameState.Default;
+                }
+
                 // Collect merge target hashes. This will not be good for performance.
                 var mergeTargets = MergeModLoader.GetAllowedMergeTargetFilenames(target.Game, true);
                 var currentHashes = new CaseInsensitiveDictionary<string>();

@@ -1,25 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
-using System.Linq;
+﻿using System.ComponentModel;
 using System.Windows;
 using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Misc;
-using LegendaryExplorerCore.Packages;
-using ME3TweaksCore.GameFilesystem;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Services;
-using ME3TweaksCore.Services.Shared.BasegameFileIdentification;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects;
-using ME3TweaksModManager.modmanager.objects.gametarget;
 using ME3TweaksModManager.modmanager.objects.launcher;
 using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.objects.mod.interfaces;
-using ME3TweaksModManager.modmanager.objects.mod.merge;
 using ME3TweaksModManager.modmanager.objects.mod.texture;
 using Microsoft.AppCenter.Crashes;
 using Microsoft.WindowsAPICodePack.Dialogs;
@@ -495,10 +485,9 @@ namespace ME3TweaksModManager.modmanager.loaders
                 {
                     foreach (var target in window.InstallationTargets.ToList()) // We do .ToList() in case user adds target while this information is computing.
                     {
-                        if (target.Game.IsLEGame() && target.RegistryActive && (gamesToLoad == null || gamesToLoad.Contains(target.Game)))
+                        if (target.Game.IsLEGame() && target.RegistryActive && (gamesToLoad == null || gamesToLoad.Contains(target.Game)) && AllLoadedMods.Any(x=>x.Game == target.Game))
                         {
                             BackgroundTaskEngine.SubmitBackgroundTaskUpdate(LoadingTask, $"Determining which mods are installed ({target.Game})");
-
                             var gs = target.GetInfoRequiredToDetermineIfInstalled();
                             foreach (var mod in AllLoadedMods.Where(x => x.Game == target.Game))
                             {
