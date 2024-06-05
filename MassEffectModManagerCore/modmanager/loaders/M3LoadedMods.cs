@@ -495,7 +495,7 @@ namespace ME3TweaksModManager.modmanager.loaders
                 {
                     foreach (var target in window.InstallationTargets.ToList()) // We do .ToList() in case user adds target while this information is computing.
                     {
-                        if (target.Game.IsLEGame() && target.RegistryActive)
+                        if (target.Game.IsLEGame() && target.RegistryActive && (gamesToLoad == null || gamesToLoad.Contains(target.Game)))
                         {
                             BackgroundTaskEngine.SubmitBackgroundTaskUpdate(LoadingTask, $"Determining which mods are installed ({target.Game})");
 
