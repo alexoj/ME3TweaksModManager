@@ -60,7 +60,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
                     if (v.Key == Mod.MODDESC_DESCRIPTOR_MODINFO_DESCRIPTION && v.Header == Mod.MODDESC_HEADERKEY_MODINFO)
                     {
                         // Convert what's written into moddesc
-                        ini[v.Header][v.Key] = M3Utilities.ConvertNewlineToBr(v.Value);
+                        ini[v.Header][v.Key] = M3Utilities.ConvertNewlineToBr(v.Value.Trim());
                     }
                     else
                     {

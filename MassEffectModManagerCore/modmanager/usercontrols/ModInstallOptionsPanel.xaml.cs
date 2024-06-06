@@ -1,5 +1,4 @@
 ﻿using LegendaryExplorerCore.Misc;
-using LegendaryExplorerCore.Packages;
 using ME3TweaksCore.Services.ThirdPartyModIdentification;
 using ME3TweaksCoreWPF.Targets;
 using ME3TweaksCoreWPF.UI;
@@ -8,23 +7,13 @@ using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.alternates;
 using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.ui;
-using PropertyChanged;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Documents;
 using System.Windows.Input;
-using CommandLine;
-using ME3TweaksModManager.modmanager.diagnostics;
+using ME3TweaksCore.Objects;
 using ME3TweaksModManager.modmanager.objects.exceptions;
 using ME3TweaksModManager.modmanager.objects.installer;
 using ME3TweaksModManager.modmanager.objects.batch;
-using Serilog.Filters;
-using static ME3TweaksModManager.modmanager.usercontrols.ModInstaller;
-using ME3TweaksCore.Targets;
 
 namespace ME3TweaksModManager.modmanager.usercontrols
 {
