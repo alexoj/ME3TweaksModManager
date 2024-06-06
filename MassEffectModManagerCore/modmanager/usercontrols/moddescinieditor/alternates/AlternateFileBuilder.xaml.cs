@@ -78,7 +78,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor.alternate
                 }
 
                 outStr += @")";
-                ini[TaskHeader.ToString()][Mod.MODDESC_DESCRIPTOR_CUSTOMDLC_ALTDLC] = outStr;
+                ini[TaskHeader.ToString()][Mod.MODDESC_DESCRIPTOR_CUSTOMDLC_ALTFILES] = outStr;
             }
         }
 
