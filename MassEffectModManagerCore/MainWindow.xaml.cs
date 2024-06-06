@@ -690,6 +690,7 @@ namespace ME3TweaksModManager
         public ICommand ImportDLCModFromGameCommand { get; set; }
         public ICommand BackupFileFetcherCommand { get; set; }
         public ICommand OpenModDescCommand { get; set; }
+        public ICommand ShowAlternateOptionKeysCommand { get; set; }
         public ICommand CheckAllModsForUpdatesCommand { get; set; }
         public ICommand CustomKeybindsInjectorCommand { get; set; }
         public ICommand NexusModsFileSearchCommand { get; set; }
@@ -748,6 +749,7 @@ namespace ME3TweaksModManager
             LaunchEGMSettingsLECommand = new GenericCommand(() => LaunchEGMSettingsLE(), CanLaunchEGMSettingsLE);
             LaunchFVBCCUCommand = new GenericCommand(() => LaunchFVBCCU(), CanLaunchFVBCCU);
             OpenModDescCommand = new GenericCommand(OpenModDesc);
+            ShowAlternateOptionKeysCommand = new GenericCommand(ShowAlternateKeys);
             CheckAllModsForUpdatesCommand = new GenericCommand(CheckAllModsForUpdatesWrapper, () => M3LoadedMods.Instance.ModsLoaded);
             CustomKeybindsInjectorCommand = new GenericCommand(OpenKeybindsInjector, () => M3LoadedMods.Instance.ModsLoaded && InstallationTargets.Any(x => x.Game == MEGame.ME3));
             ModdescEditorCommand = new GenericCommand(OpenModDescEditor, CanOpenModdescEditor);
@@ -767,6 +769,30 @@ namespace ME3TweaksModManager
 
             BetaDiagToolOpenAllPackagesCommand = new GenericCommand(DiagAllOpenPackages, CanRunGameDiagTool);
 
+        }
+
+        private void ShowAlternateKeys()
+        {
+
+            var dlcJob = SelectedMod.GetJob(ModJob.JobHeader.CUSTOMDLC);
+            if (dlcJob == null)
+            {
+                M3L.ShowDialog(this, $"{SelectedMod.ModName} does not use the CUSTOMDLC task header.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var alternates = dlcJob.GetAllAlternates();
+            if (alternates.Count == 0)
+            {
+
+                M3L.ShowDialog(this, $"{SelectedMod.ModName} does not have any alternates on its CUSTOMDLC task header.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                return;
+            }
+
+            var mapping = alternates.Select(x => $@"{(x.GroupName != null ? $@"{x.GroupName} - " : @"")}{x.FriendlyName} => {x.OptionKey}").ToList(); // do not localize
+
+            ListDialog ld = new ListDialog(mapping, $"{SelectedMod.ModName} DLC Option Keys", $"{SelectedMod.ModName} uses the following option keys in its CUSTOMDLC job. You can use these keys to detect if these options were chosen when the mod was installed.", this);
+            ld.Show();
         }
 
         private void DiagAllOpenPackages()
@@ -2705,7 +2731,7 @@ namespace ME3TweaksModManager
             // Initialize ASI manager variables before the service loads
             ASIManager.Options.DevMode = Settings.DeveloperMode;
             // Beta is handled by ME3TweaksCore boot
-            
+
             Task.Run(() =>
             {
                 ME3TweaksCoreLib.Initialize(LibraryBoot.GetPackage());

@@ -170,6 +170,21 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
+                Header="List DLC Alternate OptionKeys"
+                Command="{Binding ShowAlternateOptionKeysCommand}"
+                Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}"
+                ToolTip="List the OptionKeys for each alternate this mod can install (for DLC mods only).&#10;This can be used in other mods to change installation behavior when those options are chosen in this mod when this mod is installed beforehand">
+                <MenuItem.Icon>
+                    <fa5:ImageAwesome
+                        Style="{StaticResource EnableDisableImageStyle}"
+                        Icon="Solid_AddressCard"
+                        Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
+                        Height="16"
+                        Width="16"
+                        RenderOptions.BitmapScalingMode="HighQuality" />
+                </MenuItem.Icon>
+            </MenuItem>
+            <MenuItem
                 Header="{DynamicResource string_packageModForRelease}"
                 Style="{StaticResource MenuItemHeaderStyle}"
                 Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}" />
