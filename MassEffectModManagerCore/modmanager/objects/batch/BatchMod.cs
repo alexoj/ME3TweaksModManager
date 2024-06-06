@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using ME3TweaksCore.Helpers;
+﻿using ME3TweaksCore.Helpers;
+using ME3TweaksCore.Objects;
 using ME3TweaksCore.Services.FileSource;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects.mod;

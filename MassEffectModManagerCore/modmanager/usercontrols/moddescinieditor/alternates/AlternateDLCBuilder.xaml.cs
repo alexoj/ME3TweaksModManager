@@ -38,7 +38,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor.alternate
         {
             if (AttachedJob != null && Alternates.Any())
             {
-                string outStr = "(";
+                string outStr = @"(";
                 bool isFirst = true;
                 foreach (var adlc in Alternates)
                 {
@@ -53,7 +53,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor.alternate
                     outStr += StringStructParser.BuildCommaSeparatedSplitValueList(adlc.ParameterMap.Where(x => !string.IsNullOrWhiteSpace(x.Value)).ToDictionary(x => x.Key, x => x.Value));
                 }
 
-                outStr += ")";
+                outStr += @")";
                 ini[Mod.MODDESC_HEADERKEY_CUSTOMDLC][Mod.MODDESC_DESCRIPTOR_CUSTOMDLC_ALTDLC] = outStr;
             }
         }

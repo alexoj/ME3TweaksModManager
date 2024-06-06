@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO.Hashing;
-using System.Linq;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Windows.Media.Imaging;
 using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCore.GameFilesystem;
+using ME3TweaksCore.Objects;
 using ME3TweaksCoreWPF.Targets;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.objects.mod.editor;
 using ME3TweaksModManager.ui;
 using Microsoft.AppCenter.Crashes;
-using PropertyChanged;
 
 namespace ME3TweaksModManager.modmanager.objects.alternates
 {
