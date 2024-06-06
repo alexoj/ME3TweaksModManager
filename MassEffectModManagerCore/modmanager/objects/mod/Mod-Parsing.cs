@@ -300,7 +300,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                         string name = TPMIService.GetThirdPartyModInfo(reqDLC.DLCFolderName, Game)?.modname ?? reqDLC.DLCFolderName;
                         if (reqDLC.MinVersion != null)
                         {
-                            sb.AppendLine($@" - {name} ({reqDLC.MinVersion})");
+                            sb.AppendLine($" - {name} (Min version: {reqDLC.MinVersion})");
                         }
                         else
                         {
@@ -782,7 +782,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 PreferCompressed = pCompressed;
             }
 
-            if (bool.TryParse(iniData[Mod.MODDESC_HEADERKEY_MODINFO][Mod.MODDESC_DESCRIPTOR_MODINFO_REQUIRESAMD], out var bRequiresAMD))
+            if (Game == MEGame.ME1 && bool.TryParse(iniData[Mod.MODDESC_HEADERKEY_MODINFO][Mod.MODDESC_DESCRIPTOR_MODINFO_REQUIRESAMD], out var bRequiresAMD))
             {
                 // Only used for ME1 AMD Lighting Fix
                 RequiresAMD = bRequiresAMD;
@@ -1876,7 +1876,15 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                         }
                     }
                     M3Log.Information(@"Adding DLC requirement to mod: " + reqDLCss, Settings.LogModStartup);
-                    list.Add(DLCRequirement.ParseRequirement(reqDLCss, ModDescTargetVersion >= 8.0));
+                    if (ModDescTargetVersion >= 9.0)
+                    {
+                        list.Add(DLCRequirement.ParseRequirementKeyed(reqDLCss));
+                    }
+                    else
+                    {
+                        // Mod Manager 8.2 and below
+                        list.Add(DLCRequirement.ParseRequirement(reqDLCss, ModDescTargetVersion >= 8.0));
+                    }
                 }
             }
 
@@ -2263,7 +2271,6 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 if (headerJob.Game1TLKXmls == null)
                 {
                     var searchType = ModDescTargetVersion >= 9.0 ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
-                    var files2 = FilesystemInterposer.DirectoryGetFiles(sourceDirectory, @"*.xml", searchType, Archive);
                     var files = FilesystemInterposer.DirectoryGetFiles(sourceDirectory, @"*.xml", searchType, Archive).Select(x => x.Substring((ModPath.Length > 0 ? (ModPath.Length + 1) : 0) + jobDirLength).TrimStart('\\')).ToList();
                     if (!files.Any())
                     {
@@ -2387,7 +2394,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         /// <returns></returns>
         public SortedSet<string> GetAutoConfigs()
         {
-            var autoConfigs = new SortedSet<string>();
+            var autoConfigs = new SortedSet<string>(StringComparer.InvariantCultureIgnoreCase);
             foreach (var InstallationJob in InstallationJobs)
             {
                 foreach (var altdlc in InstallationJob.AlternateDLCs)
