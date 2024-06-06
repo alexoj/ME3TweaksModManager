@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using LegendaryExplorerCore.Misc;
-using LegendaryExplorerCore.Packages;
 using ME3TweaksModManager.modmanager.objects.mod.editor;
 
 namespace ME3TweaksModManager.modmanager.objects.mod
@@ -47,7 +43,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 {MODDESC_DESCRIPTOR_MODINFO_UPDATECODE, ModClassicUpdateCode > 0 ? ModClassicUpdateCode.ToString() : null},
                 {MODDESC_DESCRIPTOR_MODINFO_NEXUSMODSDOMAINID, NexusModID > 0 ? NexusModID.ToString() : null},
                 {MODDESC_DESCRIPTOR_MODINFO_REQUIREDDLC, string.Join(';',RequiredDLC.Select(x=>x.Serialize(false)).Concat(OptionalSingleRequiredDLC.Select(x=>x.Serialize(true))))},
-                {MODDESC_DESCRIPTOR_MODINFO_BANNERIMAGENAME, new MDParameter(@"string", BannerImageName, BannerImageName, new [] {@""}, @"") {Header = MODDESC_HEADERKEY_MODINFO, AllowedValuesPopulationFunc = PopulateImageFileOptions}}, // Uses image population function // do not localize
+                {MODDESC_DESCRIPTOR_MODINFO_BANNERIMAGENAME, new MDParameter(@"string", MODDESC_DESCRIPTOR_MODINFO_BANNERIMAGENAME, BannerImageName, new [] {@""}, @"") {Header = MODDESC_HEADERKEY_MODINFO, AllowedValuesPopulationFunc = PopulateImageFileOptions}}, // Uses image population function // do not localize
                 {MODDESC_DESCRIPTOR_MODINFO_SORTALTERNATES, new MDParameter(@"string", MODDESC_DESCRIPTOR_MODINFO_SORTALTERNATES, SortAlternateOptions ? @"" : MODDESC_VALUE_FALSE, new [] {@"", MODDESC_VALUE_TRUE, MODDESC_VALUE_FALSE}, @"") {Header = MODDESC_HEADERKEY_MODINFO}}, //don't put checkedbydefault in if it is not set to true. // do not localize
                 {MODDESC_DESCRIPTOR_MODINFO_REQUIRESENHANCEDBINK, new MDParameter(@"string", MODDESC_DESCRIPTOR_MODINFO_REQUIRESENHANCEDBINK, !RequiresEnhancedBink ? @"" : MODDESC_VALUE_TRUE, new [] {@"", MODDESC_VALUE_TRUE, MODDESC_VALUE_FALSE}, @"") {Header = MODDESC_HEADERKEY_MODINFO}}, // don't populate if not used // do not localize
                 {MODDESC_DESCRIPTOR_MODINFO_BATCHINSTALL_REVERSESORT, new MDParameter(@"string", MODDESC_DESCRIPTOR_MODINFO_BATCHINSTALL_REVERSESORT, !BatchInstallUseReverseMountSort ? @"" : MODDESC_VALUE_TRUE, new [] {@"", MODDESC_VALUE_TRUE, MODDESC_VALUE_FALSE}, @"") {Header = MODDESC_HEADERKEY_MODINFO}}, // don't populate if not used // do not localize
