@@ -121,7 +121,9 @@ namespace ME3TweaksModManager.modmanager.windows
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            var shouldClose = M3L.ShowDialog(this, "Close the editor for this mod?", "Have you saved changes?", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes) == MessageBoxResult.Yes;
+            if (shouldClose)
+                Close();
         }
 
 
