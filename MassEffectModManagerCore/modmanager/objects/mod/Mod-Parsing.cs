@@ -239,7 +239,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 if (localizationJob != null)
                 {
                     var dlcReq = RequiredDLC.First().DLCFolderName; //Localization jobs, if valid, will always have something here.
-                    var tpmi = TPMIService.GetThirdPartyModInfo(dlcReq, Game);
+                    var tpmi = TPMIService.GetThirdPartyModInfo(dlcReq.Key, Game);
                     if (tpmi != null) dlcReq += $@" ({tpmi.modname})";
                     sb.AppendLine(M3L.GetString(M3L.string_interp_addsTheFollowingLocalizationsToX, dlcReq));
                     foreach (var l in localizationJob.FilesToInstall)
@@ -297,15 +297,8 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                     sb.AppendLine(M3L.GetString(M3L.string_modparsing_requiresTheFollowingDLCToInstall));
                     foreach (var reqDLC in RequiredDLC)
                     {
-                        string name = TPMIService.GetThirdPartyModInfo(reqDLC.DLCFolderName, Game)?.modname ?? reqDLC.DLCFolderName;
-                        if (reqDLC.MinVersion != null)
-                        {
-                            sb.AppendLine($" - {name} (Min version: {reqDLC.MinVersion})");
-                        }
-                        else
-                        {
-                            sb.AppendLine($@" - {name}");
-                        }
+                        var info = TPMIService.GetThirdPartyModInfo(reqDLC.DLCFolderName.Key, Game);
+                        sb.AppendLine($@" - {reqDLC.ToUIString(info, false)}");
                     }
                 }
 
@@ -314,7 +307,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                     sb.AppendLine(M3L.GetString(M3L.string_interp_singleRequiredDLC));
                     foreach (var reqDLC in OptionalSingleRequiredDLC)
                     {
-                        string name = TPMIService.GetThirdPartyModInfo(reqDLC.DLCFolderName, Game)?.modname ?? reqDLC.DLCFolderName;
+                        string name = TPMIService.GetThirdPartyModInfo(reqDLC.DLCFolderName.Key, Game)?.modname ?? reqDLC.DLCFolderName.Key;
                         sb.AppendLine($@" - {name}");
                     }
                 }
@@ -1878,12 +1871,12 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                     M3Log.Information(@"Adding DLC requirement to mod: " + reqDLCss, Settings.LogModStartup);
                     if (ModDescTargetVersion >= 9.0)
                     {
-                        list.Add(DLCRequirement.ParseRequirementKeyed(reqDLCss));
+                        list.Add(DLCRequirement.ParseRequirementKeyed(reqDLCss, ModDescTargetVersion));
                     }
                     else
                     {
                         // Mod Manager 8.2 and below
-                        list.Add(DLCRequirement.ParseRequirement(reqDLCss, ModDescTargetVersion >= 8.0));
+                        list.Add(DLCRequirement.ParseRequirement(reqDLCss, ModDescTargetVersion >= 8.0, false));
                     }
                 }
             }
@@ -2403,7 +2396,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                     {
                         foreach (var conditionaldlc in altdlc.ConditionalDLC) // Conditional DLC are not available for COND_MANUAL
                         {
-                            autoConfigs.Add(conditionaldlc.DLCName.Key);
+                            autoConfigs.Add(conditionaldlc.DLCFolderName.Key);
                         }
                     }
                     else if (altdlc.Condition == AlternateDLC.AltDLCCondition.COND_MANUAL && altdlc.DLCRequirementsForManual != null && altdlc.DLCRequirementsForManual.Any())
@@ -2418,7 +2411,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 {
                     foreach (var conditionaldlc in altfile.ConditionalDLC)
                     {
-                        autoConfigs.Add(conditionaldlc.DLCName.Key);
+                        autoConfigs.Add(conditionaldlc.DLCFolderName.Key);
                     }
                 }
             }

@@ -487,7 +487,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         /// </summary>
         /// <param name="gameTarget">Target to validate against</param>
         /// <returns>List of missing DLC modules, or an empty list if none</returns>
-        internal List<DLCRequirement> ValidateRequiredModulesAreInstalled(GameTargetWPF gameTarget)
+        internal List<DLCRequirement> ValidateRequiredModulesAreInstalled(GameTarget gameTarget, CaseInsensitiveDictionary<MetaCMM> metas)
         {
             if (gameTarget.Game != Game)
             {
@@ -495,11 +495,10 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             }
 
             List<DLCRequirement> failedReqs = new List<DLCRequirement>();
-            var installedDLC = gameTarget.GetInstalledDLC();
 
             foreach (var req in RequiredDLC)
             {
-                if (!req.IsRequirementMet(gameTarget, installedDLC))
+                if (!req.IsRequirementMet(gameTarget, metas))
                 {
                     failedReqs.Add(req);
                 }
@@ -513,7 +512,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         /// </summary>
         /// <param name="gameTarget">Target to validate against</param>
         /// <returns>List of missing DLC modules, or an empty list if none</returns>
-        internal bool ValidateSingleOptionalRequiredDLCInstalled(GameTargetWPF gameTarget)
+        internal bool ValidateSingleOptionalRequiredDLCInstalled(GameTarget gameTarget, CaseInsensitiveDictionary<MetaCMM> metas)
         {
             if (gameTarget.Game != Game)
             {
@@ -522,11 +521,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod
 
             if (OptionalSingleRequiredDLC.Any())
             {
-                var installedDLC = gameTarget.GetInstalledDLC();
-
                 foreach (var req in OptionalSingleRequiredDLC)
                 {
-                    if (req.IsRequirementMet(gameTarget, installedDLC))
+                    if (req.IsRequirementMet(gameTarget, metas))
                     {
                         return true;
                     }

@@ -741,22 +741,27 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
         public bool CheckConditionalDLCOptionKeys(CaseInsensitiveDictionary<MetaCMM> metaInfo)
         {
             // We also check for option keys in the metacmms
-            foreach (var condDLC in ConditionalDLC.Where(x => x.OptionKeyDependencies.Any()))
+            foreach (var condDLC in ConditionalDLC.Where(x => x.DLCOptionKeys != null && x.DLCOptionKeys.Any()))
             {
-                var meta = metaInfo[condDLC.DLCName.Key]; // We know at this point that this key will exist
-                foreach (var okd in condDLC.OptionKeyDependencies)
+                if (!condDLC.IsRequirementMet(null, metaInfo))
                 {
-                    if (okd.IsPlus == true && !meta.OptionKeysSelectedAtInstallTime.Contains(okd.Key, StringComparer.InvariantCultureIgnoreCase))
+                    return false;
+                }
+
+                /*
+                foreach (var okd in condDLC.DLCOptionKeys)
+                {
+                    if (okd.OptionKey.IsPlus == true && !meta.OptionKeysSelectedAtInstallTime.Contains(okd.OptionKey.Key, StringComparer.InvariantCultureIgnoreCase))
                     {
                         // Option that must have been chosen was not. We cannot choose this option.
                         return false;
                     }
-                    if (okd.IsPlus == false && meta.OptionKeysSelectedAtInstallTime.Contains(okd.Key, StringComparer.InvariantCultureIgnoreCase))
+                    if (okd.OptionKey.IsPlus == false && meta.OptionKeysSelectedAtInstallTime.Contains(okd.OptionKey.Key, StringComparer.InvariantCultureIgnoreCase))
                     {
                         // Option that must not have been chosen in another mod was chosen. We cannot chose this option.
                         return false;
                     }
-                }
+                }*/
             }
 
             return true;

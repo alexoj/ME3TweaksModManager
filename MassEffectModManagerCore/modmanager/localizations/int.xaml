@@ -616,7 +616,6 @@
     <!-- 0={mergeMod.MergeModFilename} 1={ex.Message} -->
     <system:String x:Key="string_updatingTLKFiles">Updating TLK files</system:String>
     <system:String x:Key="string_applyingMergemods">Applying mergemods</system:String>
-    <system:String x:Key="string_interp_minVersionAppend">(minimum version: {0})</system:String>
     <!-- 0={Version string 0.1.2.3} -->
     <system:String x:Key="string_notice_directModsDontGoToLibrary">Mods installed directly from archive will not appear in the mod library</system:String>
     <system:String x:Key="string_interp_errorInstallingBinkBypassX">An error occurred installing the bink bypass, which is required for full modding support: {0}</system:String>

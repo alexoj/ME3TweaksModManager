@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
+﻿using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Helpers;
-using ME3TweaksCoreWPF;
-using ME3TweaksCoreWPF.Targets;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.objects.mod;
 
@@ -27,7 +22,7 @@ namespace ME3TweaksModManager.modmanager.objects
         /// <summary>
         /// The last selected target in the panel
         /// </summary>
-        public GameTargetWPF SelectedTarget { get; set; }
+        public GameTarget SelectedTarget { get; set; }
         /// <summary>
         /// Tool to launch after this panel has closed
         /// </summary>
@@ -36,26 +31,26 @@ namespace ME3TweaksModManager.modmanager.objects
         /// <summary>
         /// Targets to plot manager sync after this panel has closed
         /// </summary>
-        public ConcurrentHashSet<GameTargetWPF> TargetsToPlotManagerSync { get; } = new();
+        public ConcurrentHashSet<GameTarget> TargetsToPlotManagerSync { get; } = new();
 
         /// <summary>
         /// LE1 targets to run Coalesced merge on after this panel has been closed
         /// </summary>
-        public ConcurrentHashSet<GameTargetWPF> TargetsToLE1Merge { get; } = new();
+        public ConcurrentHashSet<GameTarget> TargetsToLE1Merge { get; } = new();
 
         /// <summary>
         /// Targets to squadmate merge sync when this panel has closed
         /// </summary>
-        public ConcurrentHashSet<GameTargetWPF> TargetsToSquadmateMergeSync { get; } = new();
+        public ConcurrentHashSet<GameTarget> TargetsToSquadmateMergeSync { get; } = new();
         /// <summary>
         /// Targets to email merge sync when this panel has closed
         /// </summary>
-        public ConcurrentHashSet<GameTargetWPF> TargetsToEmailMergeSync { get; } = new();
+        public ConcurrentHashSet<GameTarget> TargetsToEmailMergeSync { get; } = new();
 
         /// <summary>
         /// Targets to TOC after this panel has closed
         /// </summary>
-        public ConcurrentHashSet<GameTargetWPF> TargetsToAutoTOC { get; } = new();
+        public ConcurrentHashSet<GameTarget> TargetsToAutoTOC { get; } = new();
 
         /// <summary>
         /// Mods that should have updates checked for when the panel result is handled
@@ -131,7 +126,7 @@ namespace ME3TweaksModManager.modmanager.objects
         /// Gets a list of DLC merge mod targets for this result
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<GameTargetWPF> GetMergeTargets()
+        public IEnumerable<GameTarget> GetMergeTargets()
         {
             return TargetsToEmailMergeSync.Concat(TargetsToSquadmateMergeSync).Distinct();
         }

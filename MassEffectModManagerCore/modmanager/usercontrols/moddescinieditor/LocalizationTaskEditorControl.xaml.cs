@@ -83,7 +83,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
             if (HasLoaded) return;
             if (EditingMod.Game.IsGame2() || EditingMod.Game.IsGame3())
             {
-                TargetMod = EditingMod?.RequiredDLC.FirstOrDefault()?.DLCFolderName;
+                TargetMod = EditingMod?.RequiredDLC.FirstOrDefault()?.DLCFolderName.Key;
                 LocalizationJob = EditingMod?.GetJob(ModJob.JobHeader.LOCALIZATION);
                 if (LocalizationJob != null)
                 {

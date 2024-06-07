@@ -138,7 +138,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                     if (Enum.TryParse(dlc, out ModJob.JobHeader header) && ModJob.GetHeadersToDLCNamesMap(modForValidating.Game).TryGetValue(header, out var foldername))
                     {
                         // ME3 remapping headers
-                        ConditionalDLC.Add(new ConditionalDLC(modForValidating, foldername, modForValidating.ModDescTargetVersion >= 9.0));
+                        ConditionalDLC.Add(new ConditionalDLC(foldername, modForValidating.ModDescTargetVersion, modForValidating.ModDescTargetVersion >= 9.0));
                         continue;
                     }
                     if (!dlc.StartsWith(@"DLC_"))
@@ -150,7 +150,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                     else
                     {
                         // Direct DLC name
-                        ConditionalDLC.Add(new ConditionalDLC(modForValidating, dlc, modForValidating.ModDescTargetVersion >= 9.0));
+                        ConditionalDLC.Add(new ConditionalDLC(dlc, modForValidating.ModDescTargetVersion, modForValidating.ModDescTargetVersion >= 9.0));
                     }
                 }
             }
@@ -536,14 +536,14 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             switch (Condition)
             {
                 case AltFileCondition.COND_DLC_NOT_PRESENT:
-                    UIIsSelected = !ConditionalDLC.Any(i => metaInfo.ContainsKey(i.DLCName.Key));
+                    UIIsSelected = !ConditionalDLC.Any(i => metaInfo.ContainsKey(i.DLCFolderName.Key));
                     if (UIIsSelected && mod.ModDescTargetVersion >= 9.0)
                     {
                         UIIsSelected = CheckConditionalDLCOptionKeys(metaInfo);
                     }
                     break;
                 case AltFileCondition.COND_DLC_PRESENT:
-                    UIIsSelected = ConditionalDLC.Any(i => metaInfo.ContainsKey(i.DLCName.Key));
+                    UIIsSelected = ConditionalDLC.Any(i => metaInfo.ContainsKey(i.DLCFolderName.Key));
                     if (UIIsSelected && mod.ModDescTargetVersion >= 9.0)
                     {
                         UIIsSelected = CheckConditionalDLCOptionKeys(metaInfo);

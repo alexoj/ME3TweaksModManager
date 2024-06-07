@@ -858,9 +858,9 @@ namespace ME3TweaksModManager
                     foreach (var dlc in morph.RequiredDLC)
                     {
                         var modNameStr =
-                            TPMIService.GetThirdPartyModInfo(dlc.DLCFolderName, SelectedGameTarget.Game)?.modname ??
+                            TPMIService.GetThirdPartyModInfo(dlc.DLCFolderName.Key, SelectedGameTarget.Game)?.modname ??
                             dlc.DLCFolderName;
-                        if (installedDLC.TryGetValue(dlc.DLCFolderName, out MetaCMM metaCmm))
+                        if (installedDLC.TryGetValue(dlc.DLCFolderName.Key, out MetaCMM metaCmm))
                         {
                             if (dlc.MinVersion != null)
                             {
@@ -1156,7 +1156,7 @@ namespace ME3TweaksModManager
             Keyboard.Focus(ModSearchBox);
         }
 
-        private void LaunchEGMSettings(GameTargetWPF target = null)
+        private void LaunchEGMSettings(GameTarget target = null)
         {
             target ??= GetCurrentTarget(MEGame.ME3);
             if (target != null)
@@ -1165,7 +1165,7 @@ namespace ME3TweaksModManager
             }
         }
 
-        private void LaunchEGMSettingsLE(GameTargetWPF target = null)
+        private void LaunchEGMSettingsLE(GameTarget target = null)
         {
             target ??= GetCurrentTarget(MEGame.LE3);
             if (target != null)
@@ -1981,7 +1981,7 @@ namespace ME3TweaksModManager
             // MERGE DLC
 
             // Todo: Persistence? That sounds miserable
-            var targetMergeMapping = new Dictionary<GameTargetWPF, M3MergeDLC>();
+            var targetMergeMapping = new Dictionary<GameTarget, M3MergeDLC>();
             if (result.NeedsMergeDLC)
             {
                 // Remove any if existing.
@@ -2142,7 +2142,7 @@ namespace ME3TweaksModManager
         /// Boots the specified tool ID, passes through the current active targets in M3, if they are supported.
         /// </summary>
         /// <param name="toolname"></param>
-        private void BootToolPathPassthrough(string toolname, GameTargetWPF forcedTarget = null)
+        private void BootToolPathPassthrough(string toolname, GameTarget forcedTarget = null)
         {
             var arguments = "";
             var me1Target = forcedTarget?.Game == MEGame.ME1 ? forcedTarget : GetCurrentTarget(MEGame.ME1);
@@ -4487,7 +4487,7 @@ namespace ME3TweaksModManager
             }
         }
 
-        private void AutoTOCTarget(GameTargetWPF target, bool showInStatusBar = true)
+        private void AutoTOCTarget(GameTarget target, bool showInStatusBar = true)
         {
             BackgroundTask task = showInStatusBar ? BackgroundTaskEngine.SubmitBackgroundJob(@"AutoTOC", M3L.GetString(M3L.string_runningAutoTOC),
                     M3L.GetString(M3L.string_ranAutoTOC)) : null;

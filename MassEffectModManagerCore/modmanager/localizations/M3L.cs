@@ -612,7 +612,6 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_errorApplyingMergeModXY = "string_interp_errorApplyingMergeModXY";
 		public const string string_updatingTLKFiles = "string_updatingTLKFiles";
 		public const string string_applyingMergemods = "string_applyingMergemods";
-		public const string string_interp_minVersionAppend = "string_interp_minVersionAppend";
 		public const string string_notice_directModsDontGoToLibrary = "string_notice_directModsDontGoToLibrary";
 		public const string string_interp_errorInstallingBinkBypassX = "string_interp_errorInstallingBinkBypassX";
 		public const string string_title_errorInstallingBinkBypass = "string_title_errorInstallingBinkBypass";
