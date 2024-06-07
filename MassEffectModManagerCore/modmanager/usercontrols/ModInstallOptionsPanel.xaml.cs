@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using ME3TweaksCore.Objects;
+using ME3TweaksModManager.modmanager.installer;
 using ME3TweaksModManager.modmanager.objects.exceptions;
 using ME3TweaksModManager.modmanager.objects.installer;
 using ME3TweaksModManager.modmanager.objects.batch;
@@ -109,40 +110,20 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private void SetupOptions(bool initialSetup)
         {
-            var missingRequiredDLC = ModBeingInstalled.ValidateRequiredModulesAreInstalled(SelectedGameTarget);
-            if (missingRequiredDLC.Count > 0)
+            var canInstall = SharedInstaller.ValidateModCanInstall(window, ModBeingInstalled, SelectedGameTarget);
+            if (!canInstall)
             {
-                M3Log.Error(@"Required DLC is missing for installation against target: " + string.Join(@", ", missingRequiredDLC));
                 PreventInstallUntilTargetChange = true;
-
-                string dlcText = "";
-                foreach (var dlc in missingRequiredDLC)
-                {
-                    var info = TPMIService.GetThirdPartyModInfo(dlc.DLCFolderName, ModBeingInstalled.Game);
-                    if (info != null)
-                    {
-                        dlcText += $"\n - {info.modname} ({dlc.DLCFolderName})"; //Do not localize
-                    }
-                    else
-                    {
-                        dlcText += $"\n - {dlc.DLCFolderName}"; //Do not localize
-                    }
-
-                    if (dlc.MinVersion != null)
-                    {
-                        dlcText += @" " + M3L.GetString(M3L.string_interp_minVersionAppend, dlc.MinVersion);
-                    }
-                }
-                M3L.ShowDialog(window, M3L.GetString(M3L.string_dialogRequiredContentMissing, dlcText), M3L.GetString(M3L.string_requiredContentMissing), MessageBoxButton.OK, MessageBoxImage.Error);
-
                 if (InstallationTargets.Count == 1)
                 {
                     // There are no other options
                     OnClosing(DataEventArgs.Empty);
                 }
-                return;
 
+                return;
             }
+
+            // Installation can continue
 
             AlternateGroups.ClearEx();
 
@@ -388,6 +369,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             {
                 // ME1 and LE can't compress. If user has elected to compress packages, and there are no alternates/additional targets, just begin installation
                 CompressInstalledPackages = Settings.PreferCompressingPackages && ModBeingInstalled.Game > MEGame.ME1;
+                AllOptionsAreAutomatic = true;
                 BeginInstallingMod();
             }
             else
@@ -657,6 +639,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
             ModInstallOptionsPackage moip = new ModInstallOptionsPackage()
             {
+                SkipPrerequesitesCheck = AllOptionsAreAutomatic,
                 CompressInstalledPackages = CompressInstalledPackages,
                 InstallTarget = SelectedGameTarget,
                 ModBeingInstalled = ModBeingInstalled,
@@ -779,6 +762,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 else
                 {
                     M3Log.Information(@"Batch mod options are valid, beginning install");
+                    AllOptionsAreAutomatic = true;
                     BeginInstallingMod();
                 }
             }

@@ -35,6 +35,7 @@ using ME3TweaksModManager.me3tweakscoreextended;
 using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.gameini;
 using ME3TweaksModManager.modmanager.helpers;
+using ME3TweaksModManager.modmanager.installer;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.memoryanalyzer;
 using ME3TweaksModManager.modmanager.objects;
@@ -148,34 +149,44 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         private void BeginInstallingMod()
         {
             ModIsInstalling = true;
-            if (CheckForGameBackup())
-            {
-                if (InstallOptionsPackage.InstallTarget.Game.IsLEGame())
-                {
-                    if (!OodleHelper.EnsureOodleDll(InstallOptionsPackage.InstallTarget.TargetPath, M3Filesystem.GetDllDirectory()))
-                    {
-                        M3Log.Error($@"Oodle dll could not be sourced from game: {InstallOptionsPackage.InstallTarget.TargetPath}. Installation cannot proceed");
-                        InstallationSucceeded = false;
-                        InstallationCancelled = true;
-                        M3L.ShowDialog(mainwindow, @"The compression library for opening and saving Legendary Edition packages could not be located. Ensure your game is properly installed. If you continue to have issues, please come to the ME3Tweaks Discord.", M3L.GetString(M3L.string_cannotInstallMod), MessageBoxButton.OK, MessageBoxImage.Error);
-                        OnClosing(DataEventArgs.Empty);
-                        return;
-                    }
-                }
-                M3Log.Information($@"BeginInstallingMod(): {InstallOptionsPackage.ModBeingInstalled.ModName}");
-                NamedBackgroundWorker bw = new NamedBackgroundWorker($@"ModInstaller-{InstallOptionsPackage.ModBeingInstalled.ModName}");
-                bw.WorkerReportsProgress = true;
-                bw.DoWork += InstallModBackgroundThread;
-                bw.RunWorkerCompleted += ModInstallationCompleted;
-                bw.RunWorkerAsync();
-            }
-            else
+            if (!CheckForGameBackup())
             {
                 M3Log.Error(@"User aborted installation because they did not have a backup available");
                 InstallationSucceeded = false;
                 InstallationCancelled = true;
                 OnClosing(DataEventArgs.Empty);
+                return;
             }
+
+            // Allow skipping if previous dialog was automatically gone through.
+            if (!InstallOptionsPackage.SkipPrerequesitesCheck && !SharedInstaller.ValidateModCanInstall(window, InstallOptionsPackage.ModBeingInstalled, InstallOptionsPackage.InstallTarget))
+            {
+                M3Log.Error(@"Mod could not install - aborting");
+                InstallationSucceeded = false;
+                InstallationCancelled = true;
+                OnClosing(DataEventArgs.Empty);
+                return;
+            }
+
+            if (InstallOptionsPackage.InstallTarget.Game.IsLEGame())
+            {
+                if (!OodleHelper.EnsureOodleDll(InstallOptionsPackage.InstallTarget.TargetPath, M3Filesystem.GetDllDirectory()))
+                {
+                    M3Log.Error($@"Oodle dll could not be sourced from game: {InstallOptionsPackage.InstallTarget.TargetPath}. Installation cannot proceed");
+                    InstallationSucceeded = false;
+                    InstallationCancelled = true;
+                    M3L.ShowDialog(mainwindow, "The compression library for opening and saving Legendary Edition packages could not be located. Ensure your game is properly installed. If you continue to have issues, please come to the ME3Tweaks Discord.", M3L.GetString(M3L.string_cannotInstallMod), MessageBoxButton.OK, MessageBoxImage.Error);
+                    OnClosing(DataEventArgs.Empty);
+                    return;
+                }
+            }
+
+            M3Log.Information($@"BeginInstallingMod(): {InstallOptionsPackage.ModBeingInstalled.ModName}");
+            NamedBackgroundWorker bw = new NamedBackgroundWorker($@"ModInstaller-{InstallOptionsPackage.ModBeingInstalled.ModName}");
+            bw.WorkerReportsProgress = true;
+            bw.DoWork += InstallModBackgroundThread;
+            bw.RunWorkerCompleted += ModInstallationCompleted;
+            bw.RunWorkerAsync();
         }
 
         private bool CheckForGameBackup()
@@ -204,6 +215,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             return true; //has backup
         }
 
+
+
         private void InstallModBackgroundThread(object sender, DoWorkEventArgs e)
         {
             var sw = Stopwatch.StartNew();
@@ -221,43 +234,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             if (gameDLCPath != null)
             {
                 Directory.CreateDirectory(gameDLCPath); //me1/me2 missing dlc might not have this folder
-            }
-
-            //Check we can install
-            // Todo: Also put this in ModOptions dialog. Maybe with a SharedModInstaller.cs?
-            var missingRequiredDLC = InstallOptionsPackage.ModBeingInstalled.ValidateRequiredModulesAreInstalled(InstallOptionsPackage.InstallTarget);
-            if (missingRequiredDLC.Count > 0)
-            {
-                M3Log.Error(@"Required DLC is missing for installation: " + string.Join(@", ", missingRequiredDLC));
-                e.Result = (ModInstallCompletedStatus.INSTALL_FAILED_REQUIRED_DLC_MISSING, missingRequiredDLC);
-                M3Log.Information(@"<<<<<<< Finishing modinstaller");
-                return;
-            }
-
-            // Check optional DLCs
-            if (!InstallOptionsPackage.ModBeingInstalled.ValidateSingleOptionalRequiredDLCInstalled(InstallOptionsPackage.InstallTarget))
-            {
-                M3Log.Error($@"Mod requires installation of at least one of the following DLC, none of which are installed: {String.Join(',', InstallOptionsPackage.ModBeingInstalled.OptionalSingleRequiredDLC)}");
-                e.Result = (ModInstallCompletedStatus.INSTALL_FAILED_SINGLEREQUIRED_DLC_MISSING, InstallOptionsPackage.ModBeingInstalled.OptionalSingleRequiredDLC);
-                M3Log.Information(@"<<<<<<< Finishing modinstaller");
-                return;
-            }
-
-            //Check/warn on official headers
-            if (!PrecheckHeaders(installationJobs))
-            {
-                //logs handled in precheck
-                e.Result = ModInstallCompletedStatus.INSTALL_FAILED_USER_CANCELED_MISSING_MODULES;
-                M3Log.Information(@"<<<<<<< Exiting modinstaller");
-                return;
-            }
-
-            if (InstallOptionsPackage.ModBeingInstalled.RequiresAMD && !App.IsRunningOnAMD)
-            {
-                e.Result = ModInstallCompletedStatus.INSTALL_FAILED_AMD_PROCESSOR_REQUIRED;
-                M3Log.Error(@"This mod can only be installed on AMD processors, as it does nothing for Intel users.");
-                M3Log.Information(@"<<<<<<< Exiting modinstaller");
-                return;
             }
 
             // Bink only needs installed once in a batch install
@@ -975,7 +951,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 var gameMap = MELoadedFiles.GetFilesLoadedInGame(InstallOptionsPackage.InstallTarget.Game, gameRootOverride: InstallOptionsPackage.InstallTarget.TargetPath);
                 int doneMerges = 0;
                 int totalTlkMerges = mergeFiles.Count;
-                PackageCache cache = new PackageCache() { CacheMaxSize = 12};
+                PackageCache cache = new PackageCache() { CacheMaxSize = 12 };
 
                 // 06/05/2022 Change to parallel
                 Exception parallelException = null;
@@ -1381,81 +1357,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             return true;
         }
 
-        /// <summary>
-        /// Checks if DLC specified by the job installation headers exist and prompt user to continue or not if the DLC is not found. This is only used jobs that are not CUSTOMDLC.'
-        /// </summary>
-        /// <param name="installationJobs">List of jobs to look through and validate</param>
-        /// <returns></returns>
-        private bool PrecheckHeaders(List<ModJob> installationJobs)
-        {
-            //if (InstallOptionsPackage.ModBeingInstalled.Game != MEGame.ME3) { return true; } //me1/me2 don't have dlc header checks like me3
-            foreach (var job in installationJobs)
-            {
-                if (job.Header == ModJob.JobHeader.ME1_CONFIG)
-                {
-                    //Make sure config files exist.
-                    var destFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"BioWare", @"Mass Effect", @"Config", @"BIOEngine.ini");
-                    if (!File.Exists(destFile))
-                    {
-                        bool cancel = false;
-
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-
-                            M3L.ShowDialog(Window.GetWindow(this), M3L.GetString(M3L.string_dialogRunGameOnceFirst), M3L.GetString(M3L.string_gameMustBeRunAtLeastOnce), MessageBoxButton.OK, MessageBoxImage.Error);
-                            cancel = true;
-                            return;
-                        });
-                        if (cancel) return false;
-                    }
-
-                    continue;
-                }
-
-                if (!InstallOptionsPackage.InstallTarget.IsOfficialDLCInstalled(job.Header))
-                {
-                    M3Log.Warning($@"DLC not installed that mod is marked to modify: {job.Header}, prompting user.");
-                    //Prompt user
-                    bool cancel = false;
-                    Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        var dlcName = ModJob.GetHeadersToDLCNamesMap(InstallOptionsPackage.ModBeingInstalled.Game)[job.Header];
-                        string resolvedName = dlcName;
-                        MEDirectories.OfficialDLCNames(InstallOptionsPackage.ModBeingInstalled.Game).TryGetValue(dlcName, out resolvedName);
-                        string message = M3L.GetString(M3L.string_interp_dialogOfficialTargetDLCNotInstalled, InstallOptionsPackage.ModBeingInstalled.ModName, dlcName, resolvedName);
-                        if (job.RequirementText != null)
-                        {
-                            message += M3L.GetString(M3L.string_dialogJobDescriptionMessageHeader);
-                            message += $"\n{job.RequirementText}"; //Do not localize
-                        }
-
-                        message += M3L.GetString(M3L.string_dialogJobDescriptionMessageFooter);
-                        MessageBoxResult result = M3L.ShowDialog(window, message, M3L.GetString(M3L.string_dialogJobDescriptionMessageTitle, MEDirectories.OfficialDLCNames(InstallOptionsPackage.ModBeingInstalled.Game)[ModJob.GetHeadersToDLCNamesMap(InstallOptionsPackage.ModBeingInstalled.Game)[job.Header]]), MessageBoxButton.YesNo, MessageBoxImage.Error);
-                        if (result == MessageBoxResult.No)
-                        {
-                            cancel = true;
-                            return;
-                        }
-
-                    });
-                    if (cancel)
-                    {
-                        M3Log.Error(@"User canceling installation");
-
-                        return false;
-                    }
-
-                    M3Log.Warning(@"User continuing installation anyways");
-                }
-                else
-                {
-                    M3Log.Information(@"Official headers check passed for header " + job.Header, Settings.LogModInstallation);
-                }
-            }
-
-            return true;
-        }
-
         private void ModInstallationCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             var telemetryResult = ModInstallCompletedStatus.NO_RESULT_CODE;
@@ -1529,39 +1430,37 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 }
                 else if (e.Result is (ModInstallCompletedStatus dlcCode, List<DLCRequirement> failReqs))
                 {
-                    telemetryResult = dlcCode;
-                    // A DLC requirement failed
-                    string dlcText = "";
-                    foreach (var dlc in failReqs)
-                    {
-                        var info = TPMIService.GetThirdPartyModInfo(dlc.DLCFolderName,
-                            InstallOptionsPackage.ModBeingInstalled.Game);
-                        if (info != null)
-                        {
-                            dlcText += $"\n - {info.modname} ({dlc.DLCFolderName})"; //Do not localize
-                        }
-                        else
-                        {
-                            dlcText += $"\n - {dlc.DLCFolderName}"; //Do not localize
-                        }
+                    //telemetryResult = dlcCode;
+                    //// A DLC requirement failed
+                    //string dlcText = "";
+                    //foreach (var dlc in failReqs)
+                    //{
+                    //    var info = TPMIService.GetThirdPartyModInfo(dlc.DLCFolderName.Key, InstallOptionsPackage.ModBeingInstalled.Game);
+                    //    if (info != null)
+                    //    {
+                    //        dlcText += $"\n - {info.modname} ({dlc.DLCFolderName})"; //Do not localize
+                    //    }
+                    //    else
+                    //    {
+                    //        dlcText += $"\n - {dlc.DLCFolderName}"; //Do not localize
+                    //    }
 
-                        if (dlc.MinVersion != null)
-                        {
-                            dlcText += @" " + M3L.GetString(M3L.string_interp_minVersionAppend, dlc.MinVersion);
-                        }
-                    }
+                    //    if (dlc.MinVersion != null)
+                    //    {
+                    //        dlcText += @" " + M3L.GetString(M3L.string_interp_minVersionAppend, dlc.MinVersion);
+                    //    }
+                    //}
 
-                    // Show dialog
-                    if (dlcCode == ModInstallCompletedStatus.INSTALL_FAILED_REQUIRED_DLC_MISSING)
-                    {
-                        M3L.ShowDialog(window, M3L.GetString(M3L.string_dialogRequiredContentMissing, dlcText), M3L.GetString(M3L.string_requiredContentMissing), MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
-                    else if (dlcCode == ModInstallCompletedStatus.INSTALL_FAILED_SINGLEREQUIRED_DLC_MISSING)
-                    {
-                        M3L.ShowDialog(window, M3L.GetString(M3L.string_interp_error_singleRequiredDlcMissing, InstallOptionsPackage.ModBeingInstalled.ModName, dlcText), M3L.GetString(M3L.string_requiredContentMissing), MessageBoxButton.OK, MessageBoxImage.Error);
-                    }
+                    //// Show dialog
+                    //if (dlcCode == ModInstallCompletedStatus.INSTALL_FAILED_REQUIRED_DLC_MISSING)
+                    //{
+                    //    M3L.ShowDialog(window, M3L.GetString(M3L.string_dialogRequiredContentMissing, dlcText), M3L.GetString(M3L.string_requiredContentMissing), MessageBoxButton.OK, MessageBoxImage.Error);
+                    //}
+                    //else if (dlcCode == ModInstallCompletedStatus.INSTALL_FAILED_SINGLEREQUIRED_DLC_MISSING)
+                    //{
+                    //}
 
-                    InstallationCancelled = true;
+                    //InstallationCancelled = true;
 
                 }
                 else if (e.Result is (ModInstallCompletedStatus result, List<string> items))
