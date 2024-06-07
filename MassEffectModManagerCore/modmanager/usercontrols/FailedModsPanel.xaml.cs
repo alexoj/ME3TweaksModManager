@@ -92,18 +92,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         public ObservableCollectionExtended<Mod> FailedMods { get; } = new ObservableCollectionExtended<Mod>();
 
-        private void ModsList_ListBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (e.AddedItems.Count > 0)
-            {
-                SelectedMod = (Mod)e.AddedItems[0];
-            }
-            else
-            {
-                SelectedMod = null;
-            }
-        }
-
         private void Close_Clicked(object sender, RoutedEventArgs e)
         {
             OnClosing(DataEventArgs.Empty);
@@ -120,6 +108,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         public override void OnPanelVisible()
         {
             InitializeComponent();
+            SelectedMod = FailedMods.FirstOrDefault();
         }
     }
 }

@@ -121,7 +121,7 @@
                 <ListBox
                     Name="ModsList_ListBox"
                     ItemsSource="{Binding FailedMods}"
-                    SelectionChanged="ModsList_ListBox_OnSelectionChanged"
+                    SelectedItem="{Binding SelectedMod}"
                     BorderThickness="1">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
