@@ -12,12 +12,12 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
     {
         private ConditionalDLC() { }
 
-        public static ConditionalDLC MakeConditionalDLC(Mod mod, string input, bool canBePlusMinus, bool folderNameIsPlusMinus)
+        public static ConditionalDLC MakeConditionalDLC(Mod mod, string input, bool canBePlusMinus)
         {
             if (mod.ModDescTargetVersion >= 9.0)
             {
                 // Use the base constructor
-                return new ConditionalDLC(input, mod.ModDescTargetVersion, folderNameIsPlusMinus);
+                return new ConditionalDLC(input, mod.ModDescTargetVersion, canBePlusMinus);
             }
 
             // Old versions did not support anything beyond folder name.
@@ -28,6 +28,6 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
         }
 
 
-        public ConditionalDLC(string input, double featureLevel, bool folderNameIsPlusMinus) : base(input, featureLevel, folderNameIsPlusMinus) { }
+        private ConditionalDLC(string input, double featureLevel, bool folderNameIsPlusMinus) : base(input, featureLevel, folderNameIsPlusMinus) { }
     }
 }

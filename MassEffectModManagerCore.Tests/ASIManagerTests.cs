@@ -22,7 +22,7 @@ namespace ME3TweaksModManager.Tests
         public void TestASIManager()
         {
 #if AZURE
-            return; // This doens't work with updates from web host
+            return; // This doesn't work with updates from web host
 #endif
             GlobalTest.Init();
             Random random = new Random();
@@ -37,7 +37,7 @@ namespace ME3TweaksModManager.Tests
                 var normal = Path.Combine(root, "normal");
                 GameTarget gt = new GameTarget(game, normal, true, false, isTest: true);
 
-                var asiDir = M3Directories.GetASIPath(gt);
+                var asiDir = gt.GetASIPath();
                 if (Directory.Exists(asiDir))
                 {
                     // Clean slate
