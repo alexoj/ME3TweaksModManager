@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using ME3TweaksModManager.modmanager.objects.alternate
 using System.Windows;
 using System.Windows.Controls;
 using ME3TweaksModManager.modmanager.objects.alternates;
