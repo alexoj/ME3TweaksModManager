@@ -13,8 +13,7 @@
              ToolTipService.InitialShowDelay="0"
              ToolTipService.BetweenShowDelay="0"
              HorizontalContentAlignment="Stretch"
-             HorizontalAlignment="Stretch"
-             MouseLeave="SAOP_MouseLeave">
+             HorizontalAlignment="Stretch">
     <UserControl.Resources>
         <converters:GroupNameToColorConverter
             x:Key="GroupNameToColorConverter" />
