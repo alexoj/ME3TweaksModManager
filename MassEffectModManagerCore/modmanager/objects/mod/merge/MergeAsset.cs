@@ -9,8 +9,9 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
     /// <summary>
     /// Asset file packaged in a merge mod
     /// </summary>
-    public class MergeAsset
+    public class MergeAsset : IComparable
     {
+
         // Concurrency
         private static object syncObj = new object();
 
@@ -125,6 +126,26 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         {
             FileName = assetName;
             IsCompressed = compressAsset;
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (obj is MergeAsset o)
+                return FileName.CompareTo(o.FileName);
+            return 1;
+        }
+
+        public override bool Equals(object o)
+        {
+            if (ReferenceEquals(this, o)) return true;
+            if (ReferenceEquals(o, null)) return false;
+            if (GetType() != o.GetType()) return false;
+            return FileName == (o as MergeAsset).FileName;
+        }
+
+        public int GetHashCode(MergeAsset obj)
+        {
+            return (obj.FileName != null ? obj.FileName.GetHashCode() : 0);
         }
     }
 }
