@@ -949,7 +949,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 {
                     Action = "Tracking mergemod changes";
                     mmp.FinalizeFileTransitionMap();
-                    foreach (var f in mmp.FileTransitionMap)
+                    foreach (var f in mmp.FileTransitionMap.Where(x=>x.Value.WasSavedOnce))
                     {
                         addBasegameTrackedFile(f.Value.OriginalMD5, f.Key, f.Value.FinalMD5);
                     }
