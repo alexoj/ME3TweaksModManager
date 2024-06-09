@@ -587,8 +587,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                     break;
             }
 
-            UIIsSelectable = false; //autos
-            //IsSelected; //autos
+            UIIsSelectable = false; //auto options cannot be toggled by user
         }
 
 

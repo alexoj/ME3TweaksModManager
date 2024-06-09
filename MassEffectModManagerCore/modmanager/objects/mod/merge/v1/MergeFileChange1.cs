@@ -52,7 +52,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             }
 
             // APPLY ASSET UPDATE
-            AssetUpdate?.ApplyUpdate(package, ref export, installingMod, addMergeWeightCompletion, gameTarget);
+            AssetUpdate?.ApplyUpdate(package, ref export, assetsCache, installingMod, addMergeWeightCompletion, gameTarget);
 
             ClassUpdate?.ApplyUpdate(package, ref export, assetsCache, gameTarget, addMergeWeightCompletion);
             // The below all require a target export so we enforce it here.
@@ -499,13 +499,21 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         [JsonProperty(@"entryname")]
         public string AssetExportInstancedFullPath { get; set; }
 
-        public bool ApplyUpdate(IMEPackage package, ref ExportEntry targetExport, Mod installingMod, Action<int> addMergeWeightCompleted, GameTarget target)
+        public bool ApplyUpdate(IMEPackage package, ref ExportEntry targetExport, MergeAssetCache1 assetCache, Mod installingMod, Action<int> addMergeWeightCompleted, GameTarget target)
         {
-            // targetExport CAN BE NULL starting with ModDesc 8.1 mods!
-            OwningMM.Assets[AssetName].EnsureAssetLoaded();
-            var binaryStream = new MemoryStream(OwningMM.Assets[AssetName].AssetBinary);
+            // Unsure if asset loading should be locked to prevent double load in race condition
+            // Does it matter if same asset replaces another same asset?
 
-            using var sourcePackage = MEPackageHandler.OpenMEPackageFromStream(binaryStream, AssetName);
+            if (!assetCache.Packages.TryGetValue(AssetName, out var sourcePackage))
+            {
+                OwningMM.Assets[AssetName].EnsureAssetLoaded();
+                var binaryStream = MEPackageHandler.CreateOptimizedLoadingMemoryStream(OwningMM.Assets[AssetName].AssetBinary);
+                sourcePackage = MEPackageHandler.OpenMEPackageFromStream(binaryStream, AssetName);
+                assetCache.Packages[AssetName] = sourcePackage;
+            }
+
+            // targetExport CAN BE NULL starting with ModDesc 8.1 mods!
+
             var sourceEntry = sourcePackage.FindExport(AssetExportInstancedFullPath);
             if (sourceEntry == null)
             {
@@ -568,13 +576,15 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             else
             {
                 // Replace the existing content - even if marked as new this might be updating an existing mod
-                var resultst = EntryImporter.ImportAndRelinkEntries(EntryImporter.PortingOption.ReplaceSingular,
+                // 06/09/2024: Remove ImportExportDependencies, change to ReplaceWithRelink... that should be 
+                // same still
+                var resultst = EntryImporter.ImportAndRelinkEntries(EntryImporter.PortingOption.ReplaceSingularWithRelink,
                     sourceEntry, targetExport.FileRef, targetExport, true, new RelinkerOptionsPackage()
                     {
                         ErrorOccurredCallback = x =>
                             throw new Exception(M3L.GetString(M3L.string_interp_mergefile_errorMergingAssetsX, x)),
-                        ImportExportDependencies = true, // I don't think this is actually necessary...
                         GamePathOverride = target.TargetPath,
+                        GenerateImportsForGlobalFiles = false,
                     }, out _);
                 if (resultst.Any())
                 {
