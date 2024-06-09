@@ -1,23 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Flurl.Http;
-using LegendaryExplorerCore.Coalesced.Config;
 using LegendaryExplorerCore.Compression;
 using LegendaryExplorerCore.GameFilesystem;
 using LegendaryExplorerCore.Gammtek.Extensions;
-using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
-using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Unreal;
 using ME3TweaksCore.Config;
 using ME3TweaksCore.GameFilesystem;
@@ -25,14 +17,10 @@ using ME3TweaksCore.Helpers;
 using ME3TweaksCore.ME3Tweaks.M3Merge.PlotManager;
 using ME3TweaksCore.NativeMods;
 using ME3TweaksCore.Objects;
-using ME3TweaksCore.Services.Backup;
 using ME3TweaksCore.Services.Shared.BasegameFileIdentification;
 using ME3TweaksCore.Services.ThirdPartyModIdentification;
-using ME3TweaksCoreWPF;
 using ME3TweaksCoreWPF.Targets;
-using ME3TweaksCoreWPF.UI;
 using ME3TweaksModManager.me3tweakscoreextended;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.gameini;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.installer;
@@ -42,12 +30,12 @@ using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.alternates;
 using ME3TweaksModManager.modmanager.objects.gametarget;
 using ME3TweaksModManager.modmanager.objects.installer;
+using ME3TweaksModManager.modmanager.objects.mod.merge;
+using ME3TweaksModManager.modmanager.objects.mod.merge.v1;
 using ME3TweaksModManager.modmanager.objects.tlk;
-using ME3TweaksModManager.modmanager.usercontrols.interfaces;
 using ME3TweaksModManager.ui;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.AppCenter.Crashes;
-using Newtonsoft.Json;
+using Microsoft.VisualBasic.Devices;
 using SevenZip;
 using Mod = ME3TweaksModManager.modmanager.objects.mod.Mod;
 
@@ -230,7 +218,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             InstallOptionsPackage.ModBeingInstalled.ReOpenArchiveIfNecessary();
 
             var installationJobs = InstallOptionsPackage.ModBeingInstalled.InstallationJobs;
-            var gameDLCPath = M3Directories.GetDLCPath(InstallOptionsPackage.InstallTarget);
+            var gameDLCPath = InstallOptionsPackage.InstallTarget.GetDLCPath();
             if (gameDLCPath != null)
             {
                 Directory.CreateDirectory(gameDLCPath); //me1/me2 missing dlc might not have this folder
@@ -480,7 +468,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     else
                     {
 
-                        var destFile = Path.Combine(unpackedQueue.Key.Header == ModJob.JobHeader.CUSTOMDLC ? M3Directories.GetDLCPath(InstallOptionsPackage.InstallTarget) : InstallOptionsPackage.InstallTarget.TargetPath, originalMapping.Key); //official
+                        var destFile = Path.Combine(unpackedQueue.Key.Header == ModJob.JobHeader.CUSTOMDLC ? InstallOptionsPackage.InstallTarget.GetDLCPath() : InstallOptionsPackage.InstallTarget.TargetPath, originalMapping.Key); //official
 
                         //Extract Custom DLC name
                         if (unpackedQueue.Key.Header == ModJob.JobHeader.CUSTOMDLC)
@@ -863,86 +851,145 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             //Stage: Merge Mods
             var allMMs = installationJobs.SelectMany(x => x.MergeMods).ToList();
             allMMs.AddRange(installationJobs.SelectMany(x => x.AlternateFiles.Where(y => y.UIIsSelected && y.MergeMods != null).SelectMany(y => y.MergeMods)));
-            var totalWeight = allMMs.Sum(x => x.GetMergeWeight());
-            var doneWeight = 0;
-            if (totalWeight == 0)
-            {
-                Debug.WriteLine(@"Total weight is ZERO!");
-                totalWeight = 1;
-            }
 
-            void mergeWeightCompleted(int newWeightDone)
+            if (allMMs.Count > 0)
             {
-                doneWeight += newWeightDone;
-                Percent = (int)(doneWeight * 100.0 / totalWeight);
+                var totalWeight = allMMs.Sum(x => x.GetMergeWeight());
+                var doneWeight = 0;
+                if (totalWeight == 0)
+                {
+                    Debug.WriteLine(@"Total weight is ZERO!");
+                    totalWeight = 1;
+                }
+
+                void mergeWeightCompleted(int newWeightDone)
+                {
+                    doneWeight += newWeightDone;
+                    Percent = (int)(doneWeight * 100.0 / totalWeight);
 #if DEBUG
-                if (Percent > 100)
-                {
-                    Debug.WriteLine(@"Percent calculation is wrong!");
-                    Debugger.Break();
-                }
+                    if (Percent > 100)
+                    {
+                        Debug.WriteLine(@"Percent calculation is wrong!");
+                        Debugger.Break();
+                    }
 #endif
-            }
+                }
 
-            void addBasegameTrackedFile(string originalmd5, string file)
-            {
-                if (file != null)
+                void addBasegameTrackedFile(string originalmd5, string file, string finalMD5 = null)
                 {
-                    if (file.Contains(@"BioGame\CookedPC", StringComparison.InvariantCultureIgnoreCase))
+                    if (file != null)
                     {
-                        // It's basegame
-                        var mm = new M3BasegameFileRecord(file, (int)new FileInfo(file).Length, InstallOptionsPackage.InstallTarget, InstallOptionsPackage.ModBeingInstalled);
-                        var existingInfo = BasegameFileIdentificationService.GetBasegameFileSource(InstallOptionsPackage.InstallTarget, file, originalmd5);
-                        var newTextToAppend = $@"{InstallOptionsPackage.ModBeingInstalled.ModName} {InstallOptionsPackage.ModBeingInstalled.ModVersionString}";
-                        mm.moddeschashes ??= new();
-                        if (existingInfo != null)
+                        if (file.Contains(@"BioGame\CookedPC", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            if (!existingInfo.source.Contains(newTextToAppend))
+                            // It's basegame
+                            var mm = new M3BasegameFileRecord(file, (int)new FileInfo(file).Length,
+                                InstallOptionsPackage.InstallTarget, InstallOptionsPackage.ModBeingInstalled, finalMD5);
+                            var existingInfo =
+                                BasegameFileIdentificationService.GetBasegameFileSource(
+                                    InstallOptionsPackage.InstallTarget, file, originalmd5);
+                            var newTextToAppend =
+                                $@"{InstallOptionsPackage.ModBeingInstalled.ModName} {InstallOptionsPackage.ModBeingInstalled.ModVersionString}";
+                            mm.moddeschashes ??= new();
+                            if (existingInfo != null)
                             {
-                                mm.source = $@"{existingInfo.source} + {newTextToAppend}";
+                                if (!existingInfo.source.Contains(newTextToAppend))
+                                {
+                                    mm.source = $@"{existingInfo.source} + {newTextToAppend}";
+                                }
+
+                                mm.moddeschashes.AddRange(existingInfo.moddeschashes);
                             }
-                            mm.moddeschashes.AddRange(existingInfo.moddeschashes);
+
+                            mm.moddeschashes.Add(InstallOptionsPackage.ModBeingInstalled.ModDescHash);
+                            basegameIdentificationServiceRecords[
+                                Path.GetRelativePath(InstallOptionsPackage.InstallTarget.TargetPath, file)] = mm;
                         }
-                        mm.moddeschashes.Add(InstallOptionsPackage.ModBeingInstalled.ModDescHash);
-                        basegameIdentificationServiceRecords[Path.GetRelativePath(InstallOptionsPackage.InstallTarget.TargetPath, file)] = mm;
                     }
                 }
-            }
 
-            // We must have a list of records we use as initial lookups
-            // It is mapped filepath -> record
-            // This is so if we apply multiple m3m's to a single file 
-            // it does not wipe it out when it does the hash transition across
-            // two files but is not yet in the database
-            var originalRecords = new CaseInsensitiveConcurrentDictionary<string>();
-            Percent = 0;
-            foreach (var mergeMod in allMMs)
-            {
-                try
+                var mmp = new MergeModPackage()
                 {
-                    Action = M3L.GetString(M3L.string_applyingMergemods);
-                    mergeMod.ApplyMergeMod(InstallOptionsPackage.ModBeingInstalled, InstallOptionsPackage.InstallTarget, mergeWeightCompleted, addBasegameTrackedFile, originalRecords);
+                    Target = InstallOptionsPackage.InstallTarget,
+                    AssociatedMod = InstallOptionsPackage.ModBeingInstalled,
+                    OpenedBasegameCache = new PackageCache()
+                };
+
+                if (allMMs.Count == 1)
+                {
+                    mmp.OpenedBasegameCache.CacheMaxSize = 1; // This should effectively not cache anything
                 }
-                catch (Exception ex)
+                else if (allMMs.OfType<MergeMod1>().Any(x => x.FilesToMergeInto.Any(x => x.ApplyToAllLocalizations)) &&
+                         (new ComputerInfo().AvailablePhysicalMemory / (ulong)FileSize.GibiByte < 8))
                 {
-                    // Error applying merge mod!
-                    InstallationSucceeded = false;
-                    M3Log.Exception(ex, $@"An error occurred installing mergemod {mergeMod.MergeModFilename}: ");
-                    e.Result = ModInstallCompletedStatus.INSTALL_FAILED_EXCEPTION_APPLYING_MERGE_MOD;
-                    if (Application.Current != null)
+                    // If not a lot of free memory cap it at 4 files, about 1GB for LE1 startups
+                    mmp.OpenedBasegameCache.CacheMaxSize = 4;
+                }
+                else
+                {
+                    // Cache is uncapped. We can further optimize install time by not saving until the end.
+                    mmp.MergeModToSavePackageWith = new CaseInsensitiveDictionary<IMergeMod>();
+                    for (int i = allMMs.Count - 1; i >= 0; i--)
                     {
-                        Application.Current.Dispatcher.Invoke(() => M3L.ShowDialog(mainwindow, M3L.GetString(M3L.string_interp_errorApplyingMergeModXY, mergeMod.MergeModFilename, ex.Message), M3L.GetString(M3L.string_errorInstallingMod), MessageBoxButton.OK, MessageBoxImage.Error));
+                        var mm = allMMs[i];
+                        var allFiles = mm.GetMergeFileTargetFiles();
+                        foreach (var af in allFiles)
+                        {
+                            if (!mmp.MergeModToSavePackageWith.TryGetValue(af, out _))
+                            {
+                                mmp.MergeModToSavePackageWith[af] =
+                                    mm; // This merge mod should be the one to save the package.
+                            }
+                        }
                     }
-
-                    M3Log.Warning(@"<<<<<<< Aborting modinstaller");
-                    return;
                 }
+
+
+                // Run at the end of all merge mods so we get the final hash.
+                void convertMergeModRecordsToFileIdentificationRecords()
+                {
+                    Action = "Tracking mergemod changes";
+                    mmp.FinalizeFileTransitionMap();
+                    foreach (var f in mmp.FileTransitionMap)
+                    {
+                        addBasegameTrackedFile(f.Value.OriginalMD5, f.Key, f.Value.FinalMD5);
+                    }
+                }
+
+
+                foreach (var mergeMod in allMMs)
+                {
+                    try
+                    {
+                        Action = M3L.GetString(M3L.string_applyingMergemods);
+                        mergeMod.ApplyMergeMod(mmp, mergeWeightCompleted);
+                    }
+                    catch (Exception ex)
+                    {
+                        convertMergeModRecordsToFileIdentificationRecords(); // Run conversion now
+
+                        // Error applying merge mod!
+                        InstallationSucceeded = false;
+                        M3Log.Exception(ex, $@"An error occurred installing mergemod {mergeMod.MergeModFilename}: ");
+                        e.Result = ModInstallCompletedStatus.INSTALL_FAILED_EXCEPTION_APPLYING_MERGE_MOD;
+                        if (Application.Current != null)
+                        {
+                            Application.Current.Dispatcher.Invoke(() => M3L.ShowDialog(mainwindow,
+                                M3L.GetString(M3L.string_interp_errorApplyingMergeModXY, mergeMod.MergeModFilename,
+                                    ex.Message), M3L.GetString(M3L.string_errorInstallingMod), MessageBoxButton.OK,
+                                MessageBoxImage.Error));
+                        }
+
+                        M3Log.Warning(@"<<<<<<< Aborting modinstaller");
+                        return;
+                    }
+                }
+
+                convertMergeModRecordsToFileIdentificationRecords(); // Run conversion
             }
 
             // Stage: TLK merge (Game 1)
             if (InstallOptionsPackage.ModBeingInstalled.GetJob(ModJob.JobHeader.GAME1_EMBEDDED_TLK) != null)
             {
-                PackageCache pc = new PackageCache();
                 Percent = 0;
                 Action = M3L.GetString(M3L.string_updatingTLKFiles);
 
@@ -1003,7 +1050,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             {
                 foreach (var dlcFolderInstalled in addedDLCFolders)
                 {
-                    M3CConfigMerge.PerformDLCMerge(InstallOptionsPackage.ModBeingInstalled.Game, M3Directories.GetDLCPath(InstallOptionsPackage.InstallTarget), Path.GetFileName(dlcFolderInstalled));
+                    M3CConfigMerge.PerformDLCMerge(InstallOptionsPackage.ModBeingInstalled.Game, InstallOptionsPackage.InstallTarget.GetDLCPath(), Path.GetFileName(dlcFolderInstalled));
                 }
             }
 

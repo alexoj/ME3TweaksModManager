@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using LegendaryExplorerCore.Misc;
-using LegendaryExplorerCore.Packages;
-using ME3TweaksCore.Targets;
-using ME3TweaksModManager.me3tweakscoreextended;
+﻿using LegendaryExplorerCore.Misc;
 using ME3TweaksModManager.modmanager.objects.mod.merge.v1;
 using Newtonsoft.Json;
 
@@ -34,10 +29,8 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         /// <summary>
         /// Applies the merge mod to the target
         /// </summary>
-        /// <param name="associatedMod">The mod that is installing this merge mod</param>
-        /// <param name="target">The target to be applied to</param>
         /// <returns></returns>
-        public bool ApplyMergeMod(Mod associatedMod, GameTarget target, Action<int> mergeWeightDelegate, Action<string, string> addBasegameTrackedFile, CaseInsensitiveConcurrentDictionary<string> originalFileMD5Map);
+        public bool ApplyMergeMod(MergeModPackage mmp, Action<int> mergeWeightDelegate);
         /// <summary>
         /// Get the number of total merge operations this mod can apply
         /// </summary>

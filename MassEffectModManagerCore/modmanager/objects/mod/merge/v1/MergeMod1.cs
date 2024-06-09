@@ -175,24 +175,16 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             return mm;
         }
 
-        public bool ApplyMergeMod(Mod associatedMod, GameTarget target, Action<int> mergeWeightDelegate, Action<string, string> addTrackedFileDelegate, CaseInsensitiveConcurrentDictionary<string> originalFileMD5Map)
+
+        public bool ApplyMergeMod(MergeModPackage mmp, Action<int> mergeWeightDelegate)
         {
             M3Log.Information($@"Applying {MergeModFilename}.");
             Debug.WriteLine($@"Expected weight: {GetMergeWeight()}");
-            var loadedFiles = MELoadedFiles.GetFilesLoadedInGame(target.Game, true, gameRootOverride: target.TargetPath);
-
-            if (target.Game == MEGame.LE2)
-            {
-                // SPECIAL CASE: LE2 EntryMenu is loaded before DLC version so first load of the file
-                // will be basegame one. The majority of time this is likely the desirable
-                // file so we only target this one instead.
-                loadedFiles[@"EntryMenu.pcc"] = Path.Combine(M3Directories.GetCookedPath(target), @"EntryMenu.pcc");
-            }
 
             int numDone = 0;
             foreach (var mf in FilesToMergeInto)
             {
-                mf.ApplyChanges(target, loadedFiles, associatedMod, mergeWeightDelegate, originalFileMD5Map, addTrackedFileDelegate);
+                mf.ApplyChanges(mmp, mergeWeightDelegate);
                 numDone++;
             }
 

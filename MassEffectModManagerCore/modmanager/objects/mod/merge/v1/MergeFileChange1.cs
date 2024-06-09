@@ -39,22 +39,22 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         [JsonProperty("comment")]
         public string Comment { get; set; }
 
-        public void ApplyChanges(IMEPackage package, MergeAssetCache1 assetsCache, Mod installingMod, GameTarget gameTarget, Action<int> addMergeWeightCompletion)
+        public void ApplyChanges(IMEPackage package, MergeAssetCache1 assetsCache, MergeModPackage mmp, Action<int> addMergeWeightCompletion)
         {
             // APPLY PROPERTY UPDATES
             M3Log.Information($@"Merging changes into {ExportInstancedFullPath}");
             var export = package.FindExport(ExportInstancedFullPath);
 
             // Mod MUST target 8.1 or higher to be able to use this functionality at all
-            if (installingMod.ModDescTargetVersion < 8.1 && export == null)
+            if (mmp.AssociatedMod.ModDescTargetVersion < 8.1 && export == null)
             {
                 throw new Exception(M3L.GetString(M3L.string_interp_mergefile_couldNotFindExportInPackage, package.FilePath, ExportInstancedFullPath));
             }
 
             // APPLY ASSET UPDATE
-            AssetUpdate?.ApplyUpdate(package, ref export, assetsCache, installingMod, addMergeWeightCompletion, gameTarget);
+            AssetUpdate?.ApplyUpdate(package, ref export, assetsCache, mmp, addMergeWeightCompletion);
 
-            ClassUpdate?.ApplyUpdate(package, ref export, assetsCache, gameTarget, addMergeWeightCompletion);
+            ClassUpdate?.ApplyUpdate(package, ref export, assetsCache, mmp.Target, addMergeWeightCompletion);
             // The below all require a target export so we enforce it here.
             if (export == null)
                 throw new Exception(M3L.GetString(M3L.string_interp_mergefile_couldNotFindExportInPackage, package.FilePath, ExportInstancedFullPath));
@@ -67,24 +67,24 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                 var props = export.GetProperties();
                 foreach (var pu in PropertyUpdates)
                 {
-                    pu.ApplyUpdate(package, props, export, assetsCache, gameTarget, addMergeWeightCompletion);
+                    pu.ApplyUpdate(package, props, export, assetsCache, mmp.Target, addMergeWeightCompletion);
                 }
                 export.WriteProperties(props);
             }
 
             // APPLY SCRIPT UDPATE
-            ScriptUpdate?.ApplyUpdate(package, export, assetsCache, installingMod, gameTarget, addMergeWeightCompletion);
+            ScriptUpdate?.ApplyUpdate(package, export, assetsCache, mmp.AssociatedMod, mmp.Target, addMergeWeightCompletion);
 
             // APPLY SEQUENCE SKIP UPDATE
-            SequenceSkipUpdate?.ApplyUpdate(package, export, installingMod, addMergeWeightCompletion);
+            SequenceSkipUpdate?.ApplyUpdate(package, export, mmp.AssociatedMod, addMergeWeightCompletion);
 
             // APPLY ADD TO CLASS OR REPLACE
-            AddToClassOrReplace?.ApplyUpdate(package, export, assetsCache, gameTarget, addMergeWeightCompletion);
+            AddToClassOrReplace?.ApplyUpdate(package, export, assetsCache, mmp.Target, addMergeWeightCompletion);
 
             // APPLY CONFIG FLAG REMOVAL
             if (DisableConfigUpdate)
             {
-                DisableConfigFlag(package, export, installingMod, addMergeWeightCompletion);
+                DisableConfigFlag(package, export, mmp.AssociatedMod, addMergeWeightCompletion);
             }
         }
 
@@ -499,7 +499,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         [JsonProperty(@"entryname")]
         public string AssetExportInstancedFullPath { get; set; }
 
-        public bool ApplyUpdate(IMEPackage package, ref ExportEntry targetExport, MergeAssetCache1 assetCache, Mod installingMod, Action<int> addMergeWeightCompleted, GameTarget target)
+        public bool ApplyUpdate(IMEPackage package, ref ExportEntry targetExport, MergeAssetCache1 assetCache, MergeModPackage mmp, Action<int> addMergeWeightCompleted)
         {
             // Unsure if asset loading should be locked to prevent double load in race condition
             // Does it matter if same asset replaces another same asset?
@@ -546,7 +546,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         {
                             ImportChildrenOfPackages = false, // As roots may be Package, do not port the children, we will do it ourselves
                             ErrorOccurredCallback = x => throw new Exception(M3L.GetString(M3L.string_interp_mergefile_errorMergingAssetsX, x)),
-                            GamePathOverride = target.TargetPath,
+                            GamePathOverride = mmp.Target.TargetPath,
                         }, out parent);
                     }
                     else
@@ -563,7 +563,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         ErrorOccurredCallback = x =>
                             throw new Exception(M3L.GetString(M3L.string_interp_mergefile_errorMergingAssetsX, x)),
                         ImportExportDependencies = true, // I don't think this is actually necessary...
-                        GamePathOverride = target.TargetPath,
+                        GamePathOverride = mmp.Target.TargetPath,
                     }, out var newEntry);
                 if (resultst.Any())
                 {
@@ -583,7 +583,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                     {
                         ErrorOccurredCallback = x =>
                             throw new Exception(M3L.GetString(M3L.string_interp_mergefile_errorMergingAssetsX, x)),
-                        GamePathOverride = target.TargetPath,
+                        GamePathOverride = mmp.Target.TargetPath,
                         GenerateImportsForGlobalFiles = false,
                     }, out _);
                 if (resultst.Any())
