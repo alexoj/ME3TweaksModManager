@@ -821,7 +821,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 // Collect data for meta cmm
                 InstallOptionsPackage.ModBeingInstalled.HumanReadableCustomDLCNames.TryGetValue(Path.GetFileName(addedDLCFolder), out var assignedDLCName);
                 var alternates = InstallOptionsPackage.SelectedOptions.SelectMany(x => x.Value).ToList();
-                IEnumerable<string> optionsChosen = alternates.Where(x => !string.IsNullOrWhiteSpace(x.FriendlyName)).Select(x =>
+                IEnumerable<string> optionsChosen = alternates.Where(x => !string.IsNullOrWhiteSpace(x.FriendlyName) && !x.IsHidden).Select(x =>
                 {
                     if (x.GroupName != null) return $@"{x.GroupName}: {x.FriendlyName}";
                     return x.FriendlyName;
