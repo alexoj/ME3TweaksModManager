@@ -171,7 +171,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         /// <param name="tlkXmlName"></param>
         /// <param name="gameFileMapping"></param>
         /// <returns></returns>
-        public string InstallTLKMerge(string tlkXmlName, CompressedTLKMergeData compressedTlkMergeData, Dictionary<string, string> gameFileMapping, bool savePackage, PackageCache cache, GameTarget target, Mod modBeingInstalled, Action<BasegameFileRecord> addCloudDBEntry)
+        public string InstallTLKMerge(string tlkXmlName, CompressedTLKMergeData compressedTlkMergeData, Dictionary<string, string> gameFileMapping, bool savePackage, PackageCache cache, GameTarget target, Mod modBeingInstalled, Action<BasegameFileRecord> addBasegameRecord)
         {
             // Need to load file into memory
             string xmlContents;
@@ -286,7 +286,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                     {
                         M3Log.Information($@"Saving TLKMerged package {packagePath}");
                         package.Save();
-                        addCloudDBEntry?.Invoke(new M3BasegameFileRecord(package.FilePath, (int)new FileInfo(package.FilePath).Length, target, modBeingInstalled));
+                        addBasegameRecord?.Invoke(new M3BasegameFileRecord(package.FilePath, (int)new FileInfo(package.FilePath).Length, target, modBeingInstalled));
                         cache.DropPackageFromCache(packagePath); // we are not doing more operations on this file so drop it out
                     }
                 }

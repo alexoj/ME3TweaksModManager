@@ -1356,7 +1356,7 @@ namespace ME3TweaksModManager.modmanager.helpers
         }
     }
 
-    public static class GameTargetExtensions
+    public static class M3GameTargetExtensions
     {
         /// <summary>
         /// Returns a GameState object populated with basegame-only hashes and metacmm files about a target.

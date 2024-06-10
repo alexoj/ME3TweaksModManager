@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections;
+using System.ComponentModel;
 using System.Windows;
 using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Misc;
@@ -721,9 +722,14 @@ namespace ME3TweaksModManager.modmanager.loaders
             return Path.GetRelativePath(GetCurrentModLibraryDirectory(), mod.ModDescPath);
         }
 
-        public static void DetermineInstalledMods()
+        /// <summary>
+        /// Gets mods that have loaded for the specified game.
+        /// </summary>
+        /// <param name="game"></param>
+        /// <returns></returns>
+        public static IEnumerable<Mod> GetModsForGame(MEGame game)
         {
-
+            return Instance.AllLoadedMods.Where(x => x.Game == game);
         }
     }
 }

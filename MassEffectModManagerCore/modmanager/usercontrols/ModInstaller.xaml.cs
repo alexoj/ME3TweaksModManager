@@ -894,7 +894,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                             {
                                 if (!existingInfo.source.Contains(newTextToAppend))
                                 {
-                                    mm.source = $@"{existingInfo.source} + {newTextToAppend}";
+                                    mm.source = $"{existingInfo.source}\n{newTextToAppend}"; // do not localize
                                 }
 
                                 mm.moddeschashes.AddRange(existingInfo.moddeschashes);
