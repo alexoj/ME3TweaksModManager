@@ -692,6 +692,7 @@ namespace ME3TweaksModManager
         public ICommand OpenModDescCommand { get; set; }
         public ICommand ShowAlternateOptionKeysCommand { get; set; }
         public ICommand CheckAllModsForUpdatesCommand { get; set; }
+        public ICommand CheckNonWhitelistedModsForUpdates { get; set; }
         public ICommand CustomKeybindsInjectorCommand { get; set; }
         public ICommand NexusModsFileSearchCommand { get; set; }
         public ICommand SearchModsCommand { get; set; }
@@ -751,6 +752,7 @@ namespace ME3TweaksModManager
             OpenModDescCommand = new GenericCommand(OpenModDesc);
             ShowAlternateOptionKeysCommand = new GenericCommand(ShowAlternateKeys);
             CheckAllModsForUpdatesCommand = new GenericCommand(CheckAllModsForUpdatesWrapper, () => M3LoadedMods.Instance.ModsLoaded);
+            CheckNonWhitelistedModsForUpdates = new GenericCommand(CheckNonWhitelistedModsForUpdatesWrapper, () => M3LoadedMods.Instance.ModsLoaded);
             CustomKeybindsInjectorCommand = new GenericCommand(OpenKeybindsInjector, () => M3LoadedMods.Instance.ModsLoaded && InstallationTargets.Any(x => x.Game == MEGame.ME3));
             ModdescEditorCommand = new GenericCommand(OpenModDescEditor, CanOpenModdescEditor);
             OriginInGameOverlayDisablerCommand = new GenericCommand(OpenOIGDisabler, () => M3LoadedMods.Instance.ModsLoaded && InstallationTargets.Any());
@@ -769,6 +771,18 @@ namespace ME3TweaksModManager
 
             BetaDiagToolOpenAllPackagesCommand = new GenericCommand(DiagAllOpenPackages, CanRunGameDiagTool);
 
+        }
+
+        private void CheckNonWhitelistedModsForUpdatesWrapper()
+        {
+            if (NexusModsUtilities.UserInfo == null)
+            {
+                M3L.ShowDialog(this, "You must be authenticated to NexusMods in ME3Tweaks Mod Manager to use this feature.", "Not logged in", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            NamedBackgroundWorker nbw = new NamedBackgroundWorker(@"Non-Whitelisted Mod update check");
+            nbw.DoWork += (a, b) => ModUpdater.Instance.CheckNonWhitelistedNexusModsForUpdates();
+            nbw.RunWorkerAsync();
         }
 
         private void ShowAlternateKeys()
