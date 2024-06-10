@@ -195,6 +195,10 @@ namespace ME3TweaksModManager.modmanager.objects
                         // and stale ones are purged.
 
                         BasegameFileIdentificationService.PurgeEntriesForGame(RestoreTarget.Game);
+                        foreach (var f in M3LoadedMods.GetModsForGame(RestoreTarget.Game))
+                        {
+                            f.IsInstalledToTarget = false;
+                        }
                     }
                 }
             });
