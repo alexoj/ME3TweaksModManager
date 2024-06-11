@@ -120,7 +120,7 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
             Task.Run(() =>
             {
                 OperationInProgress = true;
-                StarterKitAddins.GenerateSquadmateMergeFilesGame3(SelectedMod.Game, hench, dlcFolderPath,
+                StarterKitAddins.GenerateSquadmateMergeFiles(SelectedMod.Game, hench, dlcFolderPath,
                     new List<Dictionary<string, object>>());
             }).ContinueWithOnUIThread(x =>
             {

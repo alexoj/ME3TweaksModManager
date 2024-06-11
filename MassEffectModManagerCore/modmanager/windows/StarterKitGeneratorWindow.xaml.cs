@@ -107,6 +107,22 @@ namespace ME3TweaksModManager.modmanager.windows
         // Game 1
         public ObservableCollectionExtended<Bio2DAOption> Selected2DAs { get; } = new();
 
+        // LE2
+        public bool AddSquadmateMerge2Miranda { get; set; }
+        public bool AddSquadmateMerge2Jacob { get; set; }
+        public bool AddSquadmateMerge2Mordin { get; set; }
+        public bool AddSquadmateMerge2Garrus { get; set; }
+        public bool AddSquadmateMerge2Jack { get; set; }
+        public bool AddSquadmateMerge2Grunt { get; set; }
+        public bool AddSquadmateMerge2Tali { get; set; }
+        public bool AddSquadmateMerge2Samara { get; set; }
+        public bool AddSquadmateMerge2Thane { get; set; }
+        public bool AddSquadmateMerge2Legion { get; set; }
+        public bool AddSquadmateMerge2Kasumi { get; set; }
+        public bool AddSquadmateMerge2Zaeed { get; set; }
+
+
+
         // Game 3
         public bool AddModSettingsMenuData { get; set; } = true; // LE3 only
         public bool AddSquadmateMerge3Garrus { get; set; }
@@ -449,14 +465,32 @@ namespace ME3TweaksModManager.modmanager.windows
                 AddPlotManagerData = AddPlotManagerData,
                 AddModSettingsMenu = AddModSettingsMenuData,
                 Blank2DAsToGenerate = Selected2DAs.ToList(),
-                AddAshleySQM = AddSquadmateMerge3Ashley,
-                AddGarrusSQM = AddSquadmateMerge3Garrus,
-                AddJamesSQM = AddSquadmateMerge3James,
-                AddEDISQM = AddSquadmateMerge3EDI,
-                AddJavikSQM = AddSquadmateMerge3Javik,
-                AddKaidanSQM = AddSquadmateMerge3Kaidan,
-                AddLiaraSQM = AddSquadmateMerge3Liara,
-                AddTaliSQM = AddSquadmateMerge3Tali,
+
+                // SQUADMATE MERGE
+
+                // SHARED 2/3
+                AddGarrusSQM = AddSquadmateMerge3Garrus && (Game.IsGame3() || Game == MEGame.LE2),
+                AddTaliSQM = AddSquadmateMerge3Tali && (Game.IsGame3() || Game == MEGame.LE2),
+
+                // LE2
+                AddMirandaSQM = AddSquadmateMerge2Miranda && Game == MEGame.LE2,
+                AddJacobSQM = AddSquadmateMerge2Jacob && Game == MEGame.LE2,
+                AddMordinSQM = AddSquadmateMerge2Mordin && Game == MEGame.LE2,
+                AddJackSQM = AddSquadmateMerge2Jack && Game == MEGame.LE2,
+                AddGruntSQM = AddSquadmateMerge2Grunt && Game == MEGame.LE2,
+                AddSamaraSQM = AddSquadmateMerge2Samara && Game == MEGame.LE2,
+                AddThaneSQM = AddSquadmateMerge2Thane && Game == MEGame.LE2,
+                AddLegionSQM = AddSquadmateMerge2Legion && Game == MEGame.LE2,
+                AddKasumiSQM = AddSquadmateMerge2Kasumi && Game == MEGame.LE2,
+                AddZaeedSQM = AddSquadmateMerge2Zaeed && Game == MEGame.LE2,
+
+                // GAME3
+                AddAshleySQM = AddSquadmateMerge3Ashley && Game.IsGame3(),
+                AddJamesSQM = AddSquadmateMerge3James && Game.IsGame3(),
+                AddEDISQM = AddSquadmateMerge3EDI && Game.IsGame3(),
+                AddJavikSQM = AddSquadmateMerge3Javik && Game.IsGame3(),
+                AddKaidanSQM = AddSquadmateMerge3Kaidan && Game.IsGame3(),
+                AddLiaraSQM = AddSquadmateMerge3Liara && Game.IsGame3(),
             };
 
             M3Log.Information(@"Generating a starter kit mod with the following options:");
@@ -654,6 +688,20 @@ namespace ME3TweaksModManager.modmanager.windows
             AddModSettingsMenuData = false;
             AddPlotManagerData = false;
             Selected2DAs.Clear();
+
+            AddSquadmateMerge2Miranda = false;
+            AddSquadmateMerge2Jacob = false;
+            AddSquadmateMerge2Mordin = false;
+            AddSquadmateMerge2Garrus = false;
+            AddSquadmateMerge2Jack = false;
+            AddSquadmateMerge2Grunt = false;
+            AddSquadmateMerge2Tali = false;
+            AddSquadmateMerge2Samara = false;
+            AddSquadmateMerge2Thane = false;
+            AddSquadmateMerge2Legion = false;
+            AddSquadmateMerge2Kasumi = false;
+            AddSquadmateMerge2Zaeed = false;
+
             AddSquadmateMerge3Ashley = false;
             AddSquadmateMerge3EDI = false;
             AddSquadmateMerge3Garrus = false;
@@ -661,6 +709,7 @@ namespace ME3TweaksModManager.modmanager.windows
             AddSquadmateMerge3Javik = false;
             AddSquadmateMerge3Kaidan = false;
             AddSquadmateMerge3Liara = false;
+            AddSquadmateMerge3Tali = false;
         }
 
         private void DebugFill_Click(object sender, RoutedEventArgs e)

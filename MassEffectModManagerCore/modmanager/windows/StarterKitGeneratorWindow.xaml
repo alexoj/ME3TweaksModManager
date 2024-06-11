@@ -403,6 +403,58 @@
                     Visibility="{Binding Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='LE3'}" />
                 <DockPanel
                     DockPanel.Dock="Top"
+                    Visibility="{Binding Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='LE2'}">
+                    <CheckBox
+                        Content="Squadmate outfit merge: Miranda"
+                        IsChecked="{Binding AddSquadmateMerge2Miranda}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="Squadmate outfit merge: Jacob"
+                        IsChecked="{Binding AddSquadmateMerge2Jacob}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="Squadmate outfit merge: Mordin"
+                        IsChecked="{Binding AddSquadmateMerge2Mordin}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="{DynamicResource string_squadmateOutfitMergeGarrus}"
+                        IsChecked="{Binding AddSquadmateMerge2Garrus}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="Squadmate outfit merge: Jack"
+                        IsChecked="{Binding AddSquadmateMerge2Jack}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="Squadmate outfit merge: Grunt"
+                        IsChecked="{Binding AddSquadmateMerge2Grunt}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="{DynamicResource string_squadmateOutfitMergeTali}"
+                        IsChecked="{Binding AddSquadmateMerge2Tali}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="Squadmate outfit merge: Samara/Morinth"
+                        IsChecked="{Binding AddSquadmateMerge2Samara}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="Squadmate outfit merge: Thane"
+                        IsChecked="{Binding AddSquadmateMerge2Thane}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="Squadmate outfit merge: Legion"
+                        IsChecked="{Binding AddSquadmateMerge2Legion}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="Squadmate outfit merge: Kasmumi"
+                        IsChecked="{Binding AddSquadmateMerge2Kasumi}"
+                        DockPanel.Dock="Top" />
+                    <CheckBox
+                        Content="Squadmate outfit merge: Zaeed"
+                        IsChecked="{Binding AddSquadmateMerge2Zaeed}"
+                        DockPanel.Dock="Top" />
+                </DockPanel>
+                <DockPanel
+                    DockPanel.Dock="Top"
                     Visibility="{Binding Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='Game3'}">
                     <CheckBox
                         Content="{DynamicResource string_squadmateOutfitMergeAshley}"
