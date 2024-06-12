@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media.Animation;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 using System.Xml;
 using System.Xml.Linq;
 using AdonisUI;
@@ -77,6 +78,21 @@ namespace ME3TweaksModManager
     /// </summary>
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
+        /// <summary>
+        /// If set to true, the app will automatically close itself after performing some cleanup
+        /// </summary>
+        public bool IsOnTrackToClose { get; set; }
+
+        /// <summary>
+        /// If we are exiting. If true, further attempts to try and close the window by the user will be ignored
+        /// </summary>
+        public bool ExitInProgress { get; set; }
+
+        /// <summary>
+        /// If set to true, the app has cleaned up and is ready for termination
+        /// </summary>
+        public bool AppExiting { get; set; }
+
         public string CurrentOperationText { get; set; } = M3L.GetString(M3L.string_startingUp);
 
         public bool IsBusy { get; set; }
@@ -1925,8 +1941,7 @@ namespace ME3TweaksModManager
             if (BusyContentM3 is SingleItemPanel2 singleItemPanel)
             {
                 var actualClosingPanel = singleItemPanel.Content as MMBusyPanelBase;
-                singleItemPanel
-                    .DetatchControl(); // Seems to reduce memory leakage due to how ContentPresenter works in BusyHost.
+                singleItemPanel.DetatchControl(); // Seems to reduce memory leakage due to how ContentPresenter works in BusyHost.
                 BusyContentM3 = null; // Remove existing reference to panel. Maybe reduces memory leakage...
 
                 // If somehow an empty panel was installed
@@ -1938,6 +1953,13 @@ namespace ME3TweaksModManager
                 if (queuedUserControls.Count == 0)
                 {
                     IsBusy = false;
+
+                    // If we are on track to close, try closing the window again
+                    if (IsOnTrackToClose)
+                    {
+                        ExitApp();
+                    }
+
                     Task.Factory.StartNew(() =>
                     {
                         // this is to force some items that are no longer relevant to be cleaned up.
@@ -1946,7 +1968,7 @@ namespace ME3TweaksModManager
                         GCSettings.LargeObjectHeapCompactionMode = GCLargeObjectHeapCompactionMode.CompactOnce;
                         GC.Collect();
                     });
-                    // No more panels, we can show message updates now./s
+                    // No more panels, we can show message updates now.
                     BackgroundTaskEngine.AllowMessageUpdates();
                 }
                 else
@@ -1973,7 +1995,7 @@ namespace ME3TweaksModManager
             if (BatchPanelResult != null)
             {
                 result.MergeInto(BatchPanelResult);
-                if (HandleBatchPanelResult)
+                if (IsOnTrackToClose || HandleBatchPanelResult)
                 {
                     result = BatchPanelResult;
 
@@ -3333,12 +3355,50 @@ namespace ME3TweaksModManager
 
         private void ModManagerWindow_Closing(object sender, CancelEventArgs e)
         {
-            // Mod installing
+            e.Cancel = true;
 
+            // App is actually closing now.
+            if (AppExiting)
+            {
+                e.Cancel = false;
+                return;
+            }
+
+            Dispatcher.InvokeAsync(HandleMainWindowClosing, DispatcherPriority.Normal);
+        }
+
+        private void HandleMainWindowClosing()
+        {
+            if (Keyboard.IsKeyDown(Key.LeftShift))
+            {
+                // User override - always close
+                MEMProcessHandler.TerminateAll();
+                M3Log.Information(@"User override - skipping cleanup checks before close.");
+                ExitApp();
+                return;
+            }
+
+
+            if (IsOnTrackToClose && AppExiting)
+            {
+                MEMProcessHandler.TerminateAll();
+                M3Log.Information(@"Cleanup complete, application will now close.");
+                ExitApp();
+                return; // We're done here
+            }
+
+            // Ignore user request.
+            if (ExitInProgress)
+            {
+                M3Log.Information(@"Ignoring window closing request: application cleanup in progress");
+                return;
+            }
 
             // Texture installing
             if (!MEMProcessHandler.CanTerminate())
             {
+                M3Log.Information(@"Important texture operation in progress, prompting user to confirm cancellation");
+
                 var reason = MEMProcessHandler.GetReasonShouldNotTerminate();
                 if (reason != null)
                 {
@@ -3349,13 +3409,58 @@ namespace ME3TweaksModManager
                 if (dialog == MessageBoxResult.No)
                 {
                     // Do not cancel.
-                    e.Cancel = true;
+                    M3Log.Information(@"User chose to not close the app");
+                    IsOnTrackToClose = false;
+                    return;
+                }
+
+                M3Log.Information(@"User chose to close the app");
+            }
+
+            // Mod installing
+            if (!IsOnTrackToClose && BusyContentM3 is SingleItemPanel2 sip2 && sip2.Content is MMBusyPanelBase bpb)
+            {
+                if (!bpb.CanBeForceClosed() || bpb.Result.DoesResultModifyGame())
+                {
+                    M3Log.Information(@"The current panel result indicates there is pending merges. We are performing the merges and then the app will close.");
+                    IsOnTrackToClose = true;
+                    ExitInProgress = true;
+                    queuedUserControls.Clear();
+                    HandleBatchPanelResult = true;
+                    if (bpb.CanBeForceClosed())
+                    {
+                        ReleaseBusyControl();
+                        Title += " - Cleaning up, please wait";
+
+                        M3L.ShowDialog(this, "Mod Manager is performing cleanup options and will automatically close when complete.\n\nYou can forcibly close Mod Manager if necessary by holding left shift when clicking the X button if it gets into a state where it doesn't want to close.",
+                            "Operation in progress", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
+                    else
+                    {
+                        M3Log.Information(@"Cannot force close current open panel, we will wait until it closes to perform cleanup");
+
+                        Title += " - Cleaning up, please wait";
+                        M3L.ShowDialog(this, "Mod Manager will complete its current task and then close automatically.\n\nYou can forcibly close Mod Manager if necessary by holding left shift when clicking the X button if it gets into a state where it doesn't want to close.",
+                            "Operation in progress", MessageBoxButton.OK, MessageBoxImage.Information);
+                    }
                     return;
                 }
             }
 
-            // Just kill everything.
+            // Nothing pending.
+            M3Log.Information(@"No pending tasks. The application will now close.");
             MEMProcessHandler.TerminateAll();
+            ExitApp();
+        }
+
+        /// <summary>
+        /// Marks that the app is ready to close and closes the window.
+        /// </summary>
+        /// <exception cref="NotImplementedException"></exception>
+        private void ExitApp()
+        {
+            AppExiting = true;
+            Close();
         }
 
         private void FailedMods_LinkClick(object sender, RequestNavigateEventArgs e)

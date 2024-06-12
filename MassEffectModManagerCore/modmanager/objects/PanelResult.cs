@@ -130,5 +130,20 @@ namespace ME3TweaksModManager.modmanager.objects
         {
             return TargetsToEmailMergeSync.Concat(TargetsToSquadmateMergeSync).Distinct();
         }
+
+
+        /// <summary>
+        /// If this result will modify the game, e.g. running a merge on game.
+        /// </summary>
+        /// <returns></returns>
+        public bool DoesResultModifyGame()
+        {
+            if (TargetsToAutoTOC.Any()) return true;
+            if (TargetsToEmailMergeSync.Any()) return true;
+            if (TargetsToLE1Merge.Any()) return true;
+            if (TargetsToPlotManagerSync.Any()) return true;
+            if (TargetsToSquadmateMergeSync.Any()) return true;
+            return false;
+        }
     }
 }

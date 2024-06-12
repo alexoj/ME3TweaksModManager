@@ -955,12 +955,16 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     }
                 }
 
+                if (allMMs.Any())
+                {
+                    Action = M3L.GetString(M3L.string_applyingMergemods);
+                    Percent = 0;
+                }
 
                 foreach (var mergeMod in allMMs)
                 {
                     try
                     {
-                        Action = M3L.GetString(M3L.string_applyingMergemods);
                         mergeMod.ApplyMergeMod(mmp, mergeWeightCompleted);
                     }
                     catch (Exception ex)
@@ -1722,6 +1726,12 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             //    }
             //}
 #endif
+        }
+
+        public override bool CanBeForceClosed()
+        {
+            // Cannot be force closed
+            return false;
         }
 
         // ISizeAdjustable Interface

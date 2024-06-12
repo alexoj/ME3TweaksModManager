@@ -111,6 +111,15 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             });
         }
 
+        /// <summary>
+        /// When window is closing, does this panel support immediate closure? Some like installers should probably not
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool CanBeForceClosed()
+        {
+            return true;
+        }
+
         public virtual double MaxWindowWidthPercent { get; set; }
         public virtual double MaxWindowHeightPercent { get; set; }
 
