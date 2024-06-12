@@ -3437,6 +3437,7 @@ namespace ME3TweaksModManager
                     }
                     else
                     {
+                        bpb.SignalAppClosing();
                         M3Log.Information(@"Cannot force close current open panel, we will wait until it closes to perform cleanup");
 
                         Title += " - Cleaning up, please wait";

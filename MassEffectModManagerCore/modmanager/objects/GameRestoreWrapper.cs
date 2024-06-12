@@ -86,9 +86,10 @@ namespace ME3TweaksModManager.modmanager.objects
 
         private object syncObj = new object();
 
-        public GameRestoreWrapper(MEGame game, IEnumerable<GameTargetWPF> availableTargets, MainWindow window)
+        public GameRestoreWrapper(MEGame game, IEnumerable<GameTargetWPF> availableTargets, MainWindow window, Action restoreCompletedCallback = null)
         {
             this.window = window;
+            RestoreCompletedCallback = restoreCompletedCallback;
             RestoreButtonCommand = new GenericCommand(BeginRestore, () => RestoreTarget != null && RestoreController != null && !RestoreController.RestoreInProgress);
             BackupStatus = BackupService.GetBackupStatus(game);
             RestoreController = new GameRestore(game)
@@ -155,9 +156,16 @@ namespace ME3TweaksModManager.modmanager.objects
                 ShouldLogEveryCopiedFile = () => Settings.LogBackupAndRestore,
             };
             AvailableRestoreTargets.AddRange(availableTargets);
+            RestoreTarget = AvailableRestoreTargets.FirstOrDefault();
+
             AvailableRestoreTargets.Add(new GameTargetWPF(game, M3L.GetString(M3L.string_restoreToCustomLocation), false, true));
             //RestoreTarget = AvailableRestoreTargets.FirstOrDefault(); // Leave it so it's blank default otherwise we get the 'Restoring from backup will reset LODs' thing.
         }
+
+        /// <summary>
+        /// Delegate to invoke when a restore operation has completed
+        /// </summary>
+        public Action RestoreCompletedCallback { get; set; }
 
         private void BeginRestore()
         {
@@ -200,6 +208,8 @@ namespace ME3TweaksModManager.modmanager.objects
                             f.IsInstalledToTarget = false;
                         }
                     }
+
+                    RestoreCompletedCallback?.Invoke();
                 }
             });
         }

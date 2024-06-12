@@ -17,6 +17,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 {
     public abstract class MMBusyPanelBase : UserControl, INotifyPropertyChanged, ISizeAdjustable
     {
+        /// <summary>
+        /// If app cleanup is in progress
+        /// </summary>
+        protected bool HandlingShutdownTasks { get; set; }
+
         //Fody uses this property on weaving
 #pragma warning disable
         public event PropertyChangedEventHandler PropertyChanged;
@@ -118,6 +123,14 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         public virtual bool CanBeForceClosed()
         {
             return true;
+        }
+
+        /// <summary>
+        /// Called when the application has a close request. Panels can override this to custom their shutdown behavior.
+        /// </summary>
+        public virtual void SignalAppClosing()
+        {
+            HandlingShutdownTasks = true;
         }
 
         public virtual double MaxWindowWidthPercent { get; set; }
