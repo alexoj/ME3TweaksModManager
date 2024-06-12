@@ -30,6 +30,7 @@ using ME3TweaksCore;
 using ME3TweaksCore.Diagnostics;
 using ME3TweaksCore.GameFilesystem;
 using ME3TweaksCore.Helpers;
+using ME3TweaksCore.Helpers.MEM;
 using ME3TweaksCore.Localization;
 using ME3TweaksCore.ME3Tweaks.M3Merge;
 using ME3TweaksCore.ME3Tweaks.M3Merge.Bio2DATable;
@@ -3332,7 +3333,29 @@ namespace ME3TweaksModManager
 
         private void ModManagerWindow_Closing(object sender, CancelEventArgs e)
         {
-            //Settings.Save();
+            // Mod installing
+
+
+            // Texture installing
+            if (!MEMProcessHandler.CanTerminate())
+            {
+                var reason = MEMProcessHandler.GetReasonShouldNotTerminate();
+                if (reason != null)
+                {
+                    reason += "\n\nContinue closing the application?";
+                }
+
+                var dialog = M3L.ShowDialog(this, reason, "Background process running", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                if (dialog == MessageBoxResult.No)
+                {
+                    // Do not cancel.
+                    e.Cancel = true;
+                    return;
+                }
+            }
+
+            // Just kill everything.
+            MEMProcessHandler.TerminateAll();
         }
 
         private void FailedMods_LinkClick(object sender, RequestNavigateEventArgs e)
