@@ -122,8 +122,16 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         /// </summary>
         /// <param name="file"></param>
         /// <returns></returns>
-        public static int? GetMergeModVersionForCompile(Window window, string file)
+        public static int? GetMergeModVersionForCompile(Window window, string file, double featureLevel = 0)
         {
+            // Pre-provided value
+            if (featureLevel >= 9.0)
+                return 2;
+            if (featureLevel > 0)
+                return 1;
+
+            // Detect
+
             // Containing folder
             var parentPath = Directory.GetParent(file);
             if (parentPath == null)

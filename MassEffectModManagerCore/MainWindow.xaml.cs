@@ -176,6 +176,10 @@ namespace ME3TweaksModManager
                     CommandLinePending.PendingInstallBink = parsedCommandLineArgs.Value.AutoInstallBink;
                 if (parsedCommandLineArgs.Value.CreateMergeDLC != false)
                     CommandLinePending.PendingMergeDLCCreation = parsedCommandLineArgs.Value.CreateMergeDLC;
+                if (parsedCommandLineArgs.Value.MergeModManifestToCompile != null)
+                    CommandLinePending.PendingMergeModCompileManifest = parsedCommandLineArgs.Value.MergeModManifestToCompile;
+                if (parsedCommandLineArgs.Value.FeatureLevel > 0)
+                    CommandLinePending.PendingFeatureLevel = parsedCommandLineArgs.Value.FeatureLevel;
                 return handleInitialPending();
             }
 
@@ -3522,7 +3526,7 @@ namespace ME3TweaksModManager
         }
 
         /// <summary>
-        /// 
+        /// First time handling pending when app initially boots.
         /// </summary>
         /// <returns>If the main window should be brought to the foreground or not.</returns>
         private bool handleInitialPending()
@@ -3661,6 +3665,16 @@ namespace ME3TweaksModManager
                         }
                     }
                 }
+
+                if (CommandLinePending.PendingMergeModCompileManifest != null && CommandLinePending.PendingFeatureLevel > 0
+                    && File.Exists(CommandLinePending.PendingMergeModCompileManifest))
+                {
+                    shouldBringToFG = true;
+                    CompileMergeMod(CommandLinePending.PendingMergeModCompileManifest, CommandLinePending.PendingFeatureLevel);
+                    CommandLinePending.PendingMergeModCompileManifest = null;
+                    CommandLinePending.PendingFeatureLevel = 0;
+                }
+
             }
             catch (Exception e)
             {
@@ -4267,34 +4281,7 @@ namespace ME3TweaksModManager
 
                         case @".json":
                             {
-                                var version = MergeModLoader.GetMergeModVersionForCompile(this, file);
-                                if (version == null)
-                                    return; // User canceled.
-
-                                var task = BackgroundTaskEngine.SubmitBackgroundJob(@"M3MCompile", M3L.GetString(M3L.string_compilingMergemod),
-                                    M3L.GetString(M3L.string_compiledMergemod));
-                                NamedBackgroundWorker nbw = new NamedBackgroundWorker(@"MergeModCompiler");
-                                nbw.DoWork += (o, args) =>
-                                {
-                                    MergeModLoader.SerializeManifest(file, version.Value);
-                                };
-                                nbw.RunWorkerCompleted += (o, args) =>
-                                {
-                                    if (args.Error != null)
-                                    {
-                                        task.FinishedUIText = M3L.GetString(M3L.string_failedToCompileMergemod);
-                                        BackgroundTaskEngine.SubmitJobCompletion(task);
-                                        M3Log.Error($@"Error compiling m3m mod file: {args.Error.Message}");
-                                        M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_errorCompilingm3mX, args.Error.Message),
-                                            M3L.GetString(M3L.string_errorCompilingm3m), MessageBoxButton.OK,
-                                            MessageBoxImage.Error);
-                                    }
-                                    else
-                                    {
-                                        BackgroundTaskEngine.SubmitJobCompletion(task);
-                                    }
-                                };
-                                nbw.RunWorkerAsync();
+                                CompileMergeMod(file);
                             }
                             break;
                         case @".m3m":
@@ -4348,6 +4335,38 @@ namespace ME3TweaksModManager
                     }
                 }
             }
+        }
+
+        private void CompileMergeMod(string file, double featureLevel = 0)
+        {
+            var version = MergeModLoader.GetMergeModVersionForCompile(this, file);
+            if (version == null)
+                return; // User canceled.
+
+            var task = BackgroundTaskEngine.SubmitBackgroundJob(@"M3MCompile", M3L.GetString(M3L.string_compilingMergemod),
+                M3L.GetString(M3L.string_compiledMergemod));
+            NamedBackgroundWorker nbw = new NamedBackgroundWorker(@"MergeModCompiler");
+            nbw.DoWork += (o, args) =>
+            {
+                MergeModLoader.SerializeManifest(file, version.Value);
+            };
+            nbw.RunWorkerCompleted += (o, args) =>
+            {
+                if (args.Error != null)
+                {
+                    task.FinishedUIText = M3L.GetString(M3L.string_failedToCompileMergemod);
+                    BackgroundTaskEngine.SubmitJobCompletion(task);
+                    M3Log.Error($@"Error compiling m3m mod file: {args.Error.Message}");
+                    M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_errorCompilingm3mX, args.Error.Message),
+                        M3L.GetString(M3L.string_errorCompilingm3m), MessageBoxButton.OK,
+                        MessageBoxImage.Error);
+                }
+                else
+                {
+                    BackgroundTaskEngine.SubmitJobCompletion(task);
+                }
+            };
+            nbw.RunWorkerAsync();
         }
 
         private void openModImportUI(string archiveFile, Stream archiveStream = null, bool priority = false, NexusProtocolLink sourceLink = null)

@@ -219,6 +219,16 @@ namespace ME3TweaksModManager
                         {
                             CommandLinePending.PendingMergeDLCCreation = parsedCommandLineArgs.Value.CreateMergeDLC;
                         }
+
+                        if (parsedCommandLineArgs.Value.MergeModManifestToCompile != null)
+                        {
+                            CommandLinePending.PendingMergeModCompileManifest = parsedCommandLineArgs.Value.MergeModManifestToCompile;
+                        }
+
+                        if (parsedCommandLineArgs.Value.FeatureLevel > 0)
+                        {
+                            CommandLinePending.PendingFeatureLevel = parsedCommandLineArgs.Value.FeatureLevel;
+                        }
                     }
                     else
                     {
@@ -774,13 +784,20 @@ namespace ME3TweaksModManager
         [Option(@"installbink", HelpText = "Instructs Mod Manager to automatically install the bink asi loader to the specified game")]
         public bool AutoInstallBink { get; set; }
 
-        [Option(@"createmergedlc", HelpText = "Instructs Mod Manager to automatically (re)create a merge DLC for the given game.")]
+        [Option(@"createmergedlc", HelpText = "Instructs Mod Manager to automatically (re)create a merge DLC for the given game")]
         public bool CreateMergeDLC { get; set; }
 
         [Option(@"m3link", HelpText = "Instructs Mod Manager to perform a task based on the contents of a me3tweaksmodmanager:// link")]
         public string M3Link { get; set; }
         
-         [Option(@"debuglogging", HelpText = "Enables verbose debug logs")]
+        [Option(@"debuglogging", HelpText = "Enables verbose debug logs")]
         public bool DebugLogging { get; set; }
+
+
+        [Option(@"compilemergemod", HelpText = "Instructs Mod Manager to compile a mergemod manifest file. Requires providing a moddesc version with the 'featurelevel' option")]
+        public string MergeModManifestToCompile { get; set; }
+
+        [Option(@"featurelevel", HelpText = "Indicates the feature level a command line operation uses")]
+        public double FeatureLevel { get; set; }
     }
 }

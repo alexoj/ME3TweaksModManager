@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using LegendaryExplorerCore.Packages;
-
-namespace ME3TweaksModManager.modmanager.helpers
+﻿namespace ME3TweaksModManager.modmanager.helpers
 {
     /// <summary>
     /// Class for caching variables used for holding temporary command-line options that need to be processed
@@ -57,6 +50,16 @@ namespace ME3TweaksModManager.modmanager.helpers
         /// If bink should be installed to the pending game
         /// </summary>
         public static bool PendingInstallBink;
+
+        /// <summary>
+        /// Feature level (typically moddesc version) of an operation
+        /// </summary>
+        public static double PendingFeatureLevel;
+
+        /// <summary>
+        /// Path to a .json file to compile into an m3m
+        /// </summary>
+        public static string PendingMergeModCompileManifest;
 
         /// <summary>
         /// Sets PendingGame to null if there are no items in the pending system that depend on it
