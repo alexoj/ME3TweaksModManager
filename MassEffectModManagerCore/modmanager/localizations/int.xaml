@@ -2588,7 +2588,7 @@
     <system:String x:Key="string_legendaryEditionOptions">Legendary Edition options</system:String>
     <system:String x:Key="string_description_leOptions">These options only apply when working with Mass Effect Legendary Edition.</system:String>
     <system:String x:Key="string_launcherAutobootSelectedGame">Launcher: Autoboot selected game</system:String>
-    <system:String x:Key="string_description_autobootLE">When pressing 'Start game', the launcher will be skipped and the selected game will automatically boot instead.</system:String>
+    <system:String x:Key="string_description_autobootLE">When pressing 'Start game', the launcher will be skipped and the selected game will automatically boot instead. To boot to the launcher, select the launcher target and then press Start Game.</system:String>
     <system:String x:Key="string_description_me3tweaksModmaker">These options only apply to ME3Tweaks ModMaker, a web application for making gameplay mods for Mass Effect 3.</system:String>
     <system:String x:Key="string_textureLODUpdates">Texture LOD updates</system:String>
     <system:String x:Key="string_description_textureLODs">These settings determine which texture LOD level is set when selecting 'Start Game' if a texture mod is detected as installed. You can turn off this feature by not selecting either option. If a texture mod is not detected, vanilla LODs are applied. These settings only apply to the Original Trilogy, Legendary Edition texture modding does not use texture LODs.</system:String>
@@ -2607,7 +2607,7 @@
     <system:String x:Key="string_temporaryCache">Temporary cache</system:String>
     <system:String x:Key="string_selectNexusModsDownloadDirectory">Select NexusMods download directory</system:String>
     <system:String x:Key="string_lE1EnableCoalescedMerge">LE1: Enable Coalesced Merge</system:String>
-    <system:String x:Key="string_description_le1CoalescedMergeOption">Turning this off will allow you to manually edit your Coalesced file, and will prevent .m3cd files from merging to the basegame Coalesced file. This may break some mods. Do not turn this off if you don't know what this means.</system:String>
+    <system:String x:Key="string_description_le1CoalescedMergeOption">Turning this off will allow you to manually edit your Coalesced file, and will prevent .m3cd files from merging to the basegame Coalesced file. This will break some mods. Do not turn this off if you don't know what this means.</system:String>
 
     <!-- Check Box Combo Box Control -->
     <system:String x:Key="string_noItemsSelected">No items selected</system:String>
