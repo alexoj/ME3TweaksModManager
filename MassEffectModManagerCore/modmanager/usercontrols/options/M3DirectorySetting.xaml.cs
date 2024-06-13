@@ -54,9 +54,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols.options
             }
 
 #else
-            SettingTitle = titleKey;
-            SettingDescription = descriptionKey;
-            ButtonString = buttonKey;
+            SettingTitle = M3L.GetString(titleKey);
+            SettingDescription = M3L.GetString(descriptionKey);
+            ButtonString = M3L.GetString(buttonKey);
 #endif
             DirectoryWatermark = getDirectoryWatermarkValue();
 

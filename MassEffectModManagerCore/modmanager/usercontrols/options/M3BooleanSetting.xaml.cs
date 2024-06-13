@@ -46,8 +46,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols.options
             }
 
 #else
-            SettingTitle = titleKey;
-            SettingDescription = descriptionKey;
+            SettingTitle = M3L.GetString(titleKey);
+            SettingDescription = M3L.GetString(descriptionKey);
 #endif
             _type = classType;
             _settingPropertyName = settingPropertyName;
