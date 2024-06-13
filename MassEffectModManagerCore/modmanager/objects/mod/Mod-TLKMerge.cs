@@ -61,7 +61,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                         var parentName = Directory.GetParent(f).Name;
                         if (parentName != Mod.Game1EmbeddedTlkFolderName)
                         {
-                            if (LE1TLKMergeChosenOptionKeys.Contains(parentName))
+                            if (LE1TLKMergeChosenOptionKeys == null || LE1TLKMergeChosenOptionKeys.Contains(parentName))
                             {
                                 filteredFiles.Add(f);
                             }

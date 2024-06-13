@@ -472,6 +472,13 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     {
                         inArchiveMergeFilePath = $@"{MUtilities.SanitizePath(modBeingDeployed.ModName)}\{inArchiveMergeFilePath}";
                         inArchiveGame1TlkFolderPath = $@"{MUtilities.SanitizePath(modBeingDeployed.ModName)}\{inArchiveGame1TlkFolderPath}";
+
+                        if (needsGamePrefix)
+                        {
+                            inArchiveMergeFilePath = $@"{modBeingDeployed.Game}\{inArchiveMergeFilePath}";
+                            inArchiveGame1TlkFolderPath = $@"{modBeingDeployed.Game}\{inArchiveGame1TlkFolderPath}";
+
+                        }
                     }
 
                     currentDeploymentStep = M3L.GetString(M3L.string_addingCombinedTLKMergeFile);
