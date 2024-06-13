@@ -1,0 +1,79 @@
+﻿<usercontrols:MMBusyPanelBase
+    x:Class="ME3TweaksModManager.modmanager.usercontrols.OptionsPanel2"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI" xmlns:usercontrols="clr-namespace:ME3TweaksModManager.modmanager.usercontrols" xmlns:modmanager="clr-namespace:ME3TweaksModManager.modmanager" xmlns:ui="clr-namespace:ME3TweaksModManager.ui" xmlns:system="clr-namespace:System;assembly=System.Runtime"
+    xmlns:options="clr-namespace:ME3TweaksModManager.modmanager.usercontrols.options"
+    mc:Ignorable="d"
+    DataContext="{Binding RelativeSource={RelativeSource Self}}">
+    <DockPanel
+        Name="OptionPanel"
+        HorizontalAlignment="Stretch"
+        VerticalAlignment="Stretch"
+        MaxWidth="920">
+        <TextBlock
+            DockPanel.Dock="Top"
+            Text="{DynamicResource string_me3tweaksModManagerOptions}"
+            FontSize="24"
+            FontWeight="Bold"
+            TextAlignment="Center"
+            Margin="0,5" />
+        <Button
+            DockPanel.Dock="Bottom"
+            Content="{DynamicResource string_close}"
+            Command="{Binding CloseCommand}"
+            HorizontalAlignment="Right"
+            Padding="15,5"
+            Margin="0,5,0,0" />
+        <ScrollViewer>
+            <ItemsControl ItemsSource="{Binding SettingGroups}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate
+                        DataType="{x:Type options:M3SettingGroup}">
+                        <GroupBox Margin="0,0,0,10">
+                            <GroupBox.Style>
+                                <Style TargetType="GroupBox" BasedOn="{StaticResource {x:Type GroupBox}}">
+                                    <Setter Property="Padding" Value="6, 0"/>
+                                </Style>
+                            </GroupBox.Style>
+                            <GroupBox.Header>
+                                <StackPanel Orientation="Vertical" Margin="0,4">
+                                    <TextBlock Text="{Binding GroupName}" FontSize="14" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding GroupDescription}"/>
+                                </StackPanel>
+                            </GroupBox.Header>
+                            <!-- AlternationCount sucks in WPF. This shit is way too complicated to use. -->
+                            <!-- Just kidding. All the examples I used suck, except this one: https://www.dotnetcurry.com/wpf/1211/wpf-items-control-advanced-topic -->
+                            <ItemsControl ItemsSource="{Binding AllSettings}" AlternationCount="2">
+                                <ItemsControl.ItemContainerStyle>
+                                    <Style TargetType="ContentControl">
+                                        <Setter Property="Padding" Value="12 4 16 4"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="-7,0,-8,0"/>
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="ContentControl">
+                                                    <Border
+                                                        Background="{TemplateBinding Background}"
+                                                        Padding="{TemplateBinding Padding}"
+                                                        Margin="{TemplateBinding Margin}">
+                                                        <ContentPresenter/>
+                                                    </Border>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+
+                                        <Style.Triggers>
+                                            <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                                <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ItemsControl.ItemContainerStyle>
+                            </ItemsControl>
+                        </GroupBox>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+    </DockPanel>
+</usercontrols:MMBusyPanelBase>
