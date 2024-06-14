@@ -677,7 +677,6 @@ namespace ME3TweaksModManager
         public ICommand ImportArchiveCommand { get; set; }
         public ICommand ReloadModsCommand { get; set; }
         public ICommand ModManagerOptionsCommand { get; set; }
-        public ICommand ModManagerOptions2Command { get; set; }
         public ICommand ConflictDetectorCommand { get; set; }
         public ICommand ApplyModCommand { get; set; }
         public ICommand RestoreCommand { get; set; }
@@ -733,7 +732,6 @@ namespace ME3TweaksModManager
             CloseModSearchBoxCommand = new GenericCommand(CloseSearchBox);
             SearchModsCommand = new GenericCommand(ShowSearchBox);
             ModManagerOptionsCommand = new GenericCommand(ShowOptions);
-            ModManagerOptions2Command = new GenericCommand(ShowOptions2);
             ReloadModsCommand = new GenericCommand(ReloadMods, CanReloadMods);
             ApplyModCommand = new GenericCommand(CallApplyMod, CanApplyMod);
             CheckForContentUpdatesCommand = new GenericCommand(CheckForContentUpdates, NetworkThreadNotRunning);
@@ -1226,15 +1224,6 @@ namespace ME3TweaksModManager
             optionsPanel.Close += (a, b) => { ReleaseBusyControl(); };
             ShowBusyControl(optionsPanel);
         }
-
-        private void ShowOptions2()
-        {
-            var optionsPanel = new OptionsPanel2();
-            optionsPanel.Close += (a, b) => { ReleaseBusyControl(); };
-            ShowBusyControl(optionsPanel);
-        }
-
-
         private bool HasGameTarget(object obj)
         {
             if (obj is MEGame game)
