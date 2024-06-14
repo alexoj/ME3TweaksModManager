@@ -445,7 +445,7 @@
                         IsChecked="{Binding AddSquadmateMerge2Legion}"
                         DockPanel.Dock="Top" />
                     <CheckBox
-                        Content="Squadmate outfit merge: Kasmumi"
+                        Content="Squadmate outfit merge: Kasumi"
                         IsChecked="{Binding AddSquadmateMerge2Kasumi}"
                         DockPanel.Dock="Top" />
                     <CheckBox

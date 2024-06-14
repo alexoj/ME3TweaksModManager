@@ -42,14 +42,22 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
             InitializeComponent();
             this.ApplyDarkNetWindowTheme();
 
+            Title += $@" - {selectedMod.ModName}";
 
             AvailableFeatures.Add(new StarterKitAddinFeature(M3L.GetString(M3L.string_addStartupFile), AddStartupFile, validGames: new[] { MEGame.ME2, MEGame.ME3, MEGame.LE1, MEGame.LE2, MEGame.LE3 }));
             AvailableFeatures.Add(new StarterKitAddinFeature(M3L.GetString(M3L.string_addPlotManagerData), AddPlotManagerData, validGames: new[] { MEGame.ME1, MEGame.ME2, MEGame.ME3, MEGame.LE1, MEGame.LE2, MEGame.LE3 }));
 
+            // LE3 Features
             string[] game3Hench = new[] { @"Ashley", @"EDI", @"Garrus", @"Kaidan", @"Marine", @"Prothean", @"Liara", @"Tali" };
             foreach (var hench in game3Hench)
             {
-                AvailableFeatures.Add(new StarterKitAddinFeature(M3L.GetString(M3L.string_interp_addSquadmateOutfitMergeX, GetUIHenchName(hench)), () => AddSquadmateMergeOutfit(hench), validGames: new[] { MEGame.ME3, MEGame.LE3 }));
+                AvailableFeatures.Add(new StarterKitAddinFeature(M3L.GetString(M3L.string_interp_addSquadmateOutfitMergeX, StarterKitAddins.GetHumanName(hench)), () => AddSquadmateMergeOutfit(hench), validGames: new[] { MEGame.ME3, MEGame.LE3 }));
+            }
+
+            string[] le2Hench = new[] { @"Vixen", @"Leading", @"Professor", @"Garrus", @"Convict", @"Grunt", @"Tali", @"Mystic", @"Assassin", @"Geth", @"Thief", @"Veteran" };
+            foreach (var hench in le2Hench)
+            {
+                AvailableFeatures.Add(new StarterKitAddinFeature(M3L.GetString(M3L.string_interp_addSquadmateOutfitMergeX, StarterKitAddins.GetHumanName(hench)), () => AddSquadmateMergeOutfit(hench), validGames: new[] { MEGame.LE2 }));
             }
 
             AvailableFeatures.Add(new StarterKitAddinFeature(M3L.GetString(M3L.string_interp_addModSettingsMenuStub), AddModSettingsStub, validGames: new[] { /*MEGame.LE1,*/ MEGame.LE3 }));
@@ -115,23 +123,27 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
 
             var dlcFolderPath = GetDLCFolderPath();
             if (dlcFolderPath == null) return; // Abort
+            var henchHumanName = StarterKitAddins.GetHumanName(hench);
 
-            OperationText = M3L.GetString(M3L.string_interp_addingSquadmateOutfitMergeFilesForX, hench);
+            OperationText = M3L.GetString(M3L.string_interp_addingSquadmateOutfitMergeFilesForX, henchHumanName);
             Task.Run(() =>
             {
                 OperationInProgress = true;
-                StarterKitAddins.GenerateSquadmateMergeFiles(SelectedMod.Game, hench, dlcFolderPath,
+                return StarterKitAddins.GenerateSquadmateMergeFiles(SelectedMod.Game, hench, dlcFolderPath,
                     new List<Dictionary<string, object>>());
             }).ContinueWithOnUIThread(x =>
             {
                 OperationInProgress = false;
                 if (x.Exception == null)
                 {
-                    OperationText = M3L.GetString(M3L.string_interp_addedSquadmateOutfitMergeFilesForX, hench);
+                    if (x.Result != null)
+                        OperationText = x.Result;
+                    else
+                        OperationText = M3L.GetString(M3L.string_interp_addedSquadmateOutfitMergeFilesForX, henchHumanName);
                 }
                 else
                 {
-                    OperationText = M3L.GetString(M3L.string_interp_failedToAddSquadmateOutfitMergeFilesForHenchXY, hench, x.Exception.Message);
+                    OperationText = M3L.GetString(M3L.string_interp_failedToAddSquadmateOutfitMergeFilesForHenchXY, henchHumanName, x.Exception.Message);
                 }
             });
         }
@@ -160,13 +172,6 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
             });
         }
 
-        private string GetUIHenchName(string hench)
-        {
-            if (hench == @"Prothean") return @"Javik"; // Not sure these need localized
-            if (hench == @"Marine") return @"James";
-            return hench;
-        }
-
         private void AddStartupFile()
         {
             var dlcFolderPath = GetDLCFolderPath();
@@ -193,7 +198,7 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
         private string GetDLCFolderPath()
         {
             var dlcJob = SelectedMod.GetJob(ModJob.JobHeader.CUSTOMDLC);
-            if (dlcJob == null) return null; // Not found
+            if (dlcJob == null || dlcJob.CustomDLCFolderMapping.Keys.Count == 0) return null; // Not found
 
             var sourceDirs = dlcJob.CustomDLCFolderMapping;
 
@@ -203,13 +208,13 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
                 var response = DropdownSelectorDialog.GetSelection<string>(this, M3L.GetString(M3L.string_selectDLCMod), dlcJob.CustomDLCFolderMapping.Keys.ToList(), M3L.GetString(M3L.string_selectADLCFolderToAddAStartupFileTo), @"");
                 if (response is string str)
                 {
-                    return str;
+                    return Path.Combine(SelectedMod.ModPath, str);
                 }
 
                 return null;
             }
 
-            return sourceDirs.Keys.FirstOrDefault();
+            return Path.Combine(SelectedMod.ModPath, sourceDirs.Keys.FirstOrDefault());
         }
     }
 }
