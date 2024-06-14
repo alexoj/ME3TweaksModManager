@@ -342,7 +342,7 @@
     <Style x:Key="StretchyExpander" TargetType="{x:Type Expander}">
         <Setter Property="Foreground" Value="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
         <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.Layer1BackgroundBrush}}"/>
-        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource {x:Static adonisUi:Brushes.SlightlyDimmedForegroundBrush}}"/>
         <Setter Property="BorderThickness" Value="{DynamicResource {x:Static adonisUi:Dimensions.BorderThickness}}"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Top"/>
@@ -528,7 +528,7 @@
                         </Trigger>
 
                         <Trigger Property="IsMouseOver" SourceName="HeaderSite" Value="True">
-                            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static adonisUi:Brushes.AccentBrush}}"/>
+                            <Setter Property="BorderBrush" Value="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"/>
                         </Trigger>
 
                     </ControlTemplate.Triggers>
