@@ -13,7 +13,8 @@
              ToolTipService.InitialShowDelay="0"
              ToolTipService.BetweenShowDelay="0"
              HorizontalContentAlignment="Stretch"
-             HorizontalAlignment="Stretch">
+             HorizontalAlignment="Stretch"
+             ToolTipOpening="ToolTipIsOpening">
     <UserControl.Resources>
         <converters:GroupNameToColorConverter
             x:Key="GroupNameToColorConverter" />
