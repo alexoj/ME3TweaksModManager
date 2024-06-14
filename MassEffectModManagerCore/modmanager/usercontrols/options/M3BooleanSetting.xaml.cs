@@ -1,5 +1,6 @@
 ﻿using LegendaryExplorerCore.UnrealScript.Language.Tree;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using ME3TweaksModManager.modmanager.localizations;
@@ -13,6 +14,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.options
     {
         private string _settingPropertyName;
         private Type _type;
+        private readonly Func<bool> _changingValueCallback;
 
         public M3BooleanSetting()
         {
@@ -51,6 +53,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.options
 #endif
             _type = classType;
             _settingPropertyName = settingPropertyName;
+            _changingValueCallback = changingCallback;
             InitializeComponent();
         }
 
@@ -58,11 +61,24 @@ namespace ME3TweaksModManager.modmanager.usercontrols.options
         {
             var binding = new Binding()
             {
-                Path = new PropertyPath(_type.GetProperty(_settingPropertyName))
+                Path = new PropertyPath(_type.GetProperty(_settingPropertyName)),
+                NotifyOnSourceUpdated = true
             };
 
             DataContext = this;
             SettingCB.SetBinding(ToggleButton.IsCheckedProperty, binding);
+            if (_changingValueCallback != null)
+            {
+                SettingCB.SourceUpdated += SettingChanged;
+            }
+        }
+
+        private void SettingChanged(object sender, DataTransferEventArgs e)
+        {
+            if (e.Property == ToggleButton.IsCheckedProperty)
+            {
+                _changingValueCallback();
+            }
         }
     }
 }

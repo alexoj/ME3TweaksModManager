@@ -64,7 +64,7 @@
 
                                         <Style.Triggers>
                                             <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                                                <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"/>
+                                                <Setter Property="Background" Value="{DynamicResource {x:Static adonisUi:Brushes.Layer4BackgroundBrush}}"/>
                                             </Trigger>
                                         </Style.Triggers>
                                     </Style>

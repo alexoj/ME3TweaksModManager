@@ -36,8 +36,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         new M3DirectorySetting(settingsType, nameof(Settings.ModDownloadCacheFolder), M3L.string_nexusModsDownloadFolder, M3L.string_description_nexusModsDownloadFolder, GetNexusDownloadLocationWatermark, M3L.string_configure, ChangeNexusModsDownloadCacheDir),
 
                         new M3BooleanSetting(settingsType, nameof(Settings.DeveloperMode), M3L.string_Developermode, M3L.string_wp_description_developermod),
-                        new M3BooleanSetting(settingsType, nameof(Settings.EnableTelemetry), M3L.string_Enabletelemetry, M3L.string_wp_description_telemetry),
-                        new M3BooleanSetting(settingsType, nameof(Settings.BetaMode), M3L.string_optIntoBetaUpdates, M3L.string_tooltip_optIntoBetaUpdates),
+                        new M3BooleanSetting(settingsType, nameof(Settings.EnableTelemetry), M3L.string_Enabletelemetry, M3L.string_wp_description_telemetry, ChangingTelemetrySetting),
+                        new M3BooleanSetting(settingsType, nameof(Settings.BetaMode), M3L.string_optIntoBetaUpdates, M3L.string_tooltip_optIntoBetaUpdates, ChangingBetaSetting),
                         new M3BooleanSetting(settingsType, nameof(Settings.ConfigureNXMHandlerOnBoot), M3L.string_configureNxmHandlerOnBoot, M3L.string_tooltip_configureNxmHandlerOnBoot),
                         new M3BooleanSetting(settingsType, nameof(Settings.DoubleClickModInstall), M3L.string_doubleClickModInLibraryToInstall, M3L.string_description_doubleClickModInLibraryToInstall),
 
@@ -75,6 +75,53 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             ];
 
 
+        }
+
+        private bool ChangingBetaSetting()
+        {
+            // Did the setting just change as they opted in?
+            if (Settings.BetaMode)
+            {
+                var result = M3L.ShowDialog(mainwindow, M3L.GetString(M3L.string_dialog_optingIntoBeta),
+                    M3L.GetString(M3L.string_enablingBetaMode), MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.No)
+                {
+                    Settings.BetaMode = false; //turn back off.
+                }
+            }
+
+            return true;
+        }
+
+        private bool ChangingTelemetrySetting()
+        {
+            if (!Settings.EnableTelemetry)
+            {
+                //user trying to turn it off 
+                var result = M3L.ShowDialog(mainwindow, M3L.GetString(M3L.string_dialogTurningOffTelemetry), M3L.GetString(M3L.string_turningOffTelemetry), MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                if (result == MessageBoxResult.No)
+                {
+                    Settings.EnableTelemetry = true; //keep on.
+                    return true;
+                }
+
+                M3Log.Warning(@"Turning off telemetry :(");
+
+                // Immediately turn off telemetry per user request
+                Analytics.SetEnabledAsync(false);
+                Crashes.SetEnabledAsync(false);
+            }
+            else
+            {
+                //turning telemetry on
+                M3Log.Information(@"Turning on telemetry :)");
+
+                // Immediately turn on telemetry per user request
+                Analytics.SetEnabledAsync(true);
+                Crashes.SetEnabledAsync(true);
+            }
+
+            return true;
         }
 
         private string GetNexusDownloadLocationWatermark()
