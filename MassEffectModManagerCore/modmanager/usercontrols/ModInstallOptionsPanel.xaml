@@ -42,7 +42,7 @@
                 Margin="0,0,5,0" />
             <TextBlock
                 Text="{Binding ModBeingInstalled.ModName}"/>
-        <TextBlock
+            <TextBlock
                 Text="{Binding ModBeingInstalled.ModVersionString}"
                 Margin="3,0,0,0"/>
         </DockPanel>
@@ -58,7 +58,8 @@
                 HorizontalContentAlignment="Stretch"
                 HorizontalAlignment="Stretch"
                 ItemsSource="{Binding AlternateGroups}"
-                RequestBringIntoView="FrameworkElement_OnRequestBringIntoView">
+                RequestBringIntoView="FrameworkElement_OnRequestBringIntoView"
+                AlternationCount="2">
                 <ItemsControl.Resources>
                     <DataTemplate
                         DataType="{x:Type alternates:AlternateGroup}">

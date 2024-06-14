@@ -112,7 +112,7 @@
                                     </TransformGroup>
                                 </Grid.LayoutTransform>
 
-                                <Ellipse x:Name="Circle"
+                                <Rectangle x:Name="Circle"
                                          Stroke="{TemplateBinding BorderBrush}"
                                          HorizontalAlignment="Center"
                                          VerticalAlignment="Center"
@@ -281,7 +281,7 @@
                                 <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
 
-                            <Ellipse x:Name="Circle"
+                            <Rectangle x:Name="Circle"
                                      Stroke="{TemplateBinding BorderBrush}"
                                      HorizontalAlignment="Center"
                                      VerticalAlignment="Center"
@@ -293,6 +293,8 @@
                                             Foreground="{TemplateBinding BorderBrush}"
                                             Grid.Column="0"
                                             Focusable="False"
+                                            Width="16"
+                                            Height="16"
                                             HorizontalAlignment="Center"
                                             VerticalAlignment="Center"
                                             RenderTransformOrigin="0.5 0.5">

@@ -1487,7 +1487,7 @@
     <system:String x:Key="string_interp_altfile_noMergeFilesSpecified">Alternate File merge filenames (MergeFiles) required but not specified. This value is required for Alternate Files using the OP_APPLY_MERGEMODS operation.</system:String>
 
     <!-- Alternate Group -->
-    <system:String x:Key="string_interp_groupNameAlternateOptionsHeader">{0} - {1} option(s)</system:String>
+    <system:String x:Key="string_interp_groupNameAlternateOptionsHeader">{0} - {1} options (click to view)</system:String>
     <!-- 0={GroupName} 1={AlternateOptions.Count} Localize as best you can for your language since numerics are hard to do across locales-->
 
     <!-- GameTargetWPF -->
