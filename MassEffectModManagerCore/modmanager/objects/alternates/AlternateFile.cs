@@ -517,7 +517,6 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
         }
 
 
-
         public void SetupInitialSelection(GameTargetWPF target, Mod mod)
         {
             UIIsSelected = CheckedByDefault; //Reset
@@ -584,6 +583,19 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
 
             BuildSharedParameterMap(mod, parameterDictionary);
             ParameterMap.ReplaceAll(MDParameter.MapIntoParameterMap(parameterDictionary));
+        }
+
+        private AlternateFile() { }
+
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="other">Item to copy</param>
+        internal AlternateFile CopyForEditor()
+        {
+            AlternateFile file = new AlternateFile();
+            base.CopyForEditor(file);
+            return file;
         }
     }
 }

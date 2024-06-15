@@ -497,6 +497,19 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             ValidAlternate = true;
         }
 
+        private AlternateDLC() { }
+
+        /// <summary>
+        /// Copy constructor
+        /// </summary>
+        /// <param name="other">Item to copy</param>
+        internal AlternateDLC CopyForEditor()
+        {
+            AlternateDLC dlc = new AlternateDLC();
+            base.CopyForEditor(dlc);
+            return dlc;
+        }
+
         public override bool IsManual => Condition == AltDLCCondition.COND_MANUAL;
 
         internal bool HasRelativeFiles()

@@ -248,6 +248,17 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             }
         }
 
+        protected virtual void CopyOther(AlternateOption other)
+        {
+            ApplicableAutoText = other.ApplicableAutoText;
+            NotApplicableAutoText = other.NotApplicableAutoText;
+            FriendlyName = other.FriendlyName;
+            IsHidden = other.IsHidden;
+            GroupName = other.GroupName;
+            CheckedByDefault = other.CheckedByDefault;
+            
+        }
+
         /// <summary>
         /// Updates the selection and applicability states for this alternate option.
         /// </summary>
@@ -765,6 +776,20 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Copies data INTO the passed in object from this one
+        /// </summary>
+        /// <param name="target"></param>
+        protected void CopyForEditor(AlternateOption target)
+        {
+            // Used in UI
+            target.FriendlyName = FriendlyName;
+            target.GroupName = GroupName;
+
+            // Used for map
+            target.ParameterMap.ReplaceAll(ParameterMap);
         }
     }
 }
