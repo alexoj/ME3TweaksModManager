@@ -60,7 +60,7 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
                 AvailableFeatures.Add(new StarterKitAddinFeature(M3L.GetString(M3L.string_interp_addSquadmateOutfitMergeX, StarterKitAddins.GetHumanName(hench)), () => AddSquadmateMergeOutfit(hench), validGames: new[] { MEGame.LE2 }));
             }
 
-            AvailableFeatures.Add(new StarterKitAddinFeature(M3L.GetString(M3L.string_interp_addModSettingsMenuStub), AddModSettingsStub, validGames: new[] { /*MEGame.LE1,*/ MEGame.LE3 }));
+            AvailableFeatures.Add(new StarterKitAddinFeature(M3L.GetString(M3L.string_interp_addModSettingsMenuStub), AddModSettingsStub, validGames: new[] { MEGame.LE1, MEGame.LE3 }));
         }
 
         private void AddModSettingsStub()
@@ -73,11 +73,17 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
             {
                 OperationInProgress = true;
                 List<Action<DuplicatingIni>> moddescAddinDelegates = new List<Action<DuplicatingIni>>();
-                StarterKitAddins.AddModSettingsMenu(SelectedMod, SelectedMod.Game, Path.Combine(SelectedMod.ModPath, dlcFolderPath), moddescAddinDelegates);
+                if (SelectedMod.Game == MEGame.LE1)
+                { 
+                    StarterKitAddins.AddLE1ModSettingsMenu(SelectedMod, SelectedMod.Game, Path.Combine(SelectedMod.ModPath, dlcFolderPath), moddescAddinDelegates);
+                }
+                else if (SelectedMod.Game == MEGame.LE3)
+                {
+                    StarterKitAddins.AddLE3ModSettingsMenu(SelectedMod, SelectedMod.Game, Path.Combine(SelectedMod.ModPath, dlcFolderPath), moddescAddinDelegates);
+                }
 
                 if (moddescAddinDelegates.Any())
                 {
-                    var iniParser = new DuplicatingIni();
                     var iniData = DuplicatingIni.LoadIni(SelectedMod.ModDescPath);
                     foreach (var del in moddescAddinDelegates)
                     {
