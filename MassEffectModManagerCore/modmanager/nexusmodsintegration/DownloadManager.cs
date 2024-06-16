@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using ME3TweaksModManager.modmanager.importer;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.ui;
@@ -92,9 +93,53 @@ namespace ME3TweaksModManager.modmanager.nexusmodsintegration
                 // Attempt to start download, as states have changed.
                 TryStartDownload();
 
-                if (item.DownloadState == EModDownloadState.DOWNLOADCOMPLETE)
+                if (item.DownloadState == EModDownloadState.DOWNLOADCOMPLETE && item.AutoImport)
                 {
+                    ModArchiveImport mai = new ModArchiveImport()
+                    {
+                        AutomatedMode = true,
+                        ArchiveStream = item.DownloadedStream,
+                        GetPanelResult = () => new PanelResult(), // TEMPORARY DO NOT RELY ON THIS
+                        ArchiveFilePath = "Test.7z",
+                    };
+                    if (item is NexusModDownload nmd)
+                    {
+                        mai.SourceNXMLink = nmd.ProtocolLink;
+                    }
+                    mai.ImportStateChanged += OnImportStateChange;
 
+                    item.ImportFlow = mai;
+
+                    mai.BeginScan();
+                }
+            }
+        }
+
+        private static void OnImportStateChange(object sender, EventArgs e)
+        {
+            if (sender is ModArchiveImport mai)
+            {
+                var matchingObj = Downloads.Values.FirstOrDefault(x => x.ImportFlow == mai);
+                if (matchingObj == null)
+                    return; 
+
+                switch (mai.CurrentState)
+                {
+                    case EModArchiveImportState.FAILED:
+                        matchingObj.Status = "Import failed";
+                        break;
+                    case EModArchiveImportState.SCANNING:
+                        matchingObj.Status = "Scanning";
+                        break;
+                    case EModArchiveImportState.SCANCOMPLETED:
+                        matchingObj.Status = "Import queued";
+                        break;
+                    case EModArchiveImportState.IMPORTING:
+                        matchingObj.Status = "Importing mods";
+                        break;
+                    case EModArchiveImportState.COMPLETE:
+                        matchingObj.Status = "Import complete";
+                        break;
                 }
             }
         }

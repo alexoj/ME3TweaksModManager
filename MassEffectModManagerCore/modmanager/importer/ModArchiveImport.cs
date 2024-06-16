@@ -299,6 +299,9 @@ namespace ME3TweaksModManager.modmanager.importer
 
             // This will fire off listeners for this object
             CurrentState = EModArchiveImportState.SCANCOMPLETED;
+            
+            if (AutomatedMode)
+                BeginImporting();
         }
 
         /// <summary>

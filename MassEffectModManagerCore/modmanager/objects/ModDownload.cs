@@ -9,6 +9,7 @@ using Pathoschild.FluentNexus.Models;
 using System.Threading;
 using System.Threading.Tasks;
 using Windows.Media.Playback;
+using ME3TweaksModManager.modmanager.importer;
 using ME3TweaksModManager.modmanager.memoryanalyzer;
 
 namespace ME3TweaksModManager.modmanager.objects
@@ -82,7 +83,7 @@ namespace ME3TweaksModManager.modmanager.objects
         /// <summary>
         /// UI string to display. Should be short.
         /// </summary>
-        public string Status { get; protected set; }
+        public string Status { get; protected internal set; }
 
         public void OnStatusChanged()
         {
@@ -95,6 +96,16 @@ namespace ME3TweaksModManager.modmanager.objects
         /// The downloaded stream data
         /// </summary>
         public Stream DownloadedStream { get; private protected set; }
+
+        /// <summary>
+        /// If import should be automatically attempted
+        /// </summary>
+        public bool AutoImport { get; set; }
+
+        /// <summary>
+        /// Associated mod importing flow for this download
+        /// </summary>
+        public ModArchiveImport ImportFlow { get; set; }
 
         /// <summary>
         /// Invoked when the mod has initialized
@@ -160,7 +171,7 @@ namespace ME3TweaksModManager.modmanager.objects
             116, // skip intro movies
             117, // skip to main menu
             120, // controller skip intro movies
-            121, // controll skip to main menu
+            121, // controller skip to main menu
             245, // ME1 Controller 1.2.2
             326, // MAKO MOD
             327, // Mako Mod v2

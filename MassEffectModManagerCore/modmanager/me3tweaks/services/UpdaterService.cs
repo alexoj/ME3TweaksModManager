@@ -933,7 +933,9 @@ namespace ME3TweaksModManager.modmanager.me3tweaks.services
                 if (DownloadFlow == null)
                     return;
 
+                UpdateInProgress = true;
                 DownloadFlow.StatusChanged += DFStatusChanged;
+                DownloadFlow.AutoImport = true;
             }
 
             private void DFStatusChanged(object sender, EventArgs e)
