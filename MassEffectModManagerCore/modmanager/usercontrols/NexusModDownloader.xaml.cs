@@ -56,7 +56,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         public void AddDownload(string nxmLink)
         {
             M3Log.Information($@"Queueing nxmlink {nxmLink}");
-            var dl = new ModDownload(nxmLink);
+            var dl = new NexusModDownload(nxmLink);
             dl.OnInitialized += ModInitialized;
             dl.OnModDownloaded += ModDownloaded;
             dl.OnModDownloadError += DownloadError;
@@ -103,10 +103,10 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private void ModInitialized(object sender, EventArgs e)
         {
-            if (sender is ModDownload initializedItem)
+            if (sender is NexusModDownload initializedItem)
             {
                 M3Log.Information($@"ModDownload has initialized: {initializedItem.ModFile.Name}");
-                var nextDownload = Downloads.FirstOrDefault(x => !x.Downloaded);
+                var nextDownload = Downloads.FirstOrDefault(x => x.DownloadState == EModDownloadState.QUEUED);
                 nextDownload?.StartDownload(cancellationTokenSource.Token);
             }
         }

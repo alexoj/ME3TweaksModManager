@@ -271,6 +271,8 @@
                                 Height="Auto" />
                             <RowDefinition
                                 Height="Auto" />
+                            <RowDefinition
+                                Height="Auto" />
                         </Grid.RowDefinitions>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition
@@ -313,9 +315,18 @@
                                 FontSize="10"
                                 Foreground="{DynamicResource {x:Static adonisUi:Brushes.DisabledForegroundBrush}}" />
                         </StackPanel>
+                        <ProgressBar
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Visibility="{Binding DownloadFlow, Converter={StaticResource NullVisibilityConverter}}"
+                            Grid.Row="4"
+                            Height="12"
+                            Maximum="{Binding DownloadFlow.ProgressMaximum, Mode=OneWay}"
+                            Value="{Binding DownloadFlow.ProgressValue, Mode=OneWay}"
+                            IsIndeterminate="{Binding DownloadFlow.ProgressIndeterminate, Mode=OneWay}" />
                         <TextBlock
                             Text="{Binding changelog}"
-                            Grid.Row="4"
+                            Grid.Row="5"
                             Grid.Column="0"
                             Grid.ColumnSpan="2"
                             TextWrapping="Wrap" />

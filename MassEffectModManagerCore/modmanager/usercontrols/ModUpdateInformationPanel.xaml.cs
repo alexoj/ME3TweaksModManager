@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,18 +8,16 @@ using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Helpers;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Misc;
-using ME3TweaksCore.Services.Backup;
 using ME3TweaksCoreWPF.UI;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.me3tweaks;
+using ME3TweaksModManager.modmanager.me3tweaks.services;
+using ME3TweaksModManager.modmanager.nexusmodsintegration;
+using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.ui;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.WindowsAPICodePack.Taskbar;
-using PropertyChanged;
-using M3OnlineContent = ME3TweaksModManager.modmanager.me3tweaks.services.M3OnlineContent;
 
 namespace ME3TweaksModManager.modmanager.usercontrols
 {
@@ -43,6 +36,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         public ModUpdateInformationPanel(List<M3OnlineContent.ModUpdateInfo> modsWithUpdates)
         {
+            DownloadManager.OnModInitialized += AssociateModDownload;
             modsWithUpdates.ForEach(x =>
             {
                 x.ApplyUpdateCommand = new RelayCommand(ApplyUpdateToMod, CanApplyUpdateToMod);
@@ -61,6 +55,21 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             });
             UpdatableMods.ReplaceAll(modsWithUpdates);
             LoadCommands();
+        }
+
+        private void AssociateModDownload(object sender, EventArgs e)
+        {
+            if (sender is NexusModDownload md)
+            {
+                foreach (var up in UpdatableMods.OfType<M3OnlineContent.NexusModUpdateInfo>())
+                {
+                    if (up.NexusModsId == md.ProtocolLink.ModId)
+                    {
+                        up.DownloadFlow = md;
+                        break;
+                    }
+                }
+            }
         }
 
         private bool CanApplyUpdateToMod(object obj)
@@ -420,6 +429,12 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         public void RefreshContentsOnDisplay()
         {
             RefreshContentsOnVisible = true;
+        }
+
+        protected override void OnClosing(DataEventArgs e)
+        {
+            DownloadManager.OnModInitialized -= AssociateModDownload;
+            base.OnClosing(e);
         }
     }
 }
