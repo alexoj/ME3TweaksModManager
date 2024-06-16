@@ -1,35 +1,19 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Security.Policy;
-using System.Windows;
-using System.Windows.Controls;
+﻿using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Animation;
-using System.Xml.Linq;
-using IniParser.Model;
-using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
-using LegendaryExplorerCore.Helpers;
+using LegendaryExplorerCore.Gammtek.Paths;
 using LegendaryExplorerCore.Misc;
-using ME3TweaksCore.GameFilesystem;
-using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Services.FileSource;
-using ME3TweaksCore.Services.ThirdPartyModIdentification;
 using ME3TweaksCoreWPF.UI;
-using ME3TweaksModManager.modmanager.gameini;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.importer;
 using ME3TweaksModManager.modmanager.localizations;
-using ME3TweaksModManager.modmanager.me3tweaks.services;
 using ME3TweaksModManager.modmanager.memoryanalyzer;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.batch;
 using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.objects.mod.interfaces;
-using ME3TweaksModManager.modmanager.objects.mod.texture;
 using ME3TweaksModManager.ui;
-using SevenZip;
-using SevenZip.EventArguments;
 
 namespace ME3TweaksModManager.modmanager.usercontrols
 {
@@ -81,30 +65,97 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             {
                 ArchiveStream = archiveStream,
                 SourceNXMLink = link,
-                ArchiveFilePath = file
+                ArchiveFilePath = file,
+
+                // Callbacks
+                OnCompressedModAdded = CompressedModAdded,
+                OnModFailedToLoad = ModFailedToLoad,
+                GetPanelResult = () => Result,
+                ShowDialogCallback = M3PromptCallbacks.GetUserChoiceCallback,
+                ErrorCallback = M3PromptCallbacks.BlockingActionOccurred
             };
+            MAI.ImportStateChanged += MAIOnImportStateChanged;
             LoadCommands();
         }
+        private void ModFailedToLoad(Mod obj)
+        {
 
+        }
 
+        private void MAIOnImportStateChanged(object sender, EventArgs e)
+        {
+            if (MAI.CurrentState == EModArchiveImportState.SCANCOMPLETED)
+            {
+                // Setup UI for scan results
+                if (MAI.ScanFailureReason != null)
+                {
+                    NoModSelectedText = MAI.ScanFailureReason;
+                }
+                else if (MAI.CompressedMods.Count > 0)
+                {
+                    MAI.ActionText = M3L.GetString(M3L.string_selectModsToImportIntoModManagerLibrary);
+                    //if (CompressedMods.Count == 1)
+                    //{
+                    //    CompressedMods_ListBox.SelectedIndex = 0; //Select the only item
+                    //}
 
-        /// <summary>
-        /// Reason the archive failed to scan
-        /// </summary>
-        public string ScanFailureReason { get; private set; }
+                    // Todo: Change to link, maybe via NTFS streams?
+                    // To support other providers
+                    
 
+                    if (MAI.CompressedMods.Count == 1 && MAI.CompressedMods[0] is BatchLibraryInstallQueue queue)
+                    {
+                        ImportModsText = "Import install group";
+                    }
 
-        ///// <summary>
-        ///// Notifies listeners when given property is updated.
-        ///// </summary>
-        ///// <param name="propertyname">Name of property to give notification for. If called in property, argument can be ignored as it will be default.</param>
-        //protected virtual void hack_NotifyPropertyChanged([CallerMemberName] string propertyname = null)
-        //{
-        //    hack_PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyname));
-        //}
+                    TriggerPropertyChangedFor(nameof(CanCompressPackages));
+                    TriggerPropertyChangedFor(nameof(CanShowCompressPackages));
+                }
+                else if (OTALOTTextureFilesImported)
+                {
+                    CancelButtonText = M3L.GetString(M3L.string_close);
+                    NoModSelectedText = M3L.GetString(M3L.string_interp_dialogImportedALOTMainToTextureLibrary,
+                        ScanningFile, M3Utilities.GetALOTInstallerTextureLibraryDirectory());
+                    MAI.ActionText = M3L.GetString(M3L.string_importCompleted);
+                }
+                else
+                {
+
+                    MAI.ActionText = M3L.GetString(M3L.string_noCompatibleModsFoundInArchive);
+                    if (MAI.ArchiveFilePath.EndsWith(@".exe"))
+                    {
+                        NoModSelectedText = M3L.GetString(M3L.string_executableModsMustBeValidatedByME3Tweaks);
+                    }
+                    else
+                    {
+                        if (Settings.GenerationSettingLE && !Settings.GenerationSettingOT)
+                        {
+                            // Show LE string
+                            NoModSelectedText = M3L.GetString(M3L.string_noCompatibleModsFoundInArchiveLEExtended);
+                        }
+                        else if (!Settings.GenerationSettingLE && Settings.GenerationSettingOT)
+                        {
+                            // Show OT string
+                            NoModSelectedText = M3L.GetString(M3L.string_noCompatibleModsFoundInArchiveOTExtended);
+                        }
+                        else
+                        {
+                            // Show combined string
+                            NoModSelectedText = M3L.GetString(M3L.string_noCompatibleModsFoundInArchiveBothGensExtended);
+                        }
+                    }
+                }
+                CommandManager.InvalidateRequerySuggested();
+            }
+
+            if (MAI.CurrentState == EModArchiveImportState.COMPLETE)
+            {
+                OnClosing(DataEventArgs.Empty);
+            }
+
+        }
+
         private bool openedMultipanel = false;
-
-
 
         protected override void OnClosing(DataEventArgs args)
         {
@@ -156,7 +207,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private void BeginImportingMods()
         {
-
+            MAI.BeginImporting();
         }
 
         public void CompressedModAdded()

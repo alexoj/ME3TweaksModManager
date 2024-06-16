@@ -6,27 +6,18 @@ using ME3TweaksModManager.modmanager.me3tweaks.services;
 using ME3TweaksModManager.modmanager.objects.batch;
 using ME3TweaksModManager.modmanager.objects.mod.texture;
 using SevenZip;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Media.Animation;
 using System.Xml.Linq;
-using JetBrains.FormatRipper.FileExplorer;
 using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCore.Services.FileSource;
 using ME3TweaksModManager.modmanager.objects.mod.interfaces;
-using LegendaryExplorerCore.Gammtek.Paths;
 using LegendaryExplorerCore.Helpers;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.mod;
-using ME3TweaksModManager.modmanager.usercontrols;
-using ME3TweaksModManager.ui;
 using SevenZip.EventArguments;
 
 namespace ME3TweaksModManager.modmanager.importer
@@ -81,8 +72,13 @@ namespace ME3TweaksModManager.modmanager.importer
         /// </summary>
         public EModArchiveImportState CurrentState { get; private set; }
 
+        private void OnCurrentStateChanged()
+        {
+            ImportStateChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         #region UI Bindings
-        public string ActionText { get; private set; }
+        public string ActionText { get; internal set; }
         public long ProgressValue { get; private set; }
         public long ProgressMaximum { get; private set; }
         public bool ProgressIndeterminate { get; private set; }
@@ -96,19 +92,34 @@ namespace ME3TweaksModManager.modmanager.importer
         #region UI Callbacks
 
         /// <summary>
-        /// Invoke when you want to signal an error has occurred. Signature is message, caption.
+        /// Invoke when you want to signal an error has occurred. Signature is title, message.
         /// </summary>
         public Action<string, string> ErrorCallback;
 
         /// <summary>
-        /// Invoke when you want to show a full dialog with result
+        /// Invoke when you want to show a full dialog with result. Strings are title, message.
         /// </summary>
         public Func<string, string, MessageBoxButton, MessageBoxImage, MessageBoxResult, MessageBoxResult> ShowDialogCallback;
 
         /// <summary>
-        /// Invoked when the extraction of mods has completed
+        /// Invoked when an item is added to CompressedMods
         /// </summary>
-        public Action OnExtractionComplete;
+        public Action OnCompressedModAdded;
+
+        /// <summary>
+        /// Invoked when a mod fails to load from archive
+        /// </summary>
+        public Action<Mod> OnModFailedToLoad;
+
+        /// <summary>
+        /// Invoked when the CurrentState value changes
+        /// </summary>
+        public event EventHandler ImportStateChanged;
+
+        /// <summary>
+        /// Invoked when the importer needs to set results on this panel
+        /// </summary>
+        public Func<PanelResult> GetPanelResult;
         #endregion
 
         #region DATA
@@ -181,12 +192,13 @@ namespace ME3TweaksModManager.modmanager.importer
         /// Begins inspection of archive file. This method will spawn a background thread that will
         /// run asynchronously.
         /// </summary>
-        /// <param name="filepath">Path to the archive file. If the filepath is virtual, just pass the filename instead.</param>
-        private void InspectArchiveFile(string filepath)
+        private void InspectArchiveFile()
         {
+            if (!ValidateSetup())
+                return; // Validation failed
             CurrentState = EModArchiveImportState.SCANNING;
 
-            ScanningFile = Path.GetFileName(filepath);
+            ScanningFile = Path.GetFileName(ArchiveFilePath);
             NamedBackgroundWorker nbw = new NamedBackgroundWorker(@"ModArchiveInspector");
             nbw.DoWork += InspectArchiveBackgroundThread;
             ProgressValue = 0;
@@ -197,111 +209,96 @@ namespace ME3TweaksModManager.modmanager.importer
             {
                 HandleScanResults();
             };
-            ActionText = M3L.GetString(M3L.string_interp_scanningX, Path.GetFileName(filepath));
-            nbw.RunWorkerAsync(filepath);
+            ActionText = M3L.GetString(M3L.string_interp_scanningX, ScanningFile);
+            nbw.RunWorkerAsync(ArchiveFilePath);
+        }
+
+        private bool ValidateSetup()
+        {
+            bool setupIsBad()
+            {
+                M3Log.Error(@"Bad ModArchiveImport setup. This is a bug in Mod Manager, please report it");
+                CurrentState = EModArchiveImportState.FAILED;
+                Debugger.Break();
+                return false;
+            }
+
+            // Object must be able to access panel result
+            if (GetPanelResult == null)
+            {
+                return setupIsBad();
+            }
+
+            if (!AutomatedMode)
+            {
+                // In non automated mode we must have a way to show things to the user
+                if (ErrorCallback == null || ShowDialogCallback == null)
+                {
+                    return setupIsBad();
+                }
+
+                // In non automated mode we must have handling for bad mods.
+                if (OnModFailedToLoad == null)
+                {
+                    return setupIsBad();
+                }
+            }
+
+            return true;
         }
 
         private void HandleScanResults()
         {
+            if (SourceNXMLink != null)
+            {
+                var downloadLink = SourceNXMLink.ToNexusDownloadPageLink();
+                var dictionary = new CaseInsensitiveDictionary<FileSourceRecord>();
+                foreach (var mod in CompressedMods.OfType<Mod>())
+                {
+                    if (mod.ModDescHash == null)
+                        continue; // We don't add these, they may have been server loaded
+                    dictionary[mod.ModDescHash] = new FileSourceRecord()
+                    {
+                        DownloadLink = downloadLink,
+                        Hash = mod.ModDescHash,
+                        Size = mod.ModDescSize,
+                        Name = $@"moddesc.ini: ({mod.Game}) {mod.ModName} {mod.ModVersionString}"
+                    };
+                }
+
+                FileSourceService.AddFileSourceEntries(dictionary, Settings.EnableTelemetry ? ServerManifest.GetInt(ServerManifest.SERVER_ALIGNMENT) : null);
+            }
+
             ActionText = null;
             M3Log.Information(@"Archive scan thread exited");
-
-            if (ScanFailureReason != null)
-            {
-                NoModSelectedText = ScanFailureReason;
-            }
-            else if (CompressedMods.Count > 0)
-            {
-                ActionText = M3L.GetString(M3L.string_selectModsToImportIntoModManagerLibrary);
-                //if (CompressedMods.Count == 1)
-                //{
-                //    CompressedMods_ListBox.SelectedIndex = 0; //Select the only item
-                //}
-
-                // Todo: Change to link, maybe via NTFS streams?
-                // To support other providers
-                if (SourceNXMLink != null)
-                {
-                    var downloadLink = SourceNXMLink.ToNexusDownloadPageLink();
-                    var dictionary = new CaseInsensitiveDictionary<FileSourceRecord>();
-                    foreach (var mod in CompressedMods.OfType<Mod>())
-                    {
-                        if (mod.ModDescHash == null)
-                            continue; // We don't add these, they may have been server loaded
-                        dictionary[mod.ModDescHash] = new FileSourceRecord()
-                        {
-                            DownloadLink = downloadLink,
-                            Hash = mod.ModDescHash,
-                            Size = mod.ModDescSize,
-                            Name = $@"moddesc.ini: ({mod.Game}) {mod.ModName} {mod.ModVersionString}"
-                        };
-                    }
-
-                    FileSourceService.AddFileSourceEntries(dictionary, Settings.EnableTelemetry ? ServerManifest.GetInt(ServerManifest.SERVER_ALIGNMENT) : null);
-                }
-
-                if (CompressedMods.Count == 1 && CompressedMods[0] is BatchLibraryInstallQueue queue)
-                {
-                    ImportModsText = "Import install group";
-                }
-
-                ArchiveScanned = true;
-                TriggerPropertyChangedFor(nameof(CanCompressPackages));
-                TriggerPropertyChangedFor(nameof(CanShowCompressPackages));
-            }
-            else if (OTALOTTextureFilesImported)
-            {
-                CancelButtonText = M3L.GetString(M3L.string_close);
-                NoModSelectedText = M3L.GetString(M3L.string_interp_dialogImportedALOTMainToTextureLibrary,
-                    ScanningFile, M3Utilities.GetALOTInstallerTextureLibraryDirectory());
-                ActionText = M3L.GetString(M3L.string_importCompleted);
-            }
-            else
-            {
-
-                ActionText = M3L.GetString(M3L.string_noCompatibleModsFoundInArchive);
-                if (filepath.EndsWith(@".exe"))
-                {
-                    NoModSelectedText = M3L.GetString(M3L.string_executableModsMustBeValidatedByME3Tweaks);
-                }
-                else
-                {
-                    if (Settings.GenerationSettingLE && !Settings.GenerationSettingOT)
-                    {
-                        // Show LE string
-                        NoModSelectedText = M3L.GetString(M3L.string_noCompatibleModsFoundInArchiveLEExtended);
-                    }
-                    else if (!Settings.GenerationSettingLE && Settings.GenerationSettingOT)
-                    {
-                        // Show OT string
-                        NoModSelectedText = M3L.GetString(M3L.string_noCompatibleModsFoundInArchiveOTExtended);
-                    }
-                    else
-                    {
-                        // Show combined string
-                        NoModSelectedText = M3L.GetString(M3L.string_noCompatibleModsFoundInArchiveBothGensExtended);
-                    }
-                }
-            }
-
             ProgressValue = 0;
             ProgressIndeterminate = false;
-            CommandManager.InvalidateRequerySuggested();
+
 
             var hasAnyImproperlyPackedMods = CompressedMods.Any(x => x is Mod { CheckDeployedWithM3: true, DeployedWithM3: false });
 
             if (hasAnyImproperlyPackedMods)
             {
-                TelemetryInterposer.TrackEvent(@"Detected improperly packed M3 mod v2", new Dictionary<string, string>()
-                {
-                        {@"Archive name", Path.GetFileName(filepath)}
+                TelemetryInterposer.TrackEvent(@"Detected improperly packed M3 mod v2",
+                    new Dictionary<string, string>()
+                    {
+                        {@"Archive name", Path.GetFileName(ArchiveFilePath)}
                     });
+
                 M3Log.Error(@"A mod in the archive was not deployed using M3 and targets 6.0 or higher! You should contact the developer and tell them to deploy it properly.");
-                M3L.ShowDialog(Window.GetWindow(this),
-                    M3L.GetString(M3L.string_dialog_improperlyDeployedMod),
-                    M3L.GetString(M3L.string_improperlyDeployedMod), MessageBoxButton.OK,
-                    MessageBoxImage.Warning);
+                if (!AutomatedMode)
+                {
+                    ShowDialogCallback?.Invoke(
+                        M3L.GetString(M3L.string_improperlyDeployedMod),
+                        M3L.GetString(M3L.string_dialog_improperlyDeployedMod),
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Warning, 
+                        MessageBoxResult.OK);
+                }
             }
+
+            // This will fire off listeners for this object
+            CurrentState = EModArchiveImportState.SCANCOMPLETED;
         }
 
         /// <summary>
@@ -321,13 +318,9 @@ namespace ME3TweaksModManager.modmanager.importer
                 Application.Current.Dispatcher.Invoke(delegate
                 {
                     CompressedMods.Add(m);
-                    OnAddedCompressedMod?.Invoke();
+                    OnCompressedModAdded?.Invoke();
                     CompressedMods.Sort(x => x.ModName);
                 });
-            }
-            void CompressedModFailedCallback(Mod m)
-            {
-                Application.Current.Dispatcher.Invoke(() => { NoModSelectedText += M3L.GetString(M3L.string_interp_XfailedToLoadY, m.ModName, m.LoadFailedReason); });
             }
 
             var archiveSize = ArchiveStream?.Length ?? new FileInfo(archive).Length;
@@ -426,7 +419,7 @@ namespace ME3TweaksModManager.modmanager.importer
                 Application.Current.Dispatcher.Invoke(delegate
                 {
                     CompressedMods.Add(memFile);
-                    OnAddedCompressedMod?.Invoke();
+                    OnCompressedModAdded?.Invoke();
                     CompressedMods.Sort(x => x.ModName);
                 });
             }
@@ -436,12 +429,12 @@ namespace ME3TweaksModManager.modmanager.importer
                 Application.Current.Dispatcher.Invoke(delegate
                 {
                     CompressedMods.Add(biq);
-                    OnAddedCompressedMod?.Invoke();
+                    OnCompressedModAdded?.Invoke();
                     CompressedMods.Sort(x => x.ModName);
                 });
             }
 
-            ScanFailureReason = ModArchiveInspector.FindModsInArchive(pathOverride ?? archive, AddCompressedModCallback, CompressedModFailedCallback, AddTextureModCallback, AddBIQCallback, ActionTextUpdateCallback, SignalOTALOTFilesDetected, archiveStream: ArchiveStream, forcedMD5: calculatedMD5);
+            ScanFailureReason = ModArchiveInspector.FindModsInArchive(pathOverride ?? archive, AddCompressedModCallback, OnModFailedToLoad, AddTextureModCallback, AddBIQCallback, ActionTextUpdateCallback, SignalOTALOTFilesDetected, archiveStream: ArchiveStream, forcedMD5: calculatedMD5);
         }
 
         private void BeginImportingMods()
@@ -451,21 +444,21 @@ namespace ME3TweaksModManager.modmanager.importer
             nbw.DoWork += ExtractModsBackgroundThread;
             nbw.RunWorkerCompleted += (a, b) =>
             {
-                TaskRunning = false;
                 if (b.Error == null && b.Result is List<IImportableMod> modList && modList.Any(x => x is Mod))
                 {
-                    Result.ReloadMods = true;
+                    var pr = GetPanelResult();
+                    pr.ReloadMods = true;
                     var updatedContentMods = modList.OfType<Mod>().ToList();
 
                     // Make sure we submit all items here - the filtering for update checks
                     // will be handled by the updater system and this must be accurate or 
                     // mod loader won't work properly since it scopes the reload
-                    Result.ModsToCheckForUpdates.AddRange(updatedContentMods);
+                    pr.ModsToCheckForUpdates.AddRange(updatedContentMods);
 
                     // If only one mod was imported, highlight it on reload
                     if (updatedContentMods.Count == 1)
                     {
-                        Result.ModToHighlightOnReload = updatedContentMods[0];
+                        pr.ModToHighlightOnReload = updatedContentMods[0];
                     }
                 }
 
@@ -496,6 +489,7 @@ namespace ME3TweaksModManager.modmanager.importer
                             ProgressMaximum = 100;
                             ProgressIndeterminate = false;
                             ActionText = M3L.GetString(M3L.string_selectModsToImportOrInstall);
+                            CurrentState = EModArchiveImportState.SCANCOMPLETED;
                             return; //Don't do anything.
                         }
                     case EModImportResult.ERROR_COULD_NOT_DELETE_EXISTING_DIR:
@@ -504,6 +498,8 @@ namespace ME3TweaksModManager.modmanager.importer
                             ProgressMaximum = 100;
                             ProgressIndeterminate = false;
                             ActionText = M3L.GetString(M3L.string_errorUnableToDeleteExistingModDirectory);
+                            CurrentState = EModArchiveImportState.SCANCOMPLETED;
+                            // Should this throw a dialog here...?
                             return; //Don't do anything.
                         }
                     case EModImportResult.ERROR_INSUFFICIENT_DISK_SPACE:
@@ -513,7 +509,10 @@ namespace ME3TweaksModManager.modmanager.importer
                             ProgressIndeterminate = false;
                             ActionText = M3L.GetString(M3L.string_insufficientDiskSpaceToExtractSelectedMods);
                             M3Utilities.DriveFreeBytes(M3LoadedMods.GetCurrentModLibraryDirectory(), out var freeSpace);
-                            ErrorCallback?.Invoke(M3L.GetString(M3L.string_interp_dialogNotEnoughFreeSpaceToExtract, FileSize.FormatSize(requiredSpace), FileSize.FormatSize(freeSpace)), M3L.GetString(M3L.string_insufficientDiskSpace));
+                            ErrorCallback?.Invoke(
+                                M3L.GetString(M3L.string_insufficientDiskSpace),
+                                M3L.GetString(M3L.string_interp_dialogNotEnoughFreeSpaceToExtract, FileSize.FormatSize(requiredSpace), FileSize.FormatSize(freeSpace)));
+                            CurrentState = EModArchiveImportState.SCANCOMPLETED;
                             return; //Don't do anything.
                         }
                     case EModImportResult.ERROR_COULD_NOT_CREATE_MOD_FOLDER:
@@ -522,14 +521,17 @@ namespace ME3TweaksModManager.modmanager.importer
                             ProgressMaximum = 100;
                             ProgressIndeterminate = false;
                             ActionText = M3L.GetString(M3L.string_errorExtractingArchive);
-                            ErrorCallback?.Invoke(M3L.GetString(M3L.string_interp_errorCreatingModFolderX, e?.Message), M3L.GetString(M3L.string_errorExtractingArchive));
+                            ErrorCallback?.Invoke(
+                                M3L.GetString(M3L.string_errorExtractingArchive),
+                                M3L.GetString(M3L.string_interp_errorCreatingModFolderX, e?.Message));
+                            CurrentState = EModArchiveImportState.SCANCOMPLETED;
                             return; //Don't do anything.
                         }
                 }
 
                 //Close.
                 ModifiedModdescFiles.AddRange(modsToExtract.OfType<Mod>().Select(x => x.ModDescPath));
-                OnExtractionComplete?.Invoke();
+                CurrentState = EModArchiveImportState.COMPLETE;
             };
             CurrentState = EModArchiveImportState.IMPORTING;
             nbw.RunWorkerAsync(modsToExtract);
@@ -596,8 +598,10 @@ namespace ME3TweaksModManager.modmanager.importer
                     if (!AutomatedMode)
                     {
                         var result = ShowDialogCallback?.Invoke(
+                            M3L.GetString(M3L.string_modAlreadyExists),
                             M3L.GetString(M3L.string_interp_dialogImportingModWillDeleteExistingMod, sanitizedPath),
-                            M3L.GetString(M3L.string_modAlreadyExists), MessageBoxButton.YesNo, MessageBoxImage.Warning,
+                            MessageBoxButton.YesNo, 
+                            MessageBoxImage.Warning,
                             MessageBoxResult.No);
                         if (result == MessageBoxResult.No)
                         {
@@ -615,8 +619,9 @@ namespace ME3TweaksModManager.modmanager.importer
                         {
                             M3Log.Error(@"Could not delete existing mod directory.");
                             e.Result = EModImportResult.ERROR_COULD_NOT_DELETE_EXISTING_DIR;
-                            ErrorCallback?.Invoke(M3L.GetString(M3L.string_dialogErrorOccuredDeletingExistingMod),
-                                    M3L.GetString(M3L.string_errorDeletingExistingMod));
+                            ErrorCallback?.Invoke(
+                                M3L.GetString(M3L.string_errorDeletingExistingMod),
+                                M3L.GetString(M3L.string_dialogErrorOccuredDeletingExistingMod));
                             abort = true;
                             return;
                         }
@@ -626,8 +631,8 @@ namespace ME3TweaksModManager.modmanager.importer
                         //I don't think this can be triggered but will leave as failsafe anyways.
                         M3Log.Error(@"Error while deleting existing output directory: " + App.FlattenException(ex));
                         ErrorCallback?.Invoke(
-                            M3L.GetString(M3L.string_interp_errorOccuredDeletingExistingModX, ex.Message),
-                            M3L.GetString(M3L.string_errorDeletingExistingMod));
+                            M3L.GetString(M3L.string_errorDeletingExistingMod),
+                            M3L.GetString(M3L.string_interp_errorOccuredDeletingExistingModX, ex.Message));
                         e.Result = EModImportResult.ERROR_COULD_NOT_DELETE_EXISTING_DIR;
                         abort = true;
                     }
@@ -685,8 +690,9 @@ namespace ME3TweaksModManager.modmanager.importer
                     Application.Current.Dispatcher.Invoke(delegate
                     {
                         M3Log.Error(@"Error while extracting archive: " + App.FlattenException(ex));
-                        ErrorCallback?.Invoke(M3L.GetString(M3L.string_interp_anErrorOccuredExtractingTheArchiveX, ex.Message),
-                            M3L.GetString(M3L.string_errorExtractingArchive));
+                        ErrorCallback?.Invoke(
+                            M3L.GetString(M3L.string_errorExtractingArchive),
+                            M3L.GetString(M3L.string_interp_anErrorOccuredExtractingTheArchiveX, ex.Message));
                         e.Result = EModImportResult.ERROR_EXTRACTING_ARCHIVE;
                     });
                     return;
@@ -706,8 +712,9 @@ namespace ME3TweaksModManager.modmanager.importer
                 if (File.Exists(destPath))
                 {
                     var result = ShowDialogCallback?.Invoke(
+                        M3L.GetString(M3L.string_installGroupAlreadyExists),
                         M3L.GetString(M3L.string_dialog_biqAlreadyExists, biq.ModName),
-                        M3L.GetString(M3L.string_installGroupAlreadyExists), MessageBoxButton.OKCancel,
+                        MessageBoxButton.OKCancel,
                         MessageBoxImage.Warning,
                         MessageBoxResult.Cancel);
                     if (result == MessageBoxResult.Cancel)
@@ -804,6 +811,12 @@ namespace ME3TweaksModManager.modmanager.importer
 
         public void BeginScan()
         {
+            InspectArchiveFile();
+        }
+
+        public void BeginImporting()
+        {
+            BeginImportingMods();
         }
     }
 }
