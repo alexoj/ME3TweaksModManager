@@ -2181,12 +2181,12 @@
 
     <!-- Batch Mod Library (Install Group List) -->
     <system:String x:Key="string_batchModInstaller">Batch Mod Installer</system:String>
-    <system:String x:Key="string_description_batchModInstallerAllowsSerialInstall">Batch Mod Installer allows you to install a group of mods all in a row, allowing you to quickly recreate a specific installation of the game.</system:String>
+    <system:String x:Key="string_description_batchModInstallerAllowsSerialInstall">Batch Mod Installer installs groups of mods, one after another, allowing you to install a large set of mods at once. After your first installation of a group, you can save your chosen options, allowing you to one-click install your mods.</system:String>
     <system:String x:Key="string_createANewInstallGroup">Create a new install group</system:String>
     <system:String x:Key="string_installGroups">Install groups</system:String>
     <system:String x:Key="string_groupInformation">Group information</system:String>
     <system:String x:Key="string_installThisGroup">Install this group</system:String>
-    <system:String x:Key="string_editGroup">Edit group</system:String>
+    <system:String x:Key="string_edit">Edit</system:String>
     <system:String x:Key="string_tooltip_targetToInstallThisModGroupTo">Target to install this mod group to</system:String>
     <system:String x:Key="string_deleteGroup">Delete group</system:String>
     <system:String x:Key="string_interp_deleteTheSelectedBatchQueue">Delete the '{0}' install group?</system:String>
@@ -2197,7 +2197,7 @@
     <system:String x:Key="string_batchQueueDesync">Batch Queue Desync</system:String>
     <system:String x:Key="string_usePreviouslySavedModOptionsQuestion">Use previously saved mod options?</system:String>
     <system:String x:Key="string_savedOptionsFound">Saved options found</system:String>
-    <system:String x:Key="string_duplicateGroup">Duplicate group</system:String>
+    <system:String x:Key="string_duplicate">Duplicate</system:String>
     <system:String x:Key="string_tooltip_bml_downloadMod">Click to go to download page for this mod</system:String>
     <system:String x:Key="string_downloadMod">Download mod</system:String>
     <system:String x:Key="string_enterANewNameForTheDuplicatedInstallGroup">Enter a new name for the duplicated install group.</system:String>

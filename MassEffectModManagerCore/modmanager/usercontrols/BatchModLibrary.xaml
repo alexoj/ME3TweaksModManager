@@ -100,7 +100,9 @@
             <DockPanel
                 Dock="Top">
                 <TextBlock
+                    FontSize="10"
                     Text="{Binding SelectedBatchQueue.QueueFormatVersion, StringFormat='Queue format version: {0}'}"
+                    VerticalAlignment="Center"
                     DockPanel.Dock="Right" />
                 <TextBlock
                     Text="{DynamicResource string_groupInformation}"
@@ -108,36 +110,98 @@
                     HorizontalAlignment="Left" />
             </DockPanel>
             <TextBlock
+                TextWrapping="Wrap"
                 Text="{Binding SelectedBatchQueue.QueueDescription}"
                 DockPanel.Dock="Top"
-                Margin="0,7" />
+                Margin="0,0,0,4" />
+            <DockPanel DockPanel.Dock="Top">
+                <Button
+                        DockPanel.Dock="Left"
+                        Command="{Binding EditGroupCommand}"
+                        Margin="0,0,5,4">
+                    <Button.Content>
+                        <StackPanel
+                                Orientation="Horizontal">
+                            <fa5:ImageAwesome
+                                    Icon="Solid_Edit"
+                                    Width="12"
+                                    Height="12"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,5,0"
+                                    Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                            <TextBlock
+                                    Text="{DynamicResource string_edit}"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button
+                        HorizontalAlignment="Left"
+                        Margin="0,0,5,4"
+                        Command="{Binding DuplicateGroupCommand}">
+                    <Button.Content>
+                        <StackPanel
+                                Orientation="Horizontal">
+                            <fa5:ImageAwesome
+                                    Icon="Solid_Copy"
+                                    Width="12"
+                                    Height="12"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,5,0"
+                                    Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                            <TextBlock
+                                    Text="{DynamicResource string_duplicate}"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button
+                        DockPanel.Dock="Left"
+                        Command="{Binding DeleteGroupCommand}"
+                        Margin="0,0,5,4" >
+                    <Button.Content>
+                        <StackPanel
+                                Orientation="Horizontal">
+                            <fa5:ImageAwesome
+                                    Icon="Solid_Times"
+                                    Width="12"
+                                    Height="12"
+                                    VerticalAlignment="Center"
+                                    Margin="0,0,5,0"
+                                    Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                            <TextBlock
+                                    Text="{DynamicResource string_delete}"
+                                    VerticalAlignment="Center" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+                <Button
+                        Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}"
+                        HorizontalAlignment="Right"
+                        Margin="5,0,0,4"
+                        Command="{Binding DeployQueueCommand}">
+                    <Button.Content>
+                        <StackPanel
+                                Orientation="Horizontal">
+                            <TextBlock
+                                    Text="Share group"
+                                    VerticalAlignment="Center" />
+                            <fa5:ImageAwesome
+                                    Icon="Solid_ShareAlt"
+                                    Width="12"
+                                    Height="12"
+                                    VerticalAlignment="Center"
+                                    Margin="5,0,0,0"
+                                    Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </DockPanel>
+
             <DockPanel>
                 <DockPanel
                     DockPanel.Dock="Bottom"
                     Margin="0,4,0,0">
-                    <DockPanel DockPanel.Dock="Top">
-                        <Button
-                            Content="{DynamicResource string_editGroup}"
-                            DockPanel.Dock="Left"
-                            Command="{Binding EditGroupCommand}"
-                            Margin="0,0,5,4" />
-                        <Button
-                            HorizontalAlignment="Left"
-                            Content="{DynamicResource string_duplicateGroup}"
-                            Margin="0,0,5,4"
-                            Command="{Binding DuplicateGroupCommand}" />
-                        <Button
-                            Content="{DynamicResource string_deleteGroup}"
-                            DockPanel.Dock="Left"
-                            Command="{Binding DeleteGroupCommand}"
-                            Margin="0,0,5,4" />
-                        <Button
-                            Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}"
-                            HorizontalAlignment="Right"
-                            Content="{DynamicResource string_deploy}"
-                            Margin="5,0,0,4"
-                            Command="{Binding DeployQueueCommand}" />
-                    </DockPanel>
                     <Button
                         Content="{DynamicResource string_installThisGroup}"
                         DockPanel.Dock="Right"
