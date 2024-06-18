@@ -375,7 +375,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         M3Log.Information($@"M3MCompiler: Adding script update file to m3m: {scriptDiskFile}");
                         if (mergeModVersion >= 2)
                         {
-                            assets.Add(new MergeAsset(mc.AssetUpdate.AssetName, true));
+                            assets.Add(new MergeAsset(mc.ScriptUpdate.ScriptFileName, true));
                         }
                         else
                         {
