@@ -4,8 +4,10 @@ using System.Windows.Input;
 using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Helpers;
+using ME3TweaksCore.GameFilesystem;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.NativeMods;
+using ME3TweaksCore.Services.ThirdPartyModIdentification;
 using ME3TweaksCoreWPF.UI;
 using ME3TweaksModManager.extensions;
 using ME3TweaksModManager.modmanager.helpers;
@@ -76,7 +78,7 @@ namespace ME3TweaksModManager.modmanager.windows
                 VisibleFilteredMods.RemoveRange(queueToEdit.ModsToInstall.Select(x => x.Mod));
                 VisibleFilteredASIMods.RemoveRange(queueToEdit.ASIModsToInstall.Select(x => x.AssociatedMod?.OwningMod));
                 VisibleFilteredMEMMods.RemoveRange(queueToEdit.TextureModsToInstall);
-                
+
                 // This must be done after all other content has been inserted!
                 RestoreGameBeforeInstall = queueToEdit.RestoreBeforeInstall;
 
@@ -105,6 +107,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
         public ICommand CancelCommand { get; set; }
         public ICommand SaveAndCloseCommand { get; set; }
+        public ICommand CheckForIssuesCommand { get; set; }
         public ICommand RemoveFromInstallGroupCommand { get; set; }
         public ICommand AddToInstallGroupCommand { get; set; }
         public ICommand MoveUpCommand { get; set; }
@@ -117,6 +120,7 @@ namespace ME3TweaksModManager.modmanager.windows
         {
             CancelCommand = new GenericCommand(CancelEditing);
             SaveAndCloseCommand = new GenericCommand(SaveAndClose, CanSave);
+            CheckForIssuesCommand = new GenericCommand(CheckForIssues);
             RemoveFromInstallGroupCommand = new GenericCommand(RemoveContentModFromInstallGroup, CanRemoveFromInstallGroup);
             AddToInstallGroupCommand = new GenericCommand(AddModToInstallGroup, CanAddToInstallGroup);
             MoveUpCommand = new GenericCommand(MoveUp, CanMoveUp);
@@ -160,6 +164,59 @@ namespace ME3TweaksModManager.modmanager.windows
 
             // Trigger this again
             OnRestoreGameBeforeInstallChanged();
+        }
+
+        public void CheckForIssues()
+        {
+            List<string> possibleIssues = new List<string>();
+            var installedDLC = new CaseInsensitiveDictionary<MetaCMM>();
+            var mods = ModsInGroup.OfType<BatchMod>()
+                .Where(x => x.Mod != null && x.Mod.ParsedModVersion != null).Select(x => x.Mod).ToList();
+
+            // In-order pass for requirements
+            foreach (var mod in mods)
+            {
+                var dlc = mod.GetAllPossibleCustomDLCFolders();
+                foreach (var d in dlc)
+                {
+                    var versionedDLC = new MetaCMM() { Version = mod.ParsedModVersion.ToString() };
+                    installedDLC[d] = versionedDLC;
+                }
+
+                foreach (var req in mod.RequiredDLC)
+                {
+                    if (!req.IsRequirementMet(null, installedDLC, checkOptionKeys: false))
+                    {
+                        var tpmi = TPMIService.GetThirdPartyModInfo(req.DLCFolderName.Key, mod.Game);
+                        possibleIssues.Add($"{mod.ModName} requires mod {tpmi?.modname ?? req.DLCFolderName.Key}{(req.MinVersion != null ? " with minimum version " + req.MinVersion : null)} to be installed beforehand, but in this install group it is not");
+                    }
+                }
+            }
+
+            // Check incompatible DLCs in second pass once we know the list of all DLC folders.
+            foreach (var mod in mods)
+            {
+                foreach (var inc in mod.IncompatibleDLC)
+                {
+                    if (installedDLC.ContainsKey(inc))
+                    {
+                        var tpmi = TPMIService.GetThirdPartyModInfo(inc, mod.Game);
+                        possibleIssues.Add($"{mod.ModName} is not compatible with mod {tpmi?.modname ?? inc}");
+                    }
+                }
+            }
+
+            if (possibleIssues.Any())
+            {
+                ListDialog ld = new ListDialog(possibleIssues, "Possible issues found",
+                    "Mod Manager found potential issues with your install group. This is a best effort guess; it may not be accurate, and it will only catch simple issues.",
+                    this);
+                ld.ShowDialog();
+            }
+            else
+            {
+                M3L.ShowDialog(this, "Mod Manager did not find issues with your install group. This is a best effort guess; it may not be accurate, and it will only catch simple issues.", "No issues detected", MessageBoxButton.OK, MessageBoxImage.Information);
+            }
         }
 
         private void ShowMEMSelector()
