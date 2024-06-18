@@ -2632,9 +2632,13 @@ namespace ME3TweaksModManager
                 //var modInstaller = new ModInstaller(mod, forcedTarget ?? SelectedGameTarget, installCompressed, batchMode: batchMode);
                 modOptionsPicker.Close += (a, b) =>
                 {
-                    ReleaseBusyControl();
                     if (b.Data is ModInstallOptionsPackage miop)
                     {
+                        // We are continuing to the mod installer
+
+                        // Release the busy control.
+                        ReleaseBusyControl();
+
                         ModInstaller mi = new ModInstaller(miop);
                         mi.Close += (c, d) =>
                         {
@@ -2652,7 +2656,10 @@ namespace ME3TweaksModManager
                     {
                         // User canceled the options
                         installCompletedCallback?.Invoke(false, false); // Canceled
+                        HandleBatchPanelResult = true; // If we're in a batch its important we handle this.
                         modInstallTask.FinishedUIText = M3L.GetString(M3L.string_installationAborted);
+                        // We release the busy control here after setting handle batch panel result to true so it handles it.
+                        ReleaseBusyControl();
                         BackgroundTaskEngine.SubmitJobCompletion(modInstallTask);
                     }
                 };
