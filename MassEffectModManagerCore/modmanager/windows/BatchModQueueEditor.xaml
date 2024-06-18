@@ -127,6 +127,7 @@
                     Padding="0">
                     <DockPanel>
                         <ListBox
+                        Name="ListBox_ContentMods"
                         Margin="-8,-8,-8,-8"
                         SelectionMode="Extended"
                         ItemsSource="{Binding VisibleFilteredMods}"
@@ -172,7 +173,7 @@
                         ItemsSource="{Binding VisibleFilteredASIMods}"
                         HorizontalContentAlignment="Stretch"
                         ItemContainerStyle="{StaticResource StretchNoPaddingStyle}"
-                        SelectedItem="{Binding SelectedAvailableASIMod}"></ListBox>
+                        SelectedItem="{Binding SelectedAvailableASIMod}"/>
                 </TabItem>
                 <TabItem
                     Header="{DynamicResource string_textureMods}">
@@ -200,8 +201,10 @@
                             </Button.Content>
                         </Button>
                         <ListBox
+                            Name="ListBox_AvailableTextures"
                             BorderThickness="1"
                             Margin="-8"
+                            SelectionMode="Extended"
                             IsTextSearchEnabled="True"
                             TextSearch.TextPath="Name"
                             Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"

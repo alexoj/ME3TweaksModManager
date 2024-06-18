@@ -459,12 +459,14 @@ namespace ME3TweaksModManager.modmanager.windows
         {
             if (SelectedTabIndex == TAB_CONTENTMOD)
             {
-                Mod m = SelectedAvailableMod;
-                if (VisibleFilteredMods.Remove(m))
+                foreach (var i in ListBox_ContentMods.SelectedItems.OfType<Mod>().ToList()) // ToList as this will be removing items that will change selection
                 {
-                    var index = ModsInGroup.FindLastIndex(x => x is BatchMod);
-                    index++; // if not found, it'll be -1. If found, we will want to insert after.
-                    ModsInGroup.Insert(index, new BatchMod(m)); // Put into specific position.
+                    if (VisibleFilteredMods.Remove(i))
+                    {
+                        var index = ModsInGroup.FindLastIndex(x => x is BatchMod or BatchGameRestore);
+                        index++; // if not found, it'll be -1. If found, we will want to insert after.
+                        ModsInGroup.Insert(index, new BatchMod(i)); // Put into specific position.
+                    }
                 }
             }
             else if (SelectedTabIndex == TAB_ASIMOD)
@@ -477,16 +479,18 @@ namespace ME3TweaksModManager.modmanager.windows
             }
             else if (SelectedTabIndex == TAB_TEXTUREMOD)
             {
-                var m = SelectedAvailableMEMMod; // cache first since removal will change the value
-                if (VisibleFilteredMEMMods.Remove(SelectedAvailableMEMMod))
+                foreach (var i in ListBox_AvailableTextures.SelectedItems.OfType<MEMMod>().ToList()) // ToList as this will be removing items that will change selection
                 {
-                    if (m is M3MEMMod m3mm) // M3MEMMMod must go first
+                    if (VisibleFilteredMEMMods.Remove(i))
                     {
-                        ModsInGroup.Add(new M3MEMMod(m3mm));
-                    }
-                    else if (m is MEMMod mm)
-                    {
-                        ModsInGroup.Add(new MEMMod(mm));
+                        if (i is M3MEMMod m3mm) // M3MEMMMod must go first
+                        {
+                            ModsInGroup.Add(new M3MEMMod(m3mm));
+                        }
+                        else if (i is MEMMod mm)
+                        {
+                            ModsInGroup.Add(new MEMMod(mm));
+                        }
                     }
                 }
             }
