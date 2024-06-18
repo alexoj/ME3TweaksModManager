@@ -76,6 +76,9 @@ namespace ME3TweaksModManager.modmanager.windows
                 VisibleFilteredMods.RemoveRange(queueToEdit.ModsToInstall.Select(x => x.Mod));
                 VisibleFilteredASIMods.RemoveRange(queueToEdit.ASIModsToInstall.Select(x => x.AssociatedMod?.OwningMod));
                 VisibleFilteredMEMMods.RemoveRange(queueToEdit.TextureModsToInstall);
+                
+                // This must be done after all other content has been inserted!
+                RestoreGameBeforeInstall = queueToEdit.RestoreBeforeInstall;
 
                 // Experimental: Load mount priority value here for UI
                 foreach (var mod in queueToEdit.ModsToInstall.Where(x => x.Mod != null))
@@ -84,7 +87,20 @@ namespace ME3TweaksModManager.modmanager.windows
                 }
             }
 
-            
+
+        }
+
+        public bool RestoreGameBeforeInstall { get; set; }
+
+        public void OnRestoreGameBeforeInstallChanged()
+        {
+            // This ensures no duplicates are ever entered.
+            ModsInGroup.Remove(new BatchGameRestore());
+
+            if (RestoreGameBeforeInstall)
+            {
+                ModsInGroup.Insert(0, new BatchGameRestore());
+            }
         }
 
         public ICommand CancelCommand { get; set; }
@@ -105,7 +121,7 @@ namespace ME3TweaksModManager.modmanager.windows
             AddToInstallGroupCommand = new GenericCommand(AddModToInstallGroup, CanAddToInstallGroup);
             MoveUpCommand = new GenericCommand(MoveUp, CanMoveUp);
             MoveDownCommand = new GenericCommand(MoveDown, CanMoveDown);
-            AutosortCommand = new GenericCommand(Autosort, CanAutosort);
+            // AutosortCommand = new GenericCommand(Autosort, CanAutosort);
             AddCustomMEMModCommand = new GenericCommand(ShowMEMSelector, CanAddMEMMod);
             SortByMountPriorityCommand = new GenericCommand(SortByMountPriority, CanSortByMountPriority);
         }
@@ -132,6 +148,8 @@ namespace ME3TweaksModManager.modmanager.windows
             if (!shouldContinue)
                 return;
 
+
+
             var contentMods = ModsInGroup.OfType<BatchMod>().Where(x => x.Mod != null)
                 .OrderByDescending(x => x.Mod.EXP_GetModMountPriority()).ToList(); // Just order it here too. Its reversed ordered as the order reverses again when we insert it
             ModsInGroup.RemoveRange(contentMods);
@@ -139,6 +157,9 @@ namespace ME3TweaksModManager.modmanager.windows
             {
                 ModsInGroup.Insert(0, m);
             }
+
+            // Trigger this again
+            OnRestoreGameBeforeInstallChanged();
         }
 
         private void ShowMEMSelector()
@@ -463,6 +484,7 @@ namespace ME3TweaksModManager.modmanager.windows
             queue.Game = SelectedGame;
             queue.ModName = GroupName;
             queue.QueueDescription = M3Utilities.ConvertNewlineToBr(GroupDescription);
+            queue.RestoreBeforeInstall = RestoreGameBeforeInstall;
 
             // Content mods
             var mods = new List<BatchMod>();
@@ -569,6 +591,14 @@ namespace ME3TweaksModManager.modmanager.windows
         /// </summary>
         public object SelectedInstallGroupMod { get; set; }
 
+        public void OnSelectedInstallGroupModChanged()
+        {
+            if (SelectedInstallGroupMod is BatchMod { Mod.BannerBitmap: null } m)
+            {
+                m.Mod.LoadBannerImage(); // Method will check if it's null
+            }
+        }
+
         /// <summary>
         /// Selected left pane mod
         /// </summary>
@@ -652,6 +682,7 @@ namespace ME3TweaksModManager.modmanager.windows
                 if (result == MessageBoxResult.Yes)
                 {
                     ModsInGroup.ClearEx();
+                    RestoreGameBeforeInstall = false;
                     SelectedGame = newgame;
                 }
                 else
@@ -679,5 +710,37 @@ namespace ME3TweaksModManager.modmanager.windows
             Games.ForEach(x => x.IsSelected = x.Game == game);
             TryChangeGameTo(game);
         }
+    }
+
+    /// <summary>
+    /// This is nothing but a placeholder object to show that the game will restore before install
+    /// </summary>
+    public class BatchGameRestore : IBatchQueueMod
+    {
+        public string UIDescription => "Restores the game to vanilla using a game backup.";
+
+        protected bool Equals(BatchGameRestore other)
+        {
+            // We are always the same as another object of this type.
+            return true;
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            if (obj.GetType() != this.GetType()) return false;
+            return Equals((BatchGameRestore)obj);
+        }
+
+        public override int GetHashCode()
+        {
+            return 0;
+        }
+
+        // IBatchMod interface
+        public bool IsAvailableForInstall() => true;
+        public string Hash { get; set; }
+        public long Size { get; set; }
     }
 }

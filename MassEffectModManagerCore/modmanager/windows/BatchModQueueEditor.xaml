@@ -1,6 +1,7 @@
 ﻿<Window
     x:Class="ME3TweaksModManager.modmanager.windows.BatchModQueueEditor" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:fa5="http://schemas.fontawesome.com/icons/" xmlns:helpers="clr-namespace:ME3TweaksModManager.modmanager.helpers" xmlns:extensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI" xmlns:batch="clr-namespace:ME3TweaksModManager.modmanager.objects.batch"
     xmlns:converters="clr-namespace:ME3TweaksModManager.modmanager.converters"
+    xmlns:windows="clr-namespace:ME3TweaksModManager.modmanager.windows"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
     mc:Ignorable="d"
     WindowStartupLocation="CenterOwner"
@@ -288,7 +289,7 @@
                     Grid.Row="0"
                     Grid.Column="0" />
                 <xctk:WatermarkTextBox
-                    Watermark="{DynamicResource string_groupName}"
+                    Watermark="Required"
                     Grid.Row="1"
                     Grid.Column="0"
                     Text="{Binding GroupName, UpdateSourceTrigger=PropertyChanged}" />
@@ -298,7 +299,7 @@
                     Grid.Row="2"
                     Grid.Column="0" />
                 <xctk:WatermarkTextBox
-                    Watermark="{DynamicResource string_groupDescription}"
+                    Watermark="Required"
                     Grid.Row="3"
                     Grid.Column="0"
                     Height="55"
@@ -329,13 +330,6 @@
                                 Text="{DynamicResource string_removeModFromInstallGroup}" />
                         </StackPanel>
                     </Button>
-                    <!-- This is not really reliable because modders don't properly use the autos system -->
-                    <!--<Button DockPanel.Dock="Left" Command="{Binding AutosortCommand}" Margin="5,0,0,0">
-                        <StackPanel Orientation="Horizontal">
-                            <fa5:ImageAwesome Icon="Solid_Sort" Height="12" Margin="0,0,5,0" Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
-                            <TextBlock Text="Autosort (experimental)" />
-                        </StackPanel>
-                    </Button>-->
                     <Button
                         DockPanel.Dock="Right"
                         Margin="5,0,0,0"
@@ -368,6 +362,7 @@
                         </StackPanel>
                     </Button>
                     <Button HorizontalAlignment="Right"
+                            Margin="5,0,0,0"
                             Command="{Binding SortByMountPriorityCommand}">
                         <StackPanel
                             Orientation="Horizontal">
@@ -380,6 +375,13 @@
                                 Text="Sort by mount priority" />
                         </StackPanel>
                     </Button>
+                    <CheckBox
+                        IsChecked="{Binding RestoreGameBeforeInstall}"
+                        ToolTip="Before installing this batch group, the user will be prompted to reset their game to vanilla.&#10;This helps ensure a consistent result"
+                        HorizontalAlignment="Right"
+                        VerticalAlignment="Center"
+                        Margin="5,2,0,0"
+                        Content="Restore game before install"/>
                 </DockPanel>
                 <Grid>
                     <Grid.ColumnDefinitions>
@@ -481,8 +483,15 @@
                             </DataTemplate>
                         </ListBox.Resources>
                     </ListBox>
-                    <TextBox
-                        Grid.Column="1"
+                    <DockPanel 
+                        Grid.Column="1">
+                        <Image
+                        Source="{Binding SelectedInstallGroupMod.Mod.BannerBitmap}"
+                        Visibility="{Binding SelectedInstallGroupMod.Mod.BannerBitmap, Converter={StaticResource NullVisibilityConverter}}"
+                        Margin="0,1"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        DockPanel.Dock="Top" />
+                        <TextBox
                         IsReadOnly="True"
                         IsReadOnlyCaretVisible="False"
                         HorizontalContentAlignment="Left"
@@ -495,26 +504,28 @@
                         extensions:CursorSpotlightExtension.BackgroundBrush="Transparent"
                         extensions:CursorSpotlightExtension.RelativeSpotlightSize="0"
                         extensions:CursorSpotlightExtension.MaxBlurRadius="0">
-                        <TextBox.Text>
-                            <PriorityBinding>
-                                <!-- ModdescMod -->
-                                <Binding
+                            <TextBox.Text>
+                                <PriorityBinding>
+                                    <!-- ModdescMod -->
+                                    <Binding
                                     Path="SelectedInstallGroupMod.Mod.DisplayedModDescription"
                                     Mode="OneWay" />
-                                <!-- ASIMod -->
-                                <Binding
+                                    <!-- ASIMod -->
+                                    <Binding
                                     Path="SelectedInstallGroupMod.AssociatedMod.Description"
                                     Mode="OneWay" />
-                                <!-- MEMMod-->
-                                <Binding
+                                    <!-- MEMMod, GameRestore-->
+                                    <Binding
                                     Path="SelectedInstallGroupMod.UIDescription"
                                     Mode="OneWay" />
-                                <Binding
+                                    <!-- Game restore -->
+                                    <Binding
                                     Path="NoModSelectedText"
                                     Mode="OneWay" />
-                            </PriorityBinding>
-                        </TextBox.Text>
-                    </TextBox>
+                                </PriorityBinding>
+                            </TextBox.Text>
+                        </TextBox>
+                    </DockPanel>
                 </Grid>
             </DockPanel>
         </DockPanel>

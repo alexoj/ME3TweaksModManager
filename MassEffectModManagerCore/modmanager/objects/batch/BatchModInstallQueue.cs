@@ -18,6 +18,7 @@ using ME3TweaksModManager.modmanager.objects.mod.texture;
 using Microsoft.AppCenter.Crashes;
 using SevenZip.EventArguments;
 using ME3TweaksModManager.modmanager.localizations;
+using ME3TweaksModManager.modmanager.windows;
 
 namespace ME3TweaksModManager.modmanager.objects.batch
 {
@@ -66,6 +67,12 @@ namespace ME3TweaksModManager.modmanager.objects.batch
         /// </summary>
         [JsonIgnore]
         public int QueueFormatVersion { get; set; } = QUEUE_VERSION_BIQ2;
+
+        /// <summary>
+        /// If a game restore should happen before installation, to reset the game. This is only supported on Mod Manager 9 and above.
+        /// </summary>
+        [JsonProperty(@"restorebeforeinstall")]
+        public bool RestoreBeforeInstall { get; set; }
 
         /// <summary>
         /// Mods that are part of the queue. This does not ensure they are available for use, check the properties
@@ -253,6 +260,10 @@ namespace ME3TweaksModManager.modmanager.objects.batch
                 modernQueue.SerializeOnly_MEMFilePaths = null; // Remove this data as it's only used during serialization
 
                 // Populate the full list of mods for UI binding
+                if (modernQueue.RestoreBeforeInstall)
+                {
+                    modernQueue.AllModsToInstall.Add(new BatchGameRestore());
+                }
                 modernQueue.AllModsToInstall.AddRange(modernQueue.ModsToInstall);
                 modernQueue.AllModsToInstall.AddRange(modernQueue.ASIModsToInstall);
                 modernQueue.AllModsToInstall.AddRange(modernQueue.TextureModsToInstall);

@@ -1432,7 +1432,7 @@ namespace ME3TweaksModManager
                             M3Log.Information($@"ModInstalled() being called - successful: {successful}");
                         }
 
-                        continueInstalling &= successful;
+                        continueInstalling &= successful && !IsOnTrackToClose;
                         if (continueInstalling && queue.ModsToInstall.Count > modIndex)
                         {
                             var bm = queue.ModsToInstall[modIndex];
@@ -1470,10 +1470,75 @@ namespace ME3TweaksModManager
                         }
                     }
 
-                    modInstalled(true, true); //kick off first installation
+                    if (queue.RestoreBeforeInstall)
+                    {
+                        RunBatchRestore(queue, target, modInstalled);
+                    }
+                    else
+                    {
+                        modInstalled(true, true); //kick off first installation
+                    }
                 }
             };
             ShowBusyControl(batchLibrary);
+        }
+
+        /// <summary>
+        /// Handles the initial batch installer game restore request and subsequent initial installation.
+        /// </summary>
+        /// <param name="queue"></param>
+        /// <param name="target"></param>
+        /// <param name="modInstalled"></param>
+        private void RunBatchRestore(BatchLibraryInstallQueue queue, GameTarget target, Action<bool, bool> modInstalled)
+        {
+            if (!BackupService.GetBackupStatus(queue.Game).BackedUp)
+            {
+                var shouldRestore = M3L.ShowDialog(this,
+                    $"{queue.ModName} is designed to restore your game before installation, however a backup is not available. This may lead to undesirable behavior due to different game states at install time.\n\nContinue installing without restoring a backup?",
+                    "Backup not available",
+                    MessageBoxButton.YesNo,
+                    MessageBoxImage.Warning,
+                    MessageBoxResult.No);
+
+                if (shouldRestore == MessageBoxResult.No)
+                    return; // Total cancellation.
+
+                if (shouldRestore == MessageBoxResult.Yes)
+                {
+                    // successful, isfirst
+                    modInstalled(true, true);
+                }
+            }
+            else
+            {
+                var shouldRestore = M3L.ShowDialog(this,
+                    $"{queue.ModName} is designed to restore your game before installation. Restoring your game from backup will wipe out all modifications to your game (saves will not be touched).\n\nRestore your game before install?",
+                    "Game restore requested",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question,
+                    MessageBoxResult.Yes); // Should this be cancel so if you click X?
+
+                if (shouldRestore == MessageBoxResult.Cancel)
+                    return; // Total cancellation.
+
+                if (shouldRestore == MessageBoxResult.No)
+                {
+                    // successful, isfirst
+                    modInstalled(true, true);
+                    return;
+                }
+
+                if (shouldRestore == MessageBoxResult.Yes)
+                {
+                    AutoGameRestorePanel agrp = new AutoGameRestorePanel(target);
+                    agrp.Close += (sender, args) =>
+                    {
+                        ReleaseBusyControl(); // This is so the panel is closed
+                        modInstalled(true, true);
+                    };
+                    ShowBusyControl(agrp);
+                }
+            }
         }
 
         private void HandleBatchTextureInstall(GameTarget target, BatchLibraryInstallQueue queue)

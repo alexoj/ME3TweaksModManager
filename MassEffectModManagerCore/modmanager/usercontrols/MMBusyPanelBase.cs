@@ -137,7 +137,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         public virtual double MaxWindowHeightPercent { get; set; }
 
         /// <summary>
-        /// Set to false to disable autosizing feature
+        /// Set to true to disable autosizing feature
         /// </summary>
         public virtual bool DisableM3AutoSizer { get; set; }
     }
