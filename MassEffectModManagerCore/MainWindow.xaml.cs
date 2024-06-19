@@ -227,7 +227,7 @@ namespace ME3TweaksModManager
             mDownloader.Close += (a, b) =>
             {
                 ReleaseBusyControl();
-                if (b.Data is List<ModDownload> items)
+                if (b.Data is List<NexusModDownload> items)
                 {
                     foreach (var ii in items)
                     {
@@ -3727,7 +3727,11 @@ namespace ME3TweaksModManager
                 if (CommandLinePending.PendingNXMLink != null)
                 {
                     shouldBringToFG = true;
+#if DEBUG
+                    DownloadManager.QueueNXMDownload(CommandLinePending.PendingNXMLink);
+#else
                     showNXMDownloader(CommandLinePending.PendingNXMLink);
+#endif
                 }
 
                 if (CommandLinePending.PendingInstallBink && CommandLinePending.PendingGame != null)
@@ -3859,6 +3863,7 @@ namespace ME3TweaksModManager
             CommandLinePending.PendingNXMLink = null;
             return shouldBringToFG;
         }
+
 
         private void handleM3Link(string pendingM3Link)
         {
@@ -4638,13 +4643,13 @@ namespace ME3TweaksModManager
                     }
                 }
 
-                if (modInspector.ImportedTextureMod)
+                if (modInspector.MAI.ImportedTextureMod)
                 {
                     M3L.ShowDialog(this, M3L.GetString(M3L.string_dialog_textureModsImportedHowToUse),
                         M3L.GetString(M3L.string_textureModsImported), MessageBoxButton.OK, MessageBoxImage.Information);
                 }
 
-                if (modInspector.ImportedBatchQueue)
+                if (modInspector.MAI.ImportedBatchQueue)
                 {
                     M3L.ShowDialog(this, M3L.GetString(M3L.string_dialog_importedBatchInstallGroup), M3L.GetString(M3L.string_installGroupImported), MessageBoxButton.OK, MessageBoxImage.Information);
                 }

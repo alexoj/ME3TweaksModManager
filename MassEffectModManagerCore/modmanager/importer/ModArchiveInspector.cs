@@ -285,11 +285,11 @@ namespace ME3TweaksModManager.modmanager.importer
                     return null; // We don't want to tell user that we don't support it cause they'll just ask us to, which I don't want
                 }
 
-                ModArchiveImporterPanel.ExeTransform transform = null;
+                ModArchiveImport.ExeTransform transform = null;
                 if (importingInfo?.exetransform != null)
                 {
                     M3Log.Information(@"TPIS lists exe transform for this mod: " + importingInfo.exetransform);
-                    transform = new ModArchiveImporterPanel.ExeTransform(M3OnlineContent.FetchExeTransform(importingInfo.exetransform));
+                    transform = new ModArchiveImport.ExeTransform(M3OnlineContent.FetchExeTransform(importingInfo.exetransform));
                 }
 
                 string custommoddesc = null;

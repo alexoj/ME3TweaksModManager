@@ -34,7 +34,7 @@
                                 FontWeight="Bold"
                                 DockPanel.Dock="Top" />
                             <TextBlock
-                                Text="{Binding DownloadStatus}"
+                                Text="{Binding Status}"
                                 DockPanel.Dock="Top" />
                         </StackPanel>
                         <StackPanel
