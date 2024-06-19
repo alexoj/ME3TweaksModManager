@@ -2079,7 +2079,9 @@ namespace ME3TweaksModManager
                     HandleBatchPanelResult = false;
                 }
                 else
+                {
                     return;
+                }
             }
 
             // This is pretty dicey with thread safety... 
@@ -2712,7 +2714,7 @@ namespace ME3TweaksModManager
                     {
                         // We are continuing to the mod installer
 
-                        // Release the busy control.
+                        // Release the mod install options panel
                         ReleaseBusyControl();
 
                         ModInstaller mi = new ModInstaller(miop);
@@ -2723,8 +2725,11 @@ namespace ME3TweaksModManager
                                 modInstallTask.FinishedUIText = M3L.GetString(M3L.string_interp_failedToInstallMod, mod.ModName);
                             }
                             BackgroundTaskEngine.SubmitJobCompletion(modInstallTask);
-                            installCompletedCallback?.Invoke(mi.InstallationSucceeded && !mi.InstallationCancelled, false);
-                            ReleaseBusyControl();
+                            ReleaseBusyControl(); // Release the mod installer. This may cause merges to occur if batch panel handling is set to false.
+
+                            // This must go after releasing the control because in batch mode it will begin setting up the next panel.
+                            // We do not want it to set up the next panel (e.g. textures) and then try to handle merges from the mod installer after that panel
+                            installCompletedCallback?.Invoke(mi.InstallationSucceeded && !mi.InstallationCancelled, false); 
                         };
                         ShowBusyControl(mi);
                     }
@@ -2732,9 +2737,9 @@ namespace ME3TweaksModManager
                     {
                         // User canceled the options
                         installCompletedCallback?.Invoke(false, false); // Canceled
-                        HandleBatchPanelResult = true; // If we're in a batch its important we handle this.
+                        HandleBatchPanelResult = true; // If we're in a batch it's important we handle this.
                         modInstallTask.FinishedUIText = M3L.GetString(M3L.string_installationAborted);
-                        // We release the busy control here after setting handle batch panel result to true so it handles it.
+                        // We release the busy control here after setting handle batch panel result to true, so it handles it.
                         ReleaseBusyControl();
                         BackgroundTaskEngine.SubmitJobCompletion(modInstallTask);
                     }
