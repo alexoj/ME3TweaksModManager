@@ -227,7 +227,7 @@ namespace ME3TweaksModManager
             mDownloader.Close += (a, b) =>
             {
                 ReleaseBusyControl();
-                if (b.Data is List<NexusModDownload> items)
+                if (b.Data is List<ModDownload> items)
                 {
                     foreach (var ii in items)
                     {
@@ -235,7 +235,7 @@ namespace ME3TweaksModManager
                         App.SubmitAnalyticTelemetryEvent(@"User opened mod archive for import", new Dictionary<string, string>
                         {
                             { @"Method", @"nxm:// link" },
-                            { @"Filename", ii.ModFile?.FileName }
+                            { @"Filename", ii.FileName }
                         });
                         if (ii.DownloadedStream is FileStream fs)
                         {
@@ -245,7 +245,7 @@ namespace ME3TweaksModManager
                         }
                         else
                         {
-                            openModImportUI(ii.ModFile.FileName, ii.DownloadedStream, true, sourceLink: npl);
+                            openModImportUI(ii.FileName, ii.DownloadedStream, true, sourceLink: npl);
                         }
                     }
                 }
@@ -3728,10 +3728,13 @@ namespace ME3TweaksModManager
                 {
                     shouldBringToFG = true;
 #if DEBUG
-                    DownloadManager.QueueNXMDownload(CommandLinePending.PendingNXMLink);
-#else
-                    showNXMDownloader(CommandLinePending.PendingNXMLink);
+                    Activate();
+                    var result = M3L.ShowDialog(this, "Use experimental download manager for this link?", "Use experiment", MessageBoxButton.YesNo);
+                    if (result == MessageBoxResult.Yes)
+                        DownloadManager.QueueNXMDownload(CommandLinePending.PendingNXMLink);
+                    else
 #endif
+                       showNXMDownloader(CommandLinePending.PendingNXMLink);
                 }
 
                 if (CommandLinePending.PendingInstallBink && CommandLinePending.PendingGame != null)

@@ -108,6 +108,11 @@ namespace ME3TweaksModManager.modmanager.objects
         public ModArchiveImport ImportFlow { get; set; }
 
         /// <summary>
+        /// The downloaded filename (may not exist on disk)
+        /// </summary>
+        public string FileName { get; set; }
+
+        /// <summary>
         /// Invoked when the mod has initialized
         /// </summary>
         public event EventHandler<EventArgs> OnInitialized;
@@ -319,6 +324,7 @@ namespace ME3TweaksModManager.modmanager.objects
                                     ?.Result);
                             }
 
+                            FileName = ModFile.FileName;
                             ProgressMaximum = ModFile.SizeInBytes ?? ModFile.SizeInKilobytes * 1024L; // SizeKb is the original version. They added SizeInBytes at my request
                             DownloadState = EModDownloadState.QUEUED;
                             M3Log.Information($@"ModDownload has initialized: {ModFile.FileName}");

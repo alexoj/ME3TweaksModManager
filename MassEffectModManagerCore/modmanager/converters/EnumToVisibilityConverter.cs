@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using LegendaryExplorerCore.Gammtek.Extensions;
+using LegendaryExplorerCore.Helpers;
 
 namespace ME3TweaksModManager.modmanager.converters
 {
-    internal class ImportStateToVisibilityConverter : IValueConverter
+    internal class EnumToVisibilityConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -22,8 +17,8 @@ namespace ME3TweaksModManager.modmanager.converters
                 // Go by pairings
                 for (int i = 0; i < splitparms.Length; i++)
                 {
-                    bool isMin = splitparms[i] == @"Min";
-                    bool isMax = splitparms[i] == @"Max";
+                    bool isMin = splitparms[i].CaseInsensitiveEquals(@"min");
+                    bool isMax = splitparms[i].CaseInsensitiveEquals(@"max");
                     if (isMin || isMax) i++; // skip to next parm
 
                     var testParm = splitparms[i];
