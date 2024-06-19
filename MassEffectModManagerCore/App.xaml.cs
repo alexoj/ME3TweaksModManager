@@ -88,7 +88,7 @@ namespace ME3TweaksModManager
         public const double HighestSupportedModDesc = 9.0;
 
         //Windows 10 1909
-        public static readonly Version MIN_SUPPORTED_OS = new Version(@"10.0.19044");
+        public static readonly Version MIN_SUPPORTED_OS = new Version(@"10.0.19045"); // Windows 10 22H2
 
         internal static readonly string[] SupportedOperatingSystemVersions =
         {
