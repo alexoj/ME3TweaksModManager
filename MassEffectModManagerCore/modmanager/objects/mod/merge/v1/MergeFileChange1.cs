@@ -609,14 +609,16 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         [JsonProperty(@"scriptfilename")]
         public string ScriptFileName { get; set; }
 
+        /// <summary>
+        /// MERGE MOD V1 FORMAT ONLY - Script text, uncompressed
+        /// </summary>
         [JsonProperty(@"scripttext")]
         public string ScriptText { get; set; }
 
         public bool ApplyUpdate(IMEPackage package, ExportEntry targetExport, MergeAssetCache1 assetsCache, Mod installingMod, GameTarget gameTarget, Action<int> addMergeWeightCompleted)
         {
             FileLib fl = MergeFileChange1.GetFileLibForMerge(package, targetExport.InstancedFullPath, assetsCache, gameTarget);
-            var scriptText = ScriptText ?? OwningMM.Assets[ScriptFileName].AsString(); // mmv1 ?? mmv2 storage
-            (_, MessageLog log) = UnrealScriptCompiler.CompileFunction(targetExport, scriptText, fl);
+            (_, MessageLog log) = UnrealScriptCompiler.CompileFunction(targetExport, GetScriptText(), fl);
             if (log.HasErrors)
             {
                 M3Log.Error($@"Error compiling function {targetExport.InstancedFullPath}:");
@@ -629,6 +631,17 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             }
             addMergeWeightCompleted?.Invoke(MergeFileChange1.WEIGHT_SCRIPTUPDATE);
             return true;
+        }
+
+        public string GetScriptText()
+        {
+            if (OwningMM.MergeModVersion >= 2)
+            {
+                return OwningMM.Assets[ScriptFileName].AsString();
+            }
+
+            // V1
+            return ScriptText
         }
     }
 
