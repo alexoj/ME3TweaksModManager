@@ -136,6 +136,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private void BeginInstallingMod()
         {
+            SystemSleepManager.PreventSleep(@"ModInstaller");
             ModIsInstalling = true;
             if (!CheckForGameBackup())
             {
@@ -629,6 +630,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             var basegameIdentificationServiceRecords = new CaseInsensitiveDictionary<BasegameFileRecord>();
             void FileInstalledIntoSFARCallback(Dictionary<string, Mod.InstallSourceFile> sfarMapping, string targetPath)
             {
+                SystemSleepManager.PreventSleep(@"ModInstaller");
+
                 numdone++;
                 targetPath = targetPath.Replace('/', '\\').TrimStart('\\');
                 var fileMapping = sfarMapping.FirstOrDefault(x => x.Key == targetPath);
@@ -647,6 +650,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
             void FileInstalledCallback(string targetPath)
             {
+                SystemSleepManager.PreventSleep(@"ModInstaller");
                 numdone++;
                 var fileMapping = fullPathMappingDisk.FirstOrDefault(x => x.Value == targetPath);
                 M3Log.Information($@"[{numdone}/{numFilesToInstall}] Installed: {fileMapping.Key} -> {targetPath}", Settings.LogModInstallation);
@@ -845,6 +849,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             //Stage: SFAR Installation
             foreach (var sfarJob in installationQueues.SFARJobs)
             {
+                SystemSleepManager.PreventSleep(@"ModInstaller");
                 InstallIntoSFAR(sfarJob, InstallOptionsPackage.ModBeingInstalled, FileInstalledIntoSFARCallback, InstallOptionsPackage.ModBeingInstalled.IsInArchive ? sfarStagingDirectory : null);
             }
 
@@ -864,6 +869,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                 void mergeWeightCompleted(int newWeightDone)
                 {
+                    SystemSleepManager.PreventSleep(@"ModInstaller");
                     doneWeight += newWeightDone;
                     Percent = (int)(doneWeight * 100.0 / totalWeight);
 #if DEBUG
@@ -1012,6 +1018,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 {
                     if (parallelException != null)
                         return;
+
+                    SystemSleepManager.PreventSleep(@"ModInstaller");
 
                     for (int i = 0; i < tlkFileMap.Value.Count; i++)
                     {
@@ -1410,6 +1418,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private void ModInstallationCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            SystemSleepManager.AllowSleep(); // We can go back to sleep again.
+
             var telemetryResult = ModInstallCompletedStatus.NO_RESULT_CODE;
             if (e.Error != null)
             {
@@ -1684,6 +1694,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         protected override void OnClosing(DataEventArgs e)
         {
+            // Ensure we can go to sleep still. This probably isn't necessary, but probably isn't a bad idea either.
+            SystemSleepManager.AllowSleep();
+
             if (InstallOptionsPackage.ModBeingInstalled.Archive != null)
             {
                 InstallOptionsPackage.ModBeingInstalled.Archive.Dispose();

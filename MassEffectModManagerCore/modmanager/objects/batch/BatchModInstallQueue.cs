@@ -509,5 +509,23 @@ namespace ME3TweaksModManager.modmanager.objects.batch
                 return str;
             }
         }
+
+        /// <summary>
+        /// If this batch queue contains texture mods to install
+        /// </summary>
+        /// <returns></returns>
+        public bool ContainsTextureMods()
+        {
+            return TextureModsToInstall.Any();
+        }
+
+        /// <summary>
+        /// If this batch queue contains content mods to install
+        /// </summary>
+        /// <returns></returns>
+        public bool ContainsContentMods()
+        {
+            return ModsToInstall.Any();
+        }
     }
 }

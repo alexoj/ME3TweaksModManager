@@ -1431,6 +1431,14 @@ namespace ME3TweaksModManager
                         {
                             M3Log.Information($@"ModInstalled() being called - successful: {successful}");
                         }
+                        else
+                        {
+                            if (queue.ContainsTextureMods() && queue.UseSavedOptions)
+                            {
+                                // We use batch text if this contains content mods due to the timing difference
+                                continueInstalling = TextureInstallerPanel.ShowTextureInstallWarning(this, queue.ContainsContentMods());
+                            }
+                        }
 
                         continueInstalling &= successful && !IsOnTrackToClose;
                         if (continueInstalling && queue.ModsToInstall.Count > modIndex)
@@ -1551,7 +1559,10 @@ namespace ME3TweaksModManager
                 HandlePanelResult(BatchPanelResult);
                 HandleBatchPanelResult = false; // Flip back after things get queued
 
-                TextureInstallerPanel tip = new TextureInstallerPanel(target, queue.TextureModsToInstall.Where(x => x.IsAvailableForInstall()).Select(x => x.GetFilePathToMEM()).ToList());
+                TextureInstallerPanel tip = new TextureInstallerPanel(target, queue.TextureModsToInstall.Where(x => x.IsAvailableForInstall()).Select(x => x.GetFilePathToMEM()).ToList())
+                {
+                    ShowTextureWarning = !queue.UseSavedOptions
+                };
                 tip.Close += (sender, args) =>
                 {
                     ReleaseBusyControl(); // This is so the panel is closed

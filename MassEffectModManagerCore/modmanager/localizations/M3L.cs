@@ -2125,8 +2125,9 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_dialog_textureInstallErrorsOccurred = "string_dialog_textureInstallErrorsOccurred";
 		public const string string_dialog_textureModPrecheckIssues = "string_dialog_textureModPrecheckIssues";
 		public const string string_dialog_bigScaryTextureInstallWarning = "string_dialog_bigScaryTextureInstallWarning";
+		public const string string_dialog_bigScaryTextureInstallWarningBatch = "string_dialog_bigScaryTextureInstallWarningBatch";
 		public const string string_noExitCodeBrackets = "string_noExitCodeBrackets";
-		public const string string_dialog_memNonZeroExitCode = "string_dialog_memNonZeroExitCode";
+        public const string string_dialog_memNonZeroExitCode = "string_dialog_memNonZeroExitCode";
 		public const string string_interp_im3v_missingRequiredParameter = "string_interp_im3v_missingRequiredParameter";
 		public const string string_interp_im3v_missingRequiredFileParameter = "string_interp_im3v_missingRequiredFileParameter";
 		public const string string_interp_im3v_invalidCharacterPatterns = "string_interp_im3v_invalidCharacterPatterns";

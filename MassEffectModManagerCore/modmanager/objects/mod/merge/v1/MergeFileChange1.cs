@@ -641,7 +641,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             }
 
             // V1
-            return ScriptText
+            return ScriptText;
         }
     }
 
