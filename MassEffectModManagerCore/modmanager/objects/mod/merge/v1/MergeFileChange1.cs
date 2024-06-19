@@ -615,8 +615,8 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         public bool ApplyUpdate(IMEPackage package, ExportEntry targetExport, MergeAssetCache1 assetsCache, Mod installingMod, GameTarget gameTarget, Action<int> addMergeWeightCompleted)
         {
             FileLib fl = MergeFileChange1.GetFileLibForMerge(package, targetExport.InstancedFullPath, assetsCache, gameTarget);
-
-            (_, MessageLog log) = UnrealScriptCompiler.CompileFunction(targetExport, ScriptText, fl);
+            var scriptText = ScriptText ?? OwningMM.Assets[ScriptFileName].AsString(); // mmv1 ?? mmv2 storage
+            (_, MessageLog log) = UnrealScriptCompiler.CompileFunction(targetExport, scriptText, fl);
             if (log.HasErrors)
             {
                 M3Log.Error($@"Error compiling function {targetExport.InstancedFullPath}:");
