@@ -29,5 +29,20 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             }
             return null;
         }
+
+        /// <summary>
+        /// Unified method for search results of mod
+        /// </summary>
+        /// <param name="mod">Mod to search against</param>
+        /// <param name="modSearchText">Text to search with</param>
+        /// <returns></returns>
+        public static bool MatchesSearch(Mod mod, string modSearchText)
+        {
+            if (mod.ModName.Contains(modSearchText, StringComparison.InvariantCultureIgnoreCase))
+                return true;
+            if (mod.ModDeveloper.Contains(modSearchText, StringComparison.InvariantCultureIgnoreCase))
+                return true;
+            return false;
+        }
     }
 }

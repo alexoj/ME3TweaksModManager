@@ -18,6 +18,11 @@ using ME3TweaksModManager.modmanager.objects.batch;
 using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.objects.mod.texture;
 using Microsoft.Win32;
+using ME3TweaksModManager.ui;
+using static ME3TweaksModManager.modmanager.usercontrols.BackupFileFetcher;
+using System.ComponentModel;
+using System.Windows.Data;
+using JetBrains.FormatRipper.Elf;
 
 namespace ME3TweaksModManager.modmanager.windows
 {
@@ -40,7 +45,7 @@ namespace ME3TweaksModManager.modmanager.windows
         /// <summary>
         /// Contains both ASI (BatchASIMod) and Content mods (BatchMod)
         /// </summary>
-        public ObservableCollectionExtended<object> ModsInGroup { get; } = new ObservableCollectionExtended<object>();
+        private ObservableCollectionExtended<object> _modsInGroup { get; } = new ObservableCollectionExtended<object>();
 
         public MEGameSelector[] Games { get; init; }
 
@@ -51,9 +56,60 @@ namespace ME3TweaksModManager.modmanager.windows
         public string InitialFileName { get; set; }
 
         /// <summary>
+        /// If the searchbox is currently visible
+        /// </summary>
+        private bool ShowingSearchBox;
+
+        /// <summary>
         /// Then newly saved path, for showing in the calling window's UI
         /// </summary>
         public string SavedPath;
+
+        public ICollectionView ModsInGroupView => CollectionViewSource.GetDefaultView(_modsInGroup);
+        private bool FilterShownModsInGroup(object obj)
+        {
+            if (!string.IsNullOrWhiteSpace(ModSearchText))
+            {
+                if (obj is BatchMod m)
+                {
+                    if (m.Mod is Mod mod)
+                    {
+                        // Available
+
+                        // Filter out things that don't contain text in name and developer fields
+                        return Mod.MatchesSearch(mod, ModSearchText);
+                    }
+                    else
+                    {
+                        // Not available
+
+                        // Filter out things that don't have it in the path
+                        return m.ModDescPath.Contains(ModSearchText, StringComparison.InvariantCultureIgnoreCase);
+                    }
+                }
+                else if (obj is M3MEMMod m3mm)
+                {
+                    if (m3mm.ModdescMod != null && Mod.MatchesSearch(m3mm.ModdescMod, ModSearchText))
+                        return true;
+                    return m3mm.ModName.Contains(ModSearchText, StringComparison.InvariantCultureIgnoreCase);
+                }
+                else if (obj is MEMMod mem)
+                {
+                    return mem.ModName.Contains(ModSearchText, StringComparison.InvariantCultureIgnoreCase);
+                }
+                else if (obj is BatchASIMod basi && basi.AssociatedMod != null)
+                {
+                    return basi.AssociatedMod.Name.Contains(ModSearchText, StringComparison.InvariantCultureIgnoreCase);
+                }
+            }
+            else
+            {
+                return true; // No filter text.
+            }
+
+            // If there is filter text and the above conditions don't return then nothing matches
+            return false;
+        }
 
         public BatchModQueueEditor(Window owner = null, BatchLibraryInstallQueue queueToEdit = null)
         {
@@ -62,7 +118,7 @@ namespace ME3TweaksModManager.modmanager.windows
             DataContext = this;
             LoadCommands();
             Games = MEGameSelector.GetGameSelectorsIncludingLauncher().ToArray();
-
+            ModsInGroupView.Filter = FilterShownModsInGroup;
             InitializeComponent();
             this.ApplyDarkNetWindowTheme();
 
@@ -72,9 +128,9 @@ namespace ME3TweaksModManager.modmanager.windows
                 GroupName = queueToEdit.ModName;
                 InitialFileName = queueToEdit.BackingFilename;
                 GroupDescription = queueToEdit.QueueDescription;
-                ModsInGroup.ReplaceAll(queueToEdit.ModsToInstall);
-                ModsInGroup.AddRange(queueToEdit.ASIModsToInstall);
-                ModsInGroup.AddRange(queueToEdit.TextureModsToInstall);
+                _modsInGroup.ReplaceAll(queueToEdit.ModsToInstall);
+                _modsInGroup.AddRange(queueToEdit.ASIModsToInstall);
+                _modsInGroup.AddRange(queueToEdit.TextureModsToInstall);
                 VisibleFilteredMods.RemoveRange(queueToEdit.ModsToInstall.Select(x => x.Mod));
                 VisibleFilteredASIMods.RemoveRange(queueToEdit.ASIModsToInstall.Select(x => x.AssociatedMod?.OwningMod));
                 VisibleFilteredMEMMods.RemoveRange(queueToEdit.TextureModsToInstall);
@@ -97,11 +153,11 @@ namespace ME3TweaksModManager.modmanager.windows
         public void OnRestoreGameBeforeInstallChanged()
         {
             // This ensures no duplicates are ever entered.
-            ModsInGroup.Remove(new BatchGameRestore());
+            _modsInGroup.Remove(new BatchGameRestore());
 
             if (RestoreGameBeforeInstall)
             {
-                ModsInGroup.Insert(0, new BatchGameRestore());
+                _modsInGroup.Insert(0, new BatchGameRestore());
             }
         }
 
@@ -112,9 +168,11 @@ namespace ME3TweaksModManager.modmanager.windows
         public ICommand AddToInstallGroupCommand { get; set; }
         public ICommand MoveUpCommand { get; set; }
         public ICommand MoveDownCommand { get; set; }
-        public ICommand AutosortCommand { get; set; }
         public ICommand AddCustomMEMModCommand { get; set; }
         public ICommand SortByMountPriorityCommand { get; set; }
+        public ICommand SearchModsCommand { get; set; }
+        public ICommand CloseSearchCommand { get; set; }
+        public ICommand EscapePressedCommand { get; set; }
 
         private void LoadCommands()
         {
@@ -125,14 +183,46 @@ namespace ME3TweaksModManager.modmanager.windows
             AddToInstallGroupCommand = new GenericCommand(AddModToInstallGroup, CanAddToInstallGroup);
             MoveUpCommand = new GenericCommand(MoveUp, CanMoveUp);
             MoveDownCommand = new GenericCommand(MoveDown, CanMoveDown);
-            // AutosortCommand = new GenericCommand(Autosort, CanAutosort);
             AddCustomMEMModCommand = new GenericCommand(ShowMEMSelector, CanAddMEMMod);
             SortByMountPriorityCommand = new GenericCommand(SortByMountPriority, CanSortByMountPriority);
+            SearchModsCommand = new GenericCommand(ShowSearchBox);
+            CloseSearchCommand = new GenericCommand(CloseSearchBox);
+            EscapePressedCommand = new GenericCommand(EscapePressed);
+        }
+
+        private void EscapePressed()
+        {
+            if (ModSearchBox.IsKeyboardFocused)
+            {
+                CloseSearchBox();
+            }
+        }
+
+        private void CloseSearchBox()
+        {
+            if (ShowingSearchBox)
+            {
+                ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, false);
+                ShowingSearchBox = false; // May have timing issues if user mashes button, but oh well
+            }
+
+            ModSearchText = null;
+        }
+
+        private void ShowSearchBox()
+        {
+            if (!ShowingSearchBox)
+            {
+                ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, true);
+                ShowingSearchBox = true; // May have timing issues if user mashes button, but oh well
+            }
+
+            Keyboard.Focus(ModSearchBox);
         }
 
         private bool CanSortByMountPriority()
         {
-            return ModsInGroup.Any(x => x is BatchMod m && m.Mod != null);
+            return _modsInGroup.Any(x => x is BatchMod m && m.Mod != null);
         }
 
         private void LeftSideMod_MouseDown(object sender, MouseButtonEventArgs e)
@@ -154,12 +244,12 @@ namespace ME3TweaksModManager.modmanager.windows
 
 
 
-            var contentMods = ModsInGroup.OfType<BatchMod>().Where(x => x.Mod != null)
+            var contentMods = _modsInGroup.OfType<BatchMod>().Where(x => x.Mod != null)
                 .OrderByDescending(x => x.Mod.EXP_GetModMountPriority()).ToList(); // Just order it here too. Its reversed ordered as the order reverses again when we insert it
-            ModsInGroup.RemoveRange(contentMods);
+            _modsInGroup.RemoveRange(contentMods);
             foreach (var m in contentMods)
             {
-                ModsInGroup.Insert(0, m);
+                _modsInGroup.Insert(0, m);
             }
 
             // Trigger this again
@@ -170,7 +260,7 @@ namespace ME3TweaksModManager.modmanager.windows
         {
             List<string> possibleIssues = new List<string>();
             var installedDLC = new CaseInsensitiveDictionary<MetaCMM>();
-            var mods = ModsInGroup.OfType<BatchMod>()
+            var mods = _modsInGroup.OfType<BatchMod>()
                 .Where(x => x.Mod != null && x.Mod.ParsedModVersion != null).Select(x => x.Mod).ToList();
 
             // In-order pass for requirements
@@ -264,7 +354,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
         private bool CanAutosort()
         {
-            return ModsInGroup.Count > 1;
+            return _modsInGroup.Count > 1;
         }
 
         class ModDependencies
@@ -307,7 +397,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
             /*var dependencies = new List<ModDependencies>();
 
-            foreach (var mod in ModsInGroup)
+            foreach (var mod in _modsInGroup)
             {
                 var depends = new ModDependencies();
 
@@ -356,7 +446,7 @@ namespace ME3TweaksModManager.modmanager.windows
                 depend.DebugPrint();
             }
 
-            ModsInGroup.ReplaceAll(finalOrder);*/
+            _modsInGroup.ReplaceAll(finalOrder);*/
 #endif
         }
 
@@ -374,16 +464,16 @@ namespace ME3TweaksModManager.modmanager.windows
         {
             if (SelectedInstallGroupMod is BatchMod)
             {
-                var index = ModsInGroup.IndexOf(SelectedInstallGroupMod);
-                if (index > 0 && ModsInGroup[index - 1] is BatchMod)
+                var index = _modsInGroup.IndexOf(SelectedInstallGroupMod);
+                if (index > 0 && _modsInGroup[index - 1] is BatchMod)
                 {
                     return true;
                 }
             }
             else if (SelectedInstallGroupMod is MEMMod)
             {
-                var index = ModsInGroup.IndexOf(SelectedInstallGroupMod);
-                if (index > 0 && ModsInGroup[index - 1] is MEMMod)
+                var index = _modsInGroup.IndexOf(SelectedInstallGroupMod);
+                if (index > 0 && _modsInGroup[index - 1] is MEMMod)
                 {
                     return true;
                 }
@@ -395,16 +485,16 @@ namespace ME3TweaksModManager.modmanager.windows
         {
             if (SelectedInstallGroupMod is BatchMod)
             {
-                var index = ModsInGroup.IndexOf(SelectedInstallGroupMod);
-                if (index < ModsInGroup.Count - 1 && ModsInGroup[index + 1] is BatchMod)
+                var index = _modsInGroup.IndexOf(SelectedInstallGroupMod);
+                if (index < _modsInGroup.Count - 1 && _modsInGroup[index + 1] is BatchMod)
                 {
                     return true;
                 }
             }
             else if (SelectedInstallGroupMod is MEMMod)
             {
-                var index = ModsInGroup.IndexOf(SelectedInstallGroupMod);
-                if (index < ModsInGroup.Count - 1 && ModsInGroup[index + 1] is MEMMod)
+                var index = _modsInGroup.IndexOf(SelectedInstallGroupMod);
+                if (index < _modsInGroup.Count - 1 && _modsInGroup[index + 1] is MEMMod)
                 {
                     return true;
                 }
@@ -420,10 +510,10 @@ namespace ME3TweaksModManager.modmanager.windows
                 if (CanMoveDown() && SelectedInstallGroupMod is BatchMod || SelectedInstallGroupMod is MEMMod)
                 {
                     var mod = SelectedInstallGroupMod;
-                    var oldIndex = ModsInGroup.IndexOf(SelectedInstallGroupMod);
+                    var oldIndex = _modsInGroup.IndexOf(SelectedInstallGroupMod);
                     var newIndex = oldIndex + 1;
-                    ModsInGroup.RemoveAt(oldIndex);
-                    ModsInGroup.Insert(newIndex, mod);
+                    _modsInGroup.RemoveAt(oldIndex);
+                    _modsInGroup.Insert(newIndex, mod);
                     SelectedInstallGroupMod = mod;
                 }
             }
@@ -439,10 +529,10 @@ namespace ME3TweaksModManager.modmanager.windows
                 if (CanMoveUp() && SelectedInstallGroupMod is BatchMod || SelectedInstallGroupMod is MEMMod)
                 {
                     var mod = SelectedInstallGroupMod;
-                    var oldIndex = ModsInGroup.IndexOf(SelectedInstallGroupMod);
+                    var oldIndex = _modsInGroup.IndexOf(SelectedInstallGroupMod);
                     var newIndex = oldIndex - 1;
-                    ModsInGroup.RemoveAt(oldIndex);
-                    ModsInGroup.Insert(newIndex, mod);
+                    _modsInGroup.RemoveAt(oldIndex);
+                    _modsInGroup.Insert(newIndex, mod);
                     SelectedInstallGroupMod = mod;
                 }
             }
@@ -463,9 +553,9 @@ namespace ME3TweaksModManager.modmanager.windows
                 {
                     if (VisibleFilteredMods.Remove(i))
                     {
-                        var index = ModsInGroup.FindLastIndex(x => x is BatchMod or BatchGameRestore);
+                        var index = _modsInGroup.FindLastIndex(x => x is BatchMod or BatchGameRestore);
                         index++; // if not found, it'll be -1. If found, we will want to insert after.
-                        ModsInGroup.Insert(index, new BatchMod(i)); // Put into specific position.
+                        _modsInGroup.Insert(index, new BatchMod(i)); // Put into specific position.
                     }
                 }
             }
@@ -474,7 +564,7 @@ namespace ME3TweaksModManager.modmanager.windows
                 ASIMod m = SelectedAvailableASIMod;
                 if (VisibleFilteredASIMods.Remove(m))
                 {
-                    ModsInGroup.Add(new BatchASIMod(m));
+                    _modsInGroup.Add(new BatchASIMod(m));
                 }
             }
             else if (SelectedTabIndex == TAB_TEXTUREMOD)
@@ -485,11 +575,11 @@ namespace ME3TweaksModManager.modmanager.windows
                     {
                         if (i is M3MEMMod m3mm) // M3MEMMMod must go first
                         {
-                            ModsInGroup.Add(new M3MEMMod(m3mm));
+                            _modsInGroup.Add(new M3MEMMod(m3mm));
                         }
                         else if (i is MEMMod mm)
                         {
-                            ModsInGroup.Add(new MEMMod(mm));
+                            _modsInGroup.Add(new MEMMod(mm));
                         }
                     }
                 }
@@ -499,29 +589,29 @@ namespace ME3TweaksModManager.modmanager.windows
         private void RemoveContentModFromInstallGroup()
         {
             var m = SelectedInstallGroupMod;
-            var selectedIndex = ModsInGroup.IndexOf(m);
+            var selectedIndex = _modsInGroup.IndexOf(m);
 
-            if (SelectedInstallGroupMod is BatchMod bm && ModsInGroup.Remove(m) && bm.IsAvailableForInstall())
+            if (SelectedInstallGroupMod is BatchMod bm && _modsInGroup.Remove(m) && bm.IsAvailableForInstall())
             {
                 VisibleFilteredMods.Add(bm.Mod);
             }
-            else if (SelectedInstallGroupMod is BatchASIMod bai && ModsInGroup.Remove(bai))
+            else if (SelectedInstallGroupMod is BatchASIMod bai && _modsInGroup.Remove(bai))
             {
                 VisibleFilteredASIMods.Add(bai.AssociatedMod.OwningMod);
             }
-            else if (SelectedInstallGroupMod is MEMMod m3ai && ModsInGroup.Remove(m3ai) && m3ai.IsAvailableForInstall()) // covers both types
+            else if (SelectedInstallGroupMod is MEMMod m3ai && _modsInGroup.Remove(m3ai) && m3ai.IsAvailableForInstall()) // covers both types
             {
                 VisibleFilteredMEMMods.Add(m3ai);
             }
 
             // Select next object to keep UI working well
-            if (ModsInGroup.Count > selectedIndex)
+            if (_modsInGroup.Count > selectedIndex)
             {
-                SelectedInstallGroupMod = ModsInGroup[selectedIndex];
+                SelectedInstallGroupMod = _modsInGroup[selectedIndex];
             }
             else
             {
-                SelectedInstallGroupMod = ModsInGroup.LastOrDefault();
+                SelectedInstallGroupMod = _modsInGroup.LastOrDefault();
             }
         }
 
@@ -532,7 +622,7 @@ namespace ME3TweaksModManager.modmanager.windows
                 TelemetryInterposer.TrackEvent(@"Saved Batch Group", new Dictionary<string, string>()
                 {
                     { @"Group name", GroupName },
-                    { @"Group size", ModsInGroup.Count.ToString() },
+                    { @"Group size", _modsInGroup.Count.ToString() },
                     { @"Game", SelectedGame.ToString() }
                 });
                 Close();
@@ -549,7 +639,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
             // Content mods
             var mods = new List<BatchMod>();
-            foreach (var m in ModsInGroup.OfType<BatchMod>())
+            foreach (var m in _modsInGroup.OfType<BatchMod>())
             {
                 mods.Add(m);
             }
@@ -557,7 +647,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
             // ASI mods
             var asimods = new List<BatchASIMod>();
-            foreach (var m in ModsInGroup.OfType<BatchASIMod>())
+            foreach (var m in _modsInGroup.OfType<BatchASIMod>())
             {
                 asimods.Add(m);
             }
@@ -565,7 +655,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
             // Texture mods
             var texturemods = new List<MEMMod>();
-            foreach (var m in ModsInGroup.OfType<MEMMod>())
+            foreach (var m in _modsInGroup.OfType<MEMMod>())
             {
                 texturemods.Add(m);
             }
@@ -608,7 +698,7 @@ namespace ME3TweaksModManager.modmanager.windows
             sb.AppendLine(GroupName);
             sb.AppendLine(M3Utilities.ConvertNewlineToBr(GroupDescription));
             var libraryRoot = M3LoadedMods.GetModDirectoryForGame(SelectedGame);
-            foreach (var m in ModsInGroup.OfType<BatchMod>())
+            foreach (var m in _modsInGroup.OfType<BatchMod>())
             {
                 sb.AppendLine(m.ModDescPath.Substring(libraryRoot.Length + 1)); //STORE RELATIVE!
             }
@@ -634,9 +724,9 @@ namespace ME3TweaksModManager.modmanager.windows
         {
             if (string.IsNullOrWhiteSpace(GroupDescription)) return false;
             if (string.IsNullOrWhiteSpace(GroupName)) return false;
-            if (!ModsInGroup.Any()) return false;
-            //if (ModsInGroup.OfType<BatchMod>().Any(x => x.Mod == null)) return false; // A batch mod could not be found // Disabled 04/25/2023 - hopefully this works properly?
-            if (ModsInGroup.OfType<BatchASIMod>().Any(x => x.AssociatedMod == null)) return false; // A batch asi mod could not be found
+            if (!_modsInGroup.Any()) return false;
+            //if (_modsInGroup.OfType<BatchMod>().Any(x => x.Mod == null)) return false; // A batch mod could not be found // Disabled 04/25/2023 - hopefully this works properly?
+            if (_modsInGroup.OfType<BatchASIMod>().Any(x => x.AssociatedMod == null)) return false; // A batch asi mod could not be found
             return true;
         }
 
@@ -680,6 +770,15 @@ namespace ME3TweaksModManager.modmanager.windows
         /// </summary>
         public int SelectedTabIndex { get; set; }
 
+        /// <summary>
+        /// Text used as filtering for the mods in install group list
+        /// </summary>
+        public string ModSearchText { get; set; }
+
+        public void OnModSearchTextChanged()
+        {
+            ModsInGroupView.Refresh();
+        }
 
         public void OnSelectedAvailableModChanged()
         {
@@ -737,12 +836,12 @@ namespace ME3TweaksModManager.modmanager.windows
         private void TryChangeGameTo(MEGame newgame)
         {
             if (newgame == SelectedGame) return; //don't care
-            if (ModsInGroup.Count > 0 && newgame != SelectedGame)
+            if (_modsInGroup.Count > 0 && newgame != SelectedGame)
             {
                 var result = M3L.ShowDialog(this, M3L.GetString(M3L.string_dialog_changingGameWillClearGroup), M3L.GetString(M3L.string_changingGameWillClearGroup), MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (result == MessageBoxResult.Yes)
                 {
-                    ModsInGroup.ClearEx();
+                    _modsInGroup.ClearEx();
                     RestoreGameBeforeInstall = false;
                     SelectedGame = newgame;
                 }
@@ -771,6 +870,11 @@ namespace ME3TweaksModManager.modmanager.windows
             Games.ForEach(x => x.IsSelected = x.Game == game);
             TryChangeGameTo(game);
         }
+
+        private void BatchModQueueEditor_OnLoaded(object sender, RoutedEventArgs e)
+        {
+            ShowSearchBox();
+        }
     }
 
     /// <summary>
@@ -778,7 +882,7 @@ namespace ME3TweaksModManager.modmanager.windows
     /// </summary>
     public class BatchGameRestore : IBatchQueueMod
     {
-        public string UIDescription => "Restores the game to vanilla using a game backup.";
+        public string UIDescription => "Restores the game to vanilla using a game backup. You'll be prompted to confirm the restore before it happens.";
 
         protected bool Equals(BatchGameRestore other)
         {
