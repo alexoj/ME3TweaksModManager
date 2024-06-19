@@ -4220,17 +4220,6 @@ namespace ME3TweaksModManager
                         // Must come before .mem general case
                         case @".mem" when ModFileFormats.GetGameMEMFileIsFor(file) is var memGame && memGame.IsLEGame(): // For LE
                             App.SubmitAnalyticTelemetryEvent(@"User dropped LE mem file", new Dictionary<string, string> { { @"Filename", Path.GetFileName(file) } });
-                            var target = SelectedGameTarget;
-                            if (target?.Game != memGame)
-                            {
-                                target = GetCurrentTarget(memGame);
-                            }
-
-                            if (target == null)
-                            {
-                                M3L.ShowDialog(this, $"No target available to install mods for {memGame} to.", "No target", MessageBoxButton.OK, MessageBoxImage.Error);
-                                return;
-                            }
 
                             continueLoop = false; // Do not parse other files in drop, we handle them here
                             var memFiles = new List<string>(files.Length);
@@ -4245,15 +4234,45 @@ namespace ME3TweaksModManager
                                 }
                             }
 
-                            var result = M3L.ShowDialog(this, $"Install the following .mem files for {memGame}?"
-                                                 + "\n\n - " // do not localize
+
+                            var impInstallCancel = M3L.ShowDialog(this, "Import or install these .mem files?"
+                                + "\n\n" // do not localize
                                 + string.Join("\n - ", memFiles.Select(Path.GetFileName)), // do not localize
-                                "Confirm installation",
-                                MessageBoxButton.YesNo,
-                                MessageBoxImage.Question
-                                );
-                            if (result == MessageBoxResult.Yes)
+                                "Import or install",
+                                  MessageBoxButton.YesNoCancel,
+                                  MessageBoxImage.Question,
+                                  MessageBoxResult.Yes,
+                                  yesContent: "Import",
+                                  noContent: M3L.GetString(M3L.string_install));
+
+                            if (impInstallCancel == MessageBoxResult.Cancel)
+                                return;
+                            if (impInstallCancel == MessageBoxResult.Yes)
                             {
+                                // Import
+                                // Todo: Copy to mod library
+
+                            }
+
+                            if (impInstallCancel == MessageBoxResult.No)
+                            {
+                                // Install
+                                var target = SelectedGameTarget;
+                                if (target?.Game != memGame)
+                                {
+                                    target = GetCurrentTarget(memGame);
+                                }
+
+                                if (target == null)
+                                {
+                                    M3L.ShowDialog(this,
+                                        M3L.GetString(M3L.string_interp_notTargetAvailableForX, memGame),
+                                        M3L.GetString(M3L.string_gameNotAvailable),
+                                        MessageBoxButton.OK,
+                                        MessageBoxImage.Error);
+                                    return;
+                                }
+
                                 TextureInstallerPanel tip = new TextureInstallerPanel(target, memFiles);
                                 tip.Close += (o, args) => ReleaseBusyControl();
                                 ShowBusyControl(tip);

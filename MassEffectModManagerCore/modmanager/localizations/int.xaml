@@ -198,7 +198,7 @@
     <system:String x:Key="string_tooltip_filterME2">Click to toggle showing mods for Mass Effect 2</system:String>
     <system:String x:Key="string_tooltip_filterME3">Click to toggle showing mods for Mass Effect 3</system:String>
     <system:String x:Key="string_tooltip_someModsFailed">Some mods failed to load, click to see why</system:String>
-    <system:String x:Key="string_tooltip_addAdditionalTarget">Add an additional installation target</system:String>
+    <system:String x:Key="string_tooltip_addAdditionalTarget">Add an installation target</system:String>
     <system:String x:Key="string_tooltip_targetInfo">View and manage installed mods and files for this target</system:String>
     <system:String x:Key="string_targetInfo">Manage Target</system:String>
     <system:String x:Key="string_modDescription">Mod Description</system:String>
@@ -215,12 +215,12 @@
     <system:String x:Key="string_errorLoadingMixinPackage">Error loading Mixin package</system:String>
     <system:String x:Key="string_checkingBackups">Checking backups</system:String>
     <system:String x:Key="string_finishedCheckingBackups">Finished checking backups</system:String>
-    <system:String xml:space="preserve" x:Key="string_dialog_optingIntoBeta">Opting into beta updates will allow Mod Manager to update to builds that have not yet been certified for wide deployment. These builds are not fully tested and may be unstable. Feedback on crashes on these builds is vital for improving ME3Tweaks Mod Manager. If you are not comfortable with unstable software, you should not enable this setting. You will have to manually downgrade if you wish to revert back to a stable version.\n\nEnable Beta Mode?</system:String>
+    <system:String xml:space="preserve" x:Key="string_dialog_optingIntoBeta">Opting into beta mode will allow Mod Manager to update to builds that have not yet been certified for wide deployment, as well as enable experimental features. These builds are not fully tested and may be unstable. Feedback on crashes on these builds is vital for improving ME3Tweaks Mod Manager. If you are not comfortable with unstable software, you should not enable this setting. You will have to manually downgrade if you wish to revert back to a stable version.\n\nEnable Beta Mode?</system:String>
     <system:String x:Key="string_enablingBetaMode">Enabling beta mode</system:String>
     <system:String x:Key="string_importAndManageMods">Import + manage mods</system:String>
     <system:String x:Key="string_libraryManagement">Library management</system:String>
     <system:String x:Key="string_optIntoBetaUpdates">Opt into beta updates</system:String>
-    <system:String xml:space="preserve" x:Key="string_tooltip_optIntoBetaUpdates">Enables beta updates, overriding soak testing settings from ME3Tweaks. These builds may be less stable but have features that need to be tested. Only takes effect after the application is restarted.</system:String>
+    <system:String xml:space="preserve" x:Key="string_tooltip_optIntoBetaUpdates">Enables beta mode, overriding update soak testing gates from ME3Tweaks and enabling experimental features. These builds may be less stable but have features that need to be tested. Only takes effect after the application is restarted.</system:String>
     <system:String x:Key="string_tooltip_toggleTelemetry">Enables/disables submission of analytics and crash logs</system:String>
     <system:String x:Key="string_tooltip_logModLoading">Log detailed information about mods loading from the library or archives</system:String>
     <system:String x:Key="string_tooltip_logModMakerCompiler">Log detailed information when ModMaker compiler is running</system:String>
@@ -257,7 +257,7 @@
     <system:String x:Key="string_requiresNothing">Requires nothing</system:String>
     <system:String x:Key="string_showWelcomePanel">Show welcome panel</system:String>
     <system:String x:Key="string_showBackupNag">Show backup nag</system:String>
-    <system:String x:Key="string_tooltip_endorseM3OnNexus">Endorse ME3Tweaks Mod Manager on the Nexus pages</system:String>
+    <system:String x:Key="string_tooltip_endorseM3OnNexus">Endorse ME3Tweaks Mod Manager on the NexusMods pages</system:String>
     <system:String x:Key="string_tooltip_manageNexusModsIntegration">Manage NexusMods integration</system:String>
     <system:String x:Key="string_interp_visitSelectedModWebSite">Visit {0}'s web site</system:String>
     <!-- 0=SelectedMod.ModName -->
@@ -332,14 +332,13 @@
     <system:String  x:Key="string_allGamesHiddenTitle">No games selected for display</system:String>
     <system:String  x:Key="string_allGamesHiddenDescription">No games are selected to show mods for. Click on a game above to enable showing mods for that game.</system:String>
     <!-- This is bolded text that shows up at the top of the mod library list area when there are no mods. Try to keep it short, feel free to adapt to your language.-->
-    <system:String xml:space="preserve" x:Key="string_noModsInLibraryDescription">Mods you import into Mod Manager will be listed here. You can import mods by dragging and dropping their downloaded archives (.7z/.rar/.zip/.exe/.me2mod) onto this window.&#10;&#10;Mods that are directly installed from the importer window will NOT be shown here, as they are installed into the game, not imported into the library. You can see what's installed by clicking 'Manage Target' in the top right of this window.&#10;&#10;Mods that are imported into the mod library are easy to reinstall, can be added to batch install queues, and more.</system:String>
+    <system:String xml:space="preserve" x:Key="string_noModsInLibraryDescription">Mods you import into Mod Manager will be listed here. You can import mods by dragging and dropping their downloaded archives (.7z/.rar/.zip/.exe/.me2mod) onto this window.&#10;&#10;Mods that are directly installed from the importer window will NOT be shown here, as they are installed into the game, not imported into the library. You can see what's installed by clicking 'Manage Target' in the top right of this window.&#10;&#10;Mods that are imported into the mod library are easy to reinstall, can be added to batch install groups, and more.</system:String>
     <!-- This is the text shown under the no mods in library header. It shows up when there are no mods imported. Make sure Manage Target lines up with your localization of that term. -->
     <system:String x:Key="string_interp_dialog_cannotDeployModNoTarget">No game installation for {0} is available. Deploying a mod requires a game installation for the game so deployment can check for data in that installation that will not be accessible in another setup.</system:String>
     <!-- 0=ME1/ME2/ME3 -->
     <system:String x:Key="string_cannotDeployMod">Cannot deploy mod</system:String>
     <system:String x:Key="string_interp_dialog_cannotDeployModNoBackup">No backup for {0} is available. Deploying a mod requires a game backup for the game the mod will install to, so the deployment checks can check against a vanilla game installation.</system:String>
     <!-- 0=ME1/ME2/ME3 -->
-    <system:String x:Key="string_preparingToScanGame">Preparing to scan game</system:String>
     <system:String x:Key="string_pleaseWait">Please wait</system:String>
     <system:String x:Key="string_pleaseWait_startup">Mod Manager is starting up, your mod library will be available momentarily.</system:String>
     <!-- Shown when Mod Manager is starting up, in place of 'no mods loaded!' message -->
@@ -362,9 +361,6 @@
     <system:String x:Key="string_dialog_nexusLoginRequiredForDownload">ME3Tweaks Mod Manager must be linked with your NexusMods account in order to directly download from NexusMods. Press OK to open the NexusMods sign-in page to link the application.</system:String>
     <system:String x:Key="string_notSignedIn">Not signed in</system:String>
     <system:String x:Key="string_couldNotEndorseFile">Could not endorse file</system:String>
-    <system:String x:Key="string_configuringNxmhandler">Configuring nxmhandler</system:String>
-    <system:String x:Key="string_configuredNxmhandler">Configured nxmhandler</system:String>
-    <system:String x:Key="string_interp_downloadingNxmhandlerX">Downloading nxmhandler {0}%</system:String>
     <!-- 0={percentage} -->
     <system:String x:Key="string_autoTOC">AutoTOC</system:String>
     <!-- This is menu container. Should probably not be changed since it's essentially a noun -->
@@ -372,13 +368,6 @@
     <system:String x:Key="string_runAutoTOCOnMassEffectLegendaryEdition">Run AutoTOC on Mass Effect (Legendary Edition)</system:String>
     <system:String x:Key="string_runAutoTOCOnMassEffect2LegendaryEdition">Run AutoTOC on Mass Effect 2 (Legendary Edition)</system:String>
     <system:String x:Key="string_runAutoTOCOnMassEffect3LegendaryEdition">Run AutoTOC on Mass Effect 3 (Legendary Edition)</system:String>
-    <system:String x:Key="string_syncPlotManager">Sync PlotManager</system:String>
-    <!-- This is menu item container. This synchronizes the PlotManager file with the DLC changes each mod can specify. PlotManager is a noun -->
-    <system:String x:Key="string_syncPlotManagerForMassEffect">Sync PlotManager for Mass Effect</system:String>
-    <system:String x:Key="string_syncPlotManagerForMassEffect2">Sync PlotManager for Mass Effect 2</system:String>
-    <system:String x:Key="string_syncPlotManagerForMassEffectLegendaryEdition">Sync PlotManager for Mass Effect (Legendary Edition)</system:String>
-    <system:String x:Key="string_syncPlotManagerForMassEffect2LegendaryEdition">Sync PlotManager for Mass Effect 2 (Legendary Edition)</system:String>
-    <system:String x:Key="string_tooltip_syncPlotManager">Synchronizes the plot manager updates located in DLC mods with the base plot manager file, which is used for story progression tracking</system:String>
     <system:String x:Key="string_massEffectModderForLegendaryEdition">Mass Effect Modder (for Legendary Edition)</system:String>
     <system:String x:Key="string_prereleaseNotice">This is a prerelease build of ME3Tweaks Mod Manager. Do not distribute mods from this build. There may be breaking changes that cause mods made for this build to not work on future builds.</system:String>
     <system:String x:Key="string_failedToCompileCoalescedFile">Failed to compile coalesced file</system:String>
@@ -442,7 +431,7 @@
     <system:String x:Key="string_beta">Beta</system:String>
     <!-- This is used for beta mode features. An example is a menu with heading of 'Beta'.-->
     <system:String x:Key="string_selectLaunchOptions">Select launch options</system:String>
-    <system:String x:Key="string_saveChosenOptionsToThisBatchGroup">Save chosen options to this batch group?</system:String>
+    <system:String x:Key="string_saveChosenOptionsToThisBatchGroup">Save chosen options to the install group?</system:String>
     <system:String x:Key="string_saveOptions">Save options</system:String>
     <system:String x:Key="string_changeCurrentLaunchConfiguration">Change current launch configuration</system:String>
     <system:String x:Key="string_launchConfigurationOptionsNotAvailableForThisGame">Launch configuration options not available for this game</system:String>
@@ -461,8 +450,7 @@
     <system:String x:Key="string_tooltip_trilogySaveEditor">Save editor for Mass Effect Trilogy and Legendary Edition</system:String>
     <system:String x:Key="string_blankItemToAvoidBreakingTheInterface">Blank item to avoid breaking the interface</system:String>
     <!-- This is a string that is used to prevent an empty beta menu from blowing up the UI for some reason -->
-    <system:String x:Key="string_autobootLE2Test">Autoboot LE2 test</system:String>
-    <!-- This is debug only -->
+
     <system:String x:Key="string_showBasegameFileIdentificationServiceViewer">Show Basegame File Identification Service Viewer</system:String>
     <!-- This is a debug build only feature -->
     <system:String x:Key="string_tooltip_installHeadmorph">Installs a headmorph from this mod into an existing save game</system:String>
@@ -520,6 +508,7 @@
     <system:String x:Key="string_test7z">Test 7z</system:String>
     <system:String x:Key="string_originalTrilogy">Original Trilogy</system:String>
     <system:String x:Key="string_legendaryEdition">Legendary Edition</system:String>
+    <system:String x:Key="string_autobootLE2Test">Autoboot LE2 test</system:String>
 
     <!-- Global Styles -->
     <system:String x:Key="string_thisTargetHasBeenTextureModded">This target has been texture modded</system:String>
