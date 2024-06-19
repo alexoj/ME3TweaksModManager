@@ -1941,15 +1941,6 @@ namespace ME3TweaksModManager
             }
         }
 
-        private void ShowUpdateCompletedPane()
-        {
-            var message = M3L.GetString(M3L.string_interp_modManagerHasBeenUpdatedTo, App.UpdatedFrom.ToString(),
-                App.AppVersionAbout);
-            var updateCompletedPanel = new UpdateCompletedPanel(M3L.GetString(M3L.string_updateCompleted), message);
-            updateCompletedPanel.Close += (a, b) => { ReleaseBusyControl(); };
-            ShowBusyControl(updateCompletedPanel);
-        }
-
         private bool IsModSelectedInDevMode()
         {
             return SelectedMod != null && Settings.DeveloperMode;
@@ -2729,7 +2720,7 @@ namespace ME3TweaksModManager
 
                             // This must go after releasing the control because in batch mode it will begin setting up the next panel.
                             // We do not want it to set up the next panel (e.g. textures) and then try to handle merges from the mod installer after that panel
-                            installCompletedCallback?.Invoke(mi.InstallationSucceeded && !mi.InstallationCancelled, false); 
+                            installCompletedCallback?.Invoke(mi.InstallationSucceeded && !mi.InstallationCancelled, false);
                         };
                         ShowBusyControl(mi);
                     }
@@ -2825,10 +2816,6 @@ namespace ME3TweaksModManager
             // MessageBox.Show(M3L.GetString(M3L.string_prereleaseNotice));
             // MessageBox.Show(M3L.GetString(M3L.string_betaBuildDialog));
 #endif
-            if (App.BootingUpdate)
-            {
-                ShowUpdateCompletedPane();
-            }
 
             if (!App.IsOperatingSystemSupported())
             {
@@ -3575,8 +3562,6 @@ namespace ME3TweaksModManager
             M3Utilities.OpenExplorer(M3LoadedMods.GetCurrentModLibraryDirectory());
         }
 
-        private const int STARTUP_FAIL_CRITICAL_FILES_MISSING = 1;
-
         public void PerformStartupNetworkFetches(bool firstStartupCheck)
         {
             NamedBackgroundWorker bw = new NamedBackgroundWorker(@"ContentCheckNetworkThread");
@@ -3606,17 +3591,6 @@ namespace ME3TweaksModManager
                     UpdateBinkStatus(MEGame.LE1);
                     UpdateBinkStatus(MEGame.LE2);
                     UpdateBinkStatus(MEGame.LE3);
-                    //bgTask = BackgroundTaskEngine.SubmitBackgroundJob(@"EnsureCriticalFiles", M3L.GetString(M3L.string_downloadingRequiredFiles), M3L.GetString(M3L.string_requiredFilesDownloaded));
-                    //if (!M3OnlineContent.EnsureCriticalFiles())
-                    //{
-                    //    //Critical files not loaded!
-                    //    b.Result = STARTUP_FAIL_CRITICAL_FILES_MISSING;
-                    //    bgTask.FinishedUIText = M3L.GetString(M3L.string_failedToDownloadRequiredFiles);
-                    //    BackgroundTaskEngine.SubmitJobCompletion(bgTask);
-                    //    return;
-                    //}
-
-                    //BackgroundTaskEngine.SubmitJobCompletion(bgTask);
 
                     var updateCheckTask = BackgroundTaskEngine.SubmitBackgroundJob(@"UpdateCheck",
                         M3L.GetString(M3L.string_checkingForModManagerUpdates),
@@ -3681,25 +3655,8 @@ namespace ME3TweaksModManager
                 {
                     // Log is handled in internal class
                 }
-                else if (b.Result is int i)
-                {
-                    if (i != 0)
-                    {
-                        switch (i)
-                        {
-                            case STARTUP_FAIL_CRITICAL_FILES_MISSING:
-                                var res = M3L.ShowDialog(this, M3L.GetString(M3L.string_dialogCriticalFilesMissing),
-                                    M3L.GetString(M3L.string_requiredFilesNotDownloaded), MessageBoxButton.OK,
-                                    MessageBoxImage.Error);
-                                Environment.Exit(1);
-                                break;
-                        }
-                    }
-                    else
-                    {
-                        ContentCheckInProgress = false;
-                    }
-                }
+
+                ContentCheckInProgress = false;
 
                 if (firstStartupCheck)
                 {
@@ -4239,9 +4196,12 @@ namespace ME3TweaksModManager
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
             {
                 // Note that you can have more than one file.
+                bool continueLoop = true;
                 string[] files = (string[])e.Data.GetData(DataFormats.FileDrop);
                 foreach (var file in files)
                 {
+                    if (!continueLoop)
+                        break;
                     string ext = Path.GetExtension(file).ToLower();
                     M3Log.Information(@"File dropped onto interface: " + file);
                     switch (ext)
@@ -4257,13 +4217,57 @@ namespace ME3TweaksModManager
                             });
                             openModImportUI(file);
                             break;
+                        // Must come before .mem general case
+                        case @".mem" when ModFileFormats.GetGameMEMFileIsFor(file) is var memGame && memGame.IsLEGame(): // For LE
+                            App.SubmitAnalyticTelemetryEvent(@"User dropped LE mem file", new Dictionary<string, string> { { @"Filename", Path.GetFileName(file) } });
+                            var target = SelectedGameTarget;
+                            if (target?.Game != memGame)
+                            {
+                                target = GetCurrentTarget(memGame);
+                            }
+
+                            if (target == null)
+                            {
+                                M3L.ShowDialog(this, $"No target available to install mods for {memGame} to.", "No target", MessageBoxButton.OK, MessageBoxImage.Error);
+                                return;
+                            }
+
+                            continueLoop = false; // Do not parse other files in drop, we handle them here
+                            var memFiles = new List<string>(files.Length);
+                            memFiles.Add(file);
+                            foreach (var f in files)
+                            {
+                                if (f == file)
+                                    continue;
+                                if (Path.GetExtension(f) == @".mem" && ModFileFormats.GetGameMEMFileIsFor(f) == memGame)
+                                {
+                                    memFiles.Add(f);
+                                }
+                            }
+
+                            var result = M3L.ShowDialog(this, $"Install the following .mem files for {memGame}?"
+                                                 + "\n\n - " // do not localize
+                                + string.Join("\n - ", memFiles.Select(Path.GetFileName)), // do not localize
+                                "Confirm installation",
+                                MessageBoxButton.YesNo,
+                                MessageBoxImage.Question
+                                );
+                            if (result == MessageBoxResult.Yes)
+                            {
+                                TextureInstallerPanel tip = new TextureInstallerPanel(target, memFiles);
+                                tip.Close += (o, args) => ReleaseBusyControl();
+                                ShowBusyControl(tip);
+                            }
+
+                            break;
                         //TPF, .mod, .mem
                         case @".tpf":
                         case @".mod":
-                        case @".mem": // Todo: Offer install option instead
+                        case @".mem":
                             App.SubmitAnalyticTelemetryEvent(@"User redirected to MEM/ALOT Installer", new Dictionary<string, string> { { @"Filename", Path.GetFileName(file) } });
                             M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_dialog_installingTextureMod, ext), M3L.GetString(M3L.string_nonModManagerModFound), MessageBoxButton.OK, MessageBoxImage.Warning);
                             break;
+
                         case @".me2mod":
                             App.SubmitAnalyticTelemetryEvent(@"User opened me2mod file", new Dictionary<string, string> { { @"Filename", Path.GetFileName(file) } });
                             openModImportUI(file);
@@ -5096,7 +5100,7 @@ namespace ME3TweaksModManager
             }
 
 
-            TextureInstallerPanel tip = new TextureInstallerPanel(target, new List<string>(new[] { m.FileName }));
+            TextureInstallerPanel tip = new TextureInstallerPanel(target, [m.FileName]);
             tip.Close += (a, b) =>
             {
                 ReleaseBusyControl();

@@ -9,6 +9,7 @@
     <system:String x:Key="string_OpenME3Tweaks">Open ME3Tweaks.com</system:String>
     <system:String x:Key="string_OpensME3Tweaks">Opens ME3Tweaks.com</system:String>
     <system:String x:Key="string_OpenMemoryAnalyzer">Open Memory Analyzer</system:String>
+    <!-- Debug builds mode only -->
     <system:String x:Key="string_Options">Options</system:String>
     <system:String x:Key="string_ModManager">Mod Manager</system:String>
     <system:String x:Key="string_Setmodlibrarypath">Set mod library path</system:String>
@@ -24,7 +25,7 @@
     <system:String x:Key="string_LogModMakerCompiler">Log ModMaker Compiler</system:String>
     <system:String x:Key="string_LogModUpdater">Log Mod Updater</system:String>
     <system:String x:Key="string_Checkforcontentupdates">Refresh ME3Tweaks services</system:String>
-    <system:String x:Key="string_ChecksME3Tweaksforupdatestovariousservices">Downloads the latest ME3Tweaks.com service information, which is used for features such as mod identification, ASIs, etc.&#10;This is done automatically once a day</system:String>
+    <system:String x:Key="string_ChecksME3Tweaksforupdatestovariousservices">Downloads the latest ME3Tweaks.com service information, which is used for features such as mod identification, ASIs, etc.&#10;This is done automatically every few hours</system:String>
     <system:String x:Key="string_Reloadsmodsfromthemodlibrary">Refresh the mod library</system:String>
     <system:String x:Key="string_tooltip_reloadModsFromLibrary">Refreshes the list of available mods in the mod library</system:String>
     <system:String x:Key="string_Exit">Exit</system:String>
@@ -36,7 +37,7 @@
     <system:String x:Key="string_ImportalreadyinstalledCustomDLCmod">Import already installed Custom DLC mod</system:String>
     <system:String x:Key="string_DownloadModMakermod">Download ModMaker mod</system:String>
     <system:String x:Key="string_ASIModManager">ASI Mod Manager</system:String>
-    <system:String x:Key="string_ASIManagerTooltip">Manage ASI mods. For advanced users only.</system:String>
+    <system:String x:Key="string_ASIManagerTooltip">Manage native code mods</system:String>
     <system:String x:Key="string_CustomDLCConflictDetector">Custom DLC Conflict Detector</system:String>
     <system:String x:Key="string_BatchModInstaller">Batch Mod Installer</system:String>
     <system:String x:Key="string_Openmodslibrarydirectory">Open mods library directory</system:String>
@@ -67,21 +68,20 @@
     <system:String x:Key="string_Binkw32Bypasses">Bink Bypasses</system:String>
     <system:String x:Key="string_Grantwriteaccesstogamedirectories">Grant write access to game directories</system:String>
     <system:String x:Key="string_Grantswritepermissionstogamedirectories">Grants write permissions to game directories</system:String>
-    <system:String x:Key="string_RunAutoTOC">Run AutoTOC on game (ME3)</system:String>
-    <system:String x:Key="string_RunsAutoTOCToolTip">Runs AutoTOC on the current ME3 target (or first ME3 one in the list if the current target is not ME3)</system:String>
+    <system:String x:Key="string_RunsAutoTOCToolTip">Updates the listed game's file Table Of Contents file (TOC)</system:String>
     <system:String x:Key="string_consoleCommandKeybinder">Console Key Keybinder</system:String>
     <system:String x:Key="string_tooltip_consoleCommandKeybinder">Allows you to configure what keys are used for opening the console in each game</system:String>
     <system:String x:Key="string_Additionalmoddingtools">Additional modding tools</system:String>
     <system:String x:Key="string_ALOTInstaller">ALOT Installer</system:String>
-    <system:String x:Key="string_ALOTInstallerTooltip">Installer for A Lot Of Textures, a graphical upgrade mod supporting all three games</system:String>
+    <system:String x:Key="string_ALOTInstallerTooltip">Installer for A Lot Of Textures, a graphical upgrade mod supporting all three games (Original Trilogy)</system:String>
     <system:String x:Key="string_MassEffectINIModder">Mass Effect INI Modder</system:String>
-    <system:String x:Key="string_MEIMTooltip">Tool for configuring many different settings for Mass Effect</system:String>
+    <system:String x:Key="string_MEIMTooltip">Tool for configuring many different settings for the original Mass Effect (2008)</system:String>
     <system:String x:Key="string_MassEffectModder">Mass Effect Modder</system:String>
     <system:String x:Key="string_Texturebrowserandinstaller">Texture browser and installer</system:String>
-    <system:String x:Key="string_MassEffectRandomizer">Mass Effect Randomizer</system:String>
-    <system:String x:Key="string_RandomizerforthefirstMassEffectgame">Randomizer for the first Mass Effect game</system:String>
-    <system:String x:Key="string_me2r">Mass Effect 2 Randomizer</system:String>
-    <system:String x:Key="string_tooltip_me2r">Randomizer for Mass Effect 2</system:String>
+    <system:String x:Key="string_MassEffectRandomizer">Mass Effect Randomizer (for Original Trilogy)</system:String>
+    <system:String x:Key="string_RandomizerforthefirstMassEffectgame">Randomizer for Mass Effect (2008)</system:String>
+    <system:String x:Key="string_me2r">Mass Effect 2 Randomizer (for Original Trilogy)</system:String>
+    <system:String x:Key="string_tooltip_me2r">Randomizer for Mass Effect 2 (2010)</system:String>
     <system:String x:Key="string_LegendaryExplorerStable">Legendary Explorer (Stable)</system:String>
     <system:String x:Key="string_LegendaryExplorerBeta">Legendary Explorer (Nightly)</system:String>
     <system:String x:Key="string_ME3ExplorerME3TweaksForkTooltip" xml:space="preserve">Toolset for developing Mass Effect (OT + LE) mods.&#10;This is the stable version, which is typically a few months old</system:String>
@@ -120,7 +120,7 @@
     <system:String x:Key="string_cannotEndorseMod">Cannot endorse mod</system:String>
     <system:String x:Key="string_cannotEndorseOwnMod">Cannot endorse your own mod</system:String>
     <system:String x:Key="string_notLinkedToNexusMods">mod not linked to NexusMods</system:String>
-    <system:String x:Key="string_notAuthenticated">not authenticated</system:String>
+    <system:String x:Key="string_notAuthenticated">not logged in</system:String>
     <system:String x:Key="string_gettingEndorsementStatus">Getting endorsement status</system:String>
     <system:String x:Key="string_endorseMod">Endorse mod</system:String>
     <system:String x:Key="string_modEndorsed">&#x1F44D; Mod endorsed</system:String>
@@ -155,19 +155,12 @@
     <system:String x:Key="string_checkingForModManagerUpdates">Checking for Mod Manager updates</system:String>
     <system:String x:Key="string_completedModManagerUpdateCheck">Completed Mod Manager update check</system:String>
     <system:String x:Key="string_failedToCheckForUpdates">Failed to check for updates</system:String>
-    <system:String x:Key="string_dialogCouldNotDownloadStaticAssets">Could not download the static component files for ME3Tweaks Mod Manager. Mod Manager may be unstable due to these files not being present. Ensure you are able to connect to GitHub.com so these assets may be downloaded.</system:String>
-    <system:String x:Key="string_missingAssets">Missing assets</system:String>
-    <system:String x:Key="string_failedToDownloadStaticFiles">Failed to download static components</system:String>
-    <system:String x:Key="string_downloadingStaticFiles">Downloading static components</system:String>
-    <system:String x:Key="string_staticFilesDownloaded">Downloaded static components</system:String>
     <system:String xml:space="preserve" x:Key="string_dialogTurningOffTelemetry">Disabling telemetry makes it more difficult to fix bugs and develop new features for ME3Tweaks Mod Manager. Telemetry data collected is used to identify crashes, errors, see what demand there is for various mod support, and see what tasks are difficult for users (such as lack of guidance on a particular enforced rule of modding).\n\nYou can continue to turn it off, but it provides valuable metrics to the developers of this program and to the modding scene.\n\nTurn off telemetry?</system:String>
     <system:String x:Key="string_turningOffTelemetry">Turning off telemetry</system:String>
     <system:String x:Key="string_selectModLibraryFolder">Select mod library folder</system:String>
     <system:String x:Key="string_runningAutoTOC">Running AutoTOC</system:String>
     <system:String x:Key="string_ranAutoTOC">Ran AutoTOC</system:String>
     <system:String x:Key="string_nonModManagerModFound">Non-Mod Manager mod found</system:String>
-    <system:String xml:space="preserve" x:Key="string_dialogCriticalFilesMissing">Mod Manager was unable to acquire files that are required for the program to function properly.\nPlease ensure you are connected to the internet and that both GitHub and ME3Tweaks is reachable.\nMod Manager will now close. If you need assistance, please come to the ME3Tweaks Discord.</system:String>
-    <system:String x:Key="string_requiredFilesNotDownloaded">Required files unable to be downloaded</system:String>
     <system:String x:Key="string_checkingWritePermissions">Checking write permissions</system:String>
     <system:String x:Key="string_checkedUserWritePermissions">Checked user write permissions</system:String>
     <system:String x:Key="string_loadingPackageInfoDatabases">Loading package information databases</system:String>
@@ -184,7 +177,6 @@
     <system:String x:Key="string_interp_unendorseMod">Unendorse {0}?</system:String>
     <system:String x:Key="string_interp_unableToModifyBioinputIni">Unable to modify BioInput.ini: {0}</system:String>
     <system:String x:Key="string_interp_dialogDeleteSelectedModFromLibrary">Delete {0} from your mod library? This only deletes the mod from your local Mod Manager library, it does not remove it from any game installations.</system:String>
-    <system:String x:Key="string_interp_modManagerHasBeenUpdatedTo">Mod Manager has been updated from build {0} to version {1}.</system:String>
     <system:String x:Key="string_interp_launching">Launching {0}</system:String>
     <system:String x:Key="string_interp_launched">Launched {0}</system:String>
     <system:String x:Key="string_interp_cannotInstallModGameNotInstalled">Cannot install mod: {0} is not installed.</system:String>

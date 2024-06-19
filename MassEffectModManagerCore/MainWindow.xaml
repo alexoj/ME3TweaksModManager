@@ -606,7 +606,7 @@
                     <MenuItem
                         Header="Check non-whitelisted mods for updates"
                         Command="{Binding CheckNonWhitelistedModsForUpdates}"
-                        ToolTip="Mods not opted into the NexusMods Update Service will not automatically check for updates as it may cause update loops.&#10;This update check will check for mods not opted in for updates.">
+                        ToolTip="Mods not opted into the NexusMods Update Service will not automatically check for updates as it may cause update loops.&#10;This update check will check for mods not opted in for updates">
                         <MenuItem.Icon>
                             <fa5:ImageAwesome
                                 Style="{StaticResource EnableDisableImageStyle}"
