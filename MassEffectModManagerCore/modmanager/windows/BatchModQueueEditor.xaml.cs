@@ -19,10 +19,8 @@ using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.objects.mod.texture;
 using Microsoft.Win32;
 using ME3TweaksModManager.ui;
-using static ME3TweaksModManager.modmanager.usercontrols.BackupFileFetcher;
 using System.ComponentModel;
 using System.Windows.Data;
-using JetBrains.FormatRipper.Elf;
 
 namespace ME3TweaksModManager.modmanager.windows
 {
