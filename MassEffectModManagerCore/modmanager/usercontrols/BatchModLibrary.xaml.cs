@@ -256,8 +256,13 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         public void OnIsLoadingChanged()
         {
+
             ClipperHelper.ShowHideVerticalContent(LoadingStatusPanel, IsLoading);
-            if (SelectedBatchQueue == null)
+            if (IsLoading)
+            {
+                SelectedBatchQueue = null;
+            }
+            else if (SelectedBatchQueue == null)
             {
                 // Select first one to populate the UI.
                 SelectedBatchQueue = AvailableBatchQueues.FirstOrDefault();
@@ -506,7 +511,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         // Todo: Handle hash of standalone MEMMod objects for non-managed textures
                         // SetWebsitePanelVisibility(m); // Show website link
                     }
-                } else if (SelectedModInGroup is BatchGameRestore bgr)
+                }
+                else if (SelectedModInGroup is BatchGameRestore bgr)
                 {
                     ModDescriptionText = bgr.UIDescription;
                 }
