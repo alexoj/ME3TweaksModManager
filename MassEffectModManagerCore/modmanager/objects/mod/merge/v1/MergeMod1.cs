@@ -434,7 +434,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         var classDiskFile = Path.Combine(sourceDir, mc.ClassUpdate.AssetName);
                         if (Directory.GetParent(classDiskFile).FullName != sourceDir)
                         {
-                            throw new Exception($"Asset files for merge mods must all be contained in the same folder. Invalid asset name: {mc.ClassUpdate.AssetName}");
+                            throw new Exception($"Asset files for merge mods must all be contained in the same folder. Invalid asset name: {mc.ClassUpdate.AssetNaed -}");
                         }
                         if (!File.Exists(classDiskFile))
                         {
