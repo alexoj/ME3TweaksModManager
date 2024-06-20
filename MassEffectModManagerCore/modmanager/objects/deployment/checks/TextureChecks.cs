@@ -73,12 +73,24 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                     using var package = MEPackageHandler.UnsafePartialLoad(f, x => x.IsTexture() && !x.IsDefaultObject); // 06/12/2022 - Use unsafe partial load to increase performance
                     if (package.Game != item.ModToValidateAgainst.Game)
                         continue; // Don't bother checking this
-                    if (package.LECLTagData.WasSavedWithMEM)
+                    if (package.Game.IsLEGame() && package.LECLTagData.WasSavedWithMEM)
                     {
                         // Cannot ship texture touched files.
                         M3Log.Error($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
                         item.AddBlockingError($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
-                        return;
+                        continue; // No further checks on this file.
+                    }
+                    else if (package.Game.IsOTGame())
+                    {
+                        using var fs = File.OpenRead(f);
+                        fs.Seek(-MEPackage.MEMPackageTagLength, SeekOrigin.End);
+                        if (MEPackage.MEMPackageTag.SequenceEqual(fs.ReadToBuffer(MEPackage.MEMPackageTagLength)))
+                        {
+                            M3Log.Error($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
+                            item.AddBlockingError($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
+                        }
+
+                        continue; // No further checks on this file.
                     }
 
                     var textures = package.Exports.Where(x => x.IsTexture() && !x.IsDefaultObject).ToList();
@@ -93,7 +105,8 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                             // 06/19/2024 - Disable this for LE as it references texture LODs which we don't touch.
                             Texture2D tex = new Texture2D(texture);
 
-                            if (package.Game.IsOTGame()){
+                            if (package.Game.IsOTGame())
+                            {
                                 // CHECK NEVERSTREAM
                                 // 1. Has more than six mips.
                                 // 2. Has no external mips.
