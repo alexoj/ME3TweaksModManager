@@ -1828,7 +1828,7 @@ namespace ME3TweaksModManager
             bw.RunWorkerAsync();
         }
 
-        private bool SelectedModIsME3TweaksUpdatable() => SelectedMod?.IsUpdatable ?? false;
+        private bool SelectedModIsME3TweaksUpdatable() => SelectedMod?.IsME3TweaksUpdatable ?? false;
 
 
         private void SubmitTelemetryForMod()
