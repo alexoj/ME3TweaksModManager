@@ -593,11 +593,12 @@ namespace SevenZip
                     if (!Directory.Exists(tempFileName))
                     {
                         // Don't try to create a UNC share root, eg "\\localhost\".
-                        if (tempFileName.StartsWith($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}") &&
-                            tempFileName.LastIndexOf(Path.DirectorySeparatorChar) != 1)
+                        if (i == 2 && tempFileName.StartsWith($"{Path.DirectorySeparatorChar}{Path.DirectorySeparatorChar}") && tempFileName.LastIndexOf(Path.DirectorySeparatorChar) != 1)
                         {
-                            Directory.CreateDirectory(tempFileName);
+                            continue;
                         }
+
+                        Directory.CreateDirectory(tempFileName);
                     }
                 }
             }
