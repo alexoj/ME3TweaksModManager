@@ -615,6 +615,18 @@ namespace ME3TweaksModManager.modmanager.windows
 
         private void SaveAndClose()
         {
+            if (string.IsNullOrWhiteSpace(GroupName))
+            {
+                M3L.ShowDialog(this, "Group name cannot be empty.", "Validation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(GroupDescription))
+            {
+                M3L.ShowDialog(this, "Group description cannot be empty.", "Validation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             if (SaveModern())
             {
                 TelemetryInterposer.TrackEvent(@"Saved Batch Group", new Dictionary<string, string>()
@@ -720,8 +732,8 @@ namespace ME3TweaksModManager.modmanager.windows
 
         private bool CanSave()
         {
-            if (string.IsNullOrWhiteSpace(GroupDescription)) return false;
-            if (string.IsNullOrWhiteSpace(GroupName)) return false;
+            // Validation of name/desc is in save for dialog
+
             if (!_modsInGroup.Any()) return false;
             //if (_modsInGroup.OfType<BatchMod>().Any(x => x.Mod == null)) return false; // A batch mod could not be found // Disabled 04/25/2023 - hopefully this works properly?
             if (_modsInGroup.OfType<BatchASIMod>().Any(x => x.AssociatedMod == null)) return false; // A batch asi mod could not be found
