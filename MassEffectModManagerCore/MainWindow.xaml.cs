@@ -98,6 +98,11 @@ namespace ME3TweaksModManager
         public bool IsBusy { get; set; }
 
         /// <summary>
+        /// If the search box is open.
+        /// </summary>
+        public bool SearchBoxOpen { get; set; }
+
+        /// <summary>
         /// Content of the current Busy Indicator modal
         /// </summary>
         public object BusyContentM3 { get; set; }
@@ -1181,13 +1186,23 @@ namespace ME3TweaksModManager
 
         private void CloseSearchBox()
         {
-            ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, false);
+            if (SearchBoxOpen)
+            {
+                ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, false);
+                SearchBoxOpen = false;
+            }
+
             M3LoadedMods.Instance.ModSearchText = null;
         }
 
         private void ShowSearchBox()
         {
-            ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, true);
+            if (!SearchBoxOpen)
+            {
+                ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, true);
+                SearchBoxOpen = true;
+            }
+
             Keyboard.Focus(ModSearchBox);
         }
 
