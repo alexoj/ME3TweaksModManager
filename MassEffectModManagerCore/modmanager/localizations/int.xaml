@@ -1013,9 +1013,9 @@
     <system:String x:Key="string_noBackupForThisGame">No backup for this game</system:String>
     <system:String x:Key="string_interp_cannotDeleteModsWhileXIsRunning">Cannot delete mods while {0} is running.</system:String>
     <!-- 0 = gamename -->
-    <system:String xml:space="preserve" x:Key="string_interp_deletingXwhileAlotInstalledUnsupported">Deleting {0} while ALOT is installed will not cause the game to become broken, however you will not be able to install updates to ALOT without a full reinstallation (unsupported configuration).\n\nAre you sure you want to delete the DLC mod?</system:String>
+    <system:String xml:space="preserve" x:Key="string_interp_deletingXwhileTexturesInstalled">Deleting {0} while texture mods are installed will not cause the game to become broken, however you will not be able to install further texture mods without a restoration from backup, or a complete game deletion and reinstall.\n\nAre you sure you want to delete this DLC mod?</system:String>
     <!-- 0 = mod name-->
-    <system:String x:Key="string_deletingWillPutAlotInUnsupportedConfig">Deleting will put game in unsupported configuration</system:String>
+    <system:String x:Key="string_deletingWillPutGameInUnsupportedConfig">Deleting will put game in unsupported configuration</system:String>
     <system:String x:Key="string_interp_removeXFromTheGameInstallationQuestion">Remove {0} from the game installation?</system:String>
     <!-- 0 = modname of dlc -->
     <system:String x:Key="string_interp_cannotRestoreFilesWhileXIsRunning">Cannot restore files while {0} is running.</system:String>
