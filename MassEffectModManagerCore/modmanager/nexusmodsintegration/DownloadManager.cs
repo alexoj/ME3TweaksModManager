@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿#if DEBUG
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using ME3TweaksModManager.modmanager.importer;
 using ME3TweaksModManager.modmanager.localizations;
@@ -201,3 +202,4 @@ namespace ME3TweaksModManager.modmanager.nexusmodsintegration
         }
     }
 }
+#endif

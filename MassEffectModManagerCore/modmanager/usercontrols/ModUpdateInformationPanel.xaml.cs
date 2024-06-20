@@ -36,7 +36,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         public ModUpdateInformationPanel(List<M3OnlineContent.ModUpdateInfo> modsWithUpdates)
         {
+#if DEBUG
             DownloadManager.OnModInitialized += AssociateModDownload;
+#endif
             modsWithUpdates.ForEach(x =>
             {
                 x.ApplyUpdateCommand = new RelayCommand(ApplyUpdateToMod, CanApplyUpdateToMod);
@@ -99,7 +101,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 }
                 else if (ui is M3OnlineContent.NexusModUpdateInfo nmui)
                 {
-                    
+
 
 
                     var domain = @"masseffectlegendaryedition";
@@ -116,6 +118,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                             break;
                     }
 
+#if DEBUG
                     if (NexusModsUtilities.UserInfo?.IsPremium == true)
                     {
                         var fileId = await NexusModsUtilities.GetMainFileForMod(domain, nmui.NexusModsId);
@@ -127,6 +130,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                             return;
                         }
                     }
+#endif
 
                     var url = $@"https://nexusmods.com/{domain}/mods/{nmui.NexusModsId}?tab=files";
                     M3Utilities.OpenWebpage(url);
@@ -448,7 +452,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         protected override void OnClosing(DataEventArgs e)
         {
+#if DEBUG
             DownloadManager.OnModInitialized -= AssociateModDownload;
+#endif
             base.OnClosing(e);
         }
     }
