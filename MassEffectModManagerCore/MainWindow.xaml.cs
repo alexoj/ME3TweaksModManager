@@ -46,6 +46,7 @@ using ME3TweaksModManager.modmanager;
 using ME3TweaksModManager.modmanager.deployment;
 using ME3TweaksModManager.modmanager.headmorph;
 using ME3TweaksModManager.modmanager.helpers;
+using ME3TweaksModManager.modmanager.importer;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.me3tweaks;
 using ME3TweaksModManager.modmanager.me3tweaks.online;
@@ -3749,7 +3750,7 @@ namespace ME3TweaksModManager
                         DownloadManager.QueueNXMDownload(CommandLinePending.PendingNXMLink);
                     else
 #endif
-                       showNXMDownloader(CommandLinePending.PendingNXMLink);
+                        showNXMDownloader(CommandLinePending.PendingNXMLink);
                 }
 
                 if (CommandLinePending.PendingInstallBink && CommandLinePending.PendingGame != null)
@@ -4272,9 +4273,14 @@ namespace ME3TweaksModManager
                                 return;
                             if (impInstallCancel == MessageBoxResult.Yes)
                             {
-                                // Import
-                                // Todo: Copy to mod library
-
+                                var task = BackgroundTaskEngine.SubmitBackgroundJob("TextureImport", "Importing texture mods to library", "Imported texture mods");
+                                Task.Run(() =>
+                                {
+                                    ModArchiveImport.ImportTextureFiles(memFiles, memGame);
+                                }).ContinueWithOnUIThread(x =>
+                                {
+                                    BackgroundTaskEngine.SubmitJobCompletion(task);
+                                });
                             }
 
                             if (impInstallCancel == MessageBoxResult.No)

@@ -8,6 +8,7 @@ using ME3TweaksModManager.modmanager.objects.mod.texture;
 using SevenZip;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Xml.Linq;
@@ -844,6 +845,22 @@ namespace ME3TweaksModManager.modmanager.importer
         public void BeginImporting()
         {
             BeginImportingMods();
+        }
+
+        public static void ImportTextureFiles(List<string> memFiles, MEGame memGame = MEGame.Unknown, BackgroundTask task = null)
+        {
+            foreach (var memFile in memFiles)
+            {
+                var game = memGame != MEGame.Unknown ? memGame : ModFileFormats.GetGameMEMFileIsFor(memFile);
+                var tml = M3LoadedMods.GetTextureLibraryDirectory(game);
+                var destPath = Path.Combine(tml, Path.GetFileName(memFile));
+                M3Log.Information($@"Importing {memFile} to {destPath}");
+                if (task != null)
+                {
+                    BackgroundTaskEngine.SubmitBackgroundTaskUpdate(task, $"Importing {Path.GetFileName(memFile)}");
+                }
+                File.Copy(memFile, destPath, true);
+            }
         }
     }
 }
