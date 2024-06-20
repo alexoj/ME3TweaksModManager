@@ -184,8 +184,15 @@
                         Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
                         ItemsSource="{Binding VisibleFilteredASIMods}"
                         HorizontalContentAlignment="Stretch"
-                        ItemContainerStyle="{StaticResource StretchNoPaddingStyle}"
-                        SelectedItem="{Binding SelectedAvailableASIMod}"/>
+                        SelectedItem="{Binding SelectedAvailableASIMod}">
+                        <ListBox.ItemContainerStyle>
+                            <Style
+                                TargetType="ListBoxItem"
+                                BasedOn="{StaticResource StretchNoPaddingStyle}">
+                                <EventSetter Event="MouseDoubleClick" Handler="LeftSideMod_MouseDown"/>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
                 </TabItem>
                 <TabItem
                     Header="{DynamicResource string_textureMods}">
@@ -230,6 +237,7 @@
                                     <Setter
                                         Property="HorizontalContentAlignment"
                                         Value="Stretch" />
+                                    <EventSetter Event="MouseDoubleClick" Handler="LeftSideMod_MouseDown"/>
                                 </Style>
                             </ListBox.ItemContainerStyle>
                         </ListBox>
