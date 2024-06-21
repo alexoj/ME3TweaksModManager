@@ -37,7 +37,7 @@
                 MinWidth="70"
                 Content="{DynamicResource string_Openmodfolder}"
                 Margin="5,0,0,0"
-                Command="{Binding EditModdescCommand}"
+                Command="{Binding OpenModFolderCommand}"
                 Padding="7,4"/>
             <Button
                 DockPanel.Dock="Right"
