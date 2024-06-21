@@ -1460,7 +1460,9 @@ namespace ME3TweaksModManager
                         }
                         else
                         {
-                            if (queue.ContainsTextureMods() && queue.UseSavedOptions)
+                            if (queue.ContainsTextureMods() && (queue.UseSavedOptions || 
+                                                                // If all options are standalone we don't really care if there are saved options so just show it here
+                                                                queue.ModsToInstall.Where(x => !x.ModMissing).All(x => x.IsStandalone)))
                             {
                                 // We use batch text if this contains content mods due to the timing difference
                                 continueInstalling = TextureInstallerPanel.ShowTextureInstallWarning(this, queue.ContainsContentMods());
@@ -1523,7 +1525,7 @@ namespace ME3TweaksModManager
         /// </summary>
         /// <param name="queue"></param>
         /// <param name="target"></param>
-        /// <param name="modInstalled"></param>
+        /// <param name="modInstalled">Function, (succeeded, isFirst) </param>
         private void RunBatchRestore(BatchLibraryInstallQueue queue, GameTarget target, Action<bool, bool> modInstalled)
         {
             if (!BackupService.GetBackupStatus(queue.Game).BackedUp)
@@ -1569,7 +1571,7 @@ namespace ME3TweaksModManager
                     agrp.Close += (sender, args) =>
                     {
                         ReleaseBusyControl(); // This is so the panel is closed
-                        modInstalled(true, true);
+                        modInstalled(agrp.RestoreSucceeded, true);
                     };
                     ShowBusyControl(agrp);
                 }
@@ -1588,7 +1590,11 @@ namespace ME3TweaksModManager
 
                 TextureInstallerPanel tip = new TextureInstallerPanel(target, queue.TextureModsToInstall.Where(x => x.IsAvailableForInstall()).Select(x => x.GetFilePathToMEM()).ToList())
                 {
-                    ShowTextureWarning = !queue.UseSavedOptions
+                    // Show if:
+                    // Not using saved options
+                    // and
+                    // There is at least one mod that is not standalone
+                    ShowTextureWarning = !queue.UseSavedOptions && queue.ModsToInstall.Where(x => !x.ModMissing).Any(x => !x.IsStandalone)
                 };
                 tip.Close += (sender, args) =>
                 {

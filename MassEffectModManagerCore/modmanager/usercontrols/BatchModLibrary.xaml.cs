@@ -183,9 +183,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         private void InstallGroup()
         {
             // Has user saved options before?
-            if (SelectedBatchQueue.ModsToInstall.Any(x => x.HasChosenOptions))
+            if (SelectedBatchQueue.ModsToInstall.Any(x => !x.IsStandalone && x.HasChosenOptions))
             {
-
                 if (SelectedBatchQueue.ModsToInstall.Any(x => x.ChosenOptionsDesync || !x.HasChosenOptions))
                 {
                     M3L.ShowDialog(window,

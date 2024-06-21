@@ -1,6 +1,7 @@
 ﻿using System.Timers;
 using System.Windows;
 using System.Windows.Input;
+using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Helpers.MEM;
@@ -214,7 +215,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     Target.PopulateModifiedBasegameFiles();
                     int numDone = 0;
                     var trackedFileToOriginalMD5Map = new CaseInsensitiveDictionary<string>(); // Map pre-texture modded -> pre-texture modded MD5
-                    foreach (var f in Target.ModifiedBasegameFiles)
+                    foreach (var f in Target.ModifiedBasegameFiles.Where(x=>x.FilePath.RepresentsPackageFilePath()))
                     {
                         var path = Path.Combine(Target.TargetPath, f.FilePath);
                         var hash = MUtilities.CalculateHash(path);
