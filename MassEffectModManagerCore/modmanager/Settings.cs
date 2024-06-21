@@ -445,6 +445,7 @@ namespace ME3TweaksModManager.modmanager
             set => SetProperty(ref _showInstalledModsInLibrary, value);
         }
 
+        #region SESSION ONLY SETTINGS - DO NOT SAVE OR LOAD THESE
         private static bool _sessionOnly_ShowWhichModsCanCheckForUpdates;
 
         /// <summary>
@@ -455,6 +456,20 @@ namespace ME3TweaksModManager.modmanager
             get => _sessionOnly_ShowWhichModsCanCheckForUpdates;
             set => SetProperty(ref _sessionOnly_ShowWhichModsCanCheckForUpdates, value);
         }
+
+
+        private static bool _sessionOnly_SuppressDLCMerge;
+
+        /// <summary>
+        /// Session only setting: Prevent DLC merges from being applied to game
+        /// </summary>
+        public static bool SessionOnly_SuppressDLCMerge
+        {
+            get => _sessionOnly_SuppressDLCMerge;
+            set => SetProperty(ref _sessionOnly_SuppressDLCMerge, value);
+        }
+
+        #endregion
 
         public static readonly string SettingsPath = Path.Combine(M3Filesystem.GetAppDataFolder(), "settings.ini");
 
@@ -549,7 +564,7 @@ namespace ME3TweaksModManager.modmanager
 
             // BETA OPTIONS
             ShowInstalledModsInLibrary = LoadSettingBool(settingsIni, "ModManager", "ShowInstalledModsInLibrary", false);
-            
+
 
             Loaded = true;
         }

@@ -97,6 +97,8 @@ namespace ME3TweaksModManager
 
         public bool IsBusy { get; set; }
 
+        public ObservableCollectionExtended<MEGame> MenuAvailableGames { get; } = new();
+
         /// <summary>
         /// Content of the current Busy Indicator modal
         /// </summary>
@@ -2076,15 +2078,18 @@ namespace ME3TweaksModManager
             }
 
             // This is pretty dicey with thread safety... 
-            foreach (var v in result.TargetsToPlotManagerSync)
+            if (!Settings.SessionOnly_SuppressDLCMerge)
             {
-                SyncPlotManagerForTarget(v);
-            }
+                foreach (var v in result.TargetsToPlotManagerSync)
+                {
+                    SyncPlotManagerForTarget(v);
+                }
 
-            foreach (var v in result.TargetsToLE1Merge)
-            {
-                MergeLE1CoalescedForTarget(v);
-                MergeLE12DAsForTarget(v);
+                foreach (var v in result.TargetsToLE1Merge)
+                {
+                    MergeLE1CoalescedForTarget(v);
+                    MergeLE12DAsForTarget(v);
+                }
             }
 
             // MERGE DLC
@@ -2104,7 +2109,7 @@ namespace ME3TweaksModManager
                     // Generate a new one - IF NECESSARY!
                     // This is so if user deletes merge DLC it doesn't re-create itself immediately even if it's not necessary, e.g. user removed all merge DLC-eligible items.
 
-                    bool needsGenerated = SQMOutfitMerge.NeedsMerged(mergeTarget) || ME2EmailMerge.NeedsMergedGame2(mergeTarget);
+                    bool needsGenerated = !Settings.SessionOnly_SuppressDLCMerge && (SQMOutfitMerge.NeedsMerged(mergeTarget) || ME2EmailMerge.NeedsMergedGame2(mergeTarget));
                     if (needsGenerated)
                     {
                         try
@@ -2121,27 +2126,33 @@ namespace ME3TweaksModManager
                 }
             }
 
-
-            foreach (var v in result.TargetsToSquadmateMergeSync)
+            if (!Settings.SessionOnly_SuppressDLCMerge)
             {
-                ShowRunAndDone((updateUIString) => SQMOutfitMerge.RunSquadmateOutfitMerge(targetMergeMapping[v], updateUIString),
-                LC.GetString(LC.string_synchronizingSquadmateOutfits),
-                    M3L.GetString(M3L.string_synchronizedSquadmateOutfits),
-                    null);
-            }
+                foreach (var v in result.TargetsToSquadmateMergeSync)
+                {
+                    ShowRunAndDone(
+                        (updateUIString) =>
+                            SQMOutfitMerge.RunSquadmateOutfitMerge(targetMergeMapping[v], updateUIString),
+                        LC.GetString(LC.string_synchronizingSquadmateOutfits),
+                        M3L.GetString(M3L.string_synchronizedSquadmateOutfits),
+                        null);
+                }
 
-            foreach (var v in result.TargetsToEmailMergeSync)
-            {
-                ShowRunAndDone((updateUIString) => ME2EmailMerge.RunGame2EmailMerge(targetMergeMapping[v], updateUIString),
-                    M3L.GetString(M3L.string_synchronizingEmails),
-                    M3L.GetString(M3L.string_synchronizedEmails),
-                    null);
+                foreach (var v in result.TargetsToEmailMergeSync)
+                {
+                    ShowRunAndDone(
+                        (updateUIString) => ME2EmailMerge.RunGame2EmailMerge(targetMergeMapping[v], updateUIString),
+                        M3L.GetString(M3L.string_synchronizingEmails),
+                        M3L.GetString(M3L.string_synchronizedEmails),
+                        null);
+                }
             }
 
             foreach (var v in result.TargetsToAutoTOC)
             {
                 AutoTOCTarget(v, false);
             }
+
 
             if (result.ReloadMods)
             {
@@ -3054,6 +3065,7 @@ namespace ME3TweaksModManager
         {
             RepopulatingTargets = true;
             InstallationTargets.ClearEx();
+            MenuAvailableGames.ClearEx();
             SelectedGameTarget = null;
             MEDirectories.ReloadGamePaths(true); //this is redundant on the first boot but whatever.
             M3Log.Information(@"Populating game targets");
@@ -3277,6 +3289,9 @@ namespace ME3TweaksModManager
                     }
                 }
             }
+
+            // Populate the list of available games, for menus
+            MenuAvailableGames.AddRange(InstallationTargets.Where(x => x.Game.IsMEGame()).Select(x => x.Game).Distinct());
 
             //BackupService.SetInstallStatuses(InstallationTargets);
             RepopulatingTargets = false;
@@ -3734,7 +3749,7 @@ namespace ME3TweaksModManager
                         DownloadManager.QueueNXMDownload(CommandLinePending.PendingNXMLink);
                     else
 #endif
-                       showNXMDownloader(CommandLinePending.PendingNXMLink);
+                        showNXMDownloader(CommandLinePending.PendingNXMLink);
                 }
 
                 if (CommandLinePending.PendingInstallBink && CommandLinePending.PendingGame != null)

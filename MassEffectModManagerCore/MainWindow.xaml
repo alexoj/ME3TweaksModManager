@@ -1024,16 +1024,32 @@
                         </MenuItem>
                     </MenuItem>
                     <MenuItem
-                        Header="{DynamicResource string_syncPlotManager}">
+                        Header="Target merge"
+                        ItemsSource="{Binding MenuAvailableGames}">
                         <MenuItem.Icon>
                             <fa5:ImageAwesome
                                 Style="{StaticResource EnableDisableImageStyle}"
-                                Icon="Solid_Compress"
+                                Icon="Brands_YCombinator"
                                 Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
                                 Height="16"
                                 Width="16" />
                         </MenuItem.Icon>
-                        <MenuItem
+                        <MenuItem.ItemContainerStyle>
+                            <Style TargetType="MenuItem"  BasedOn="{StaticResource {x:Type MenuItem}}">
+                                <Setter Property="Header" Value="{Binding}"/>
+                                <Setter Property="Icon">
+                                    <Setter.Value>
+                                        <Image
+                                            Source="{Binding Converter={StaticResource GameToImageIconConverter}, ConverterParameter='16'}"
+                                            Width="16"
+                                            Height="16" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </MenuItem.ItemContainerStyle>
+                    </MenuItem>
+
+                    <!--<MenuItem
                             ui:SharedUIBindings.GenerationOT="True"
                             Header="{DynamicResource string_syncPlotManagerForMassEffect}"
                             Command="{Binding SyncPlotManagerCommand}"
@@ -1085,7 +1101,7 @@
                                     Height="16" />
                             </MenuItem.Icon>
                         </MenuItem>
-                    </MenuItem>
+                    </MenuItem>-->
                     <MenuItem
                         ui:SharedUIBindings.GenerationLE="True"
                         Header="{DynamicResource string_runLE1CoalescedMerge}"
@@ -1463,6 +1479,13 @@
                         IsCheckable="True"
                         StaysOpenOnClick="True"
                         IsChecked="{Binding Path=(modmanager:Settings.ShowInstalledModsInLibrary)}" />
+                    <MenuItem
+                        Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}"
+                        Header="SESSION ONLY Beta setting: Suppress target merges"
+                        ToolTip="DANGER: DO NOT TURN THIS ON IF YOU DON'T KNOW WHAT IT MEANS. YOU WILL BREAK THINGS"
+                        IsCheckable="True"
+                        StaysOpenOnClick="True"
+                        IsChecked="{Binding Path=(modmanager:Settings.SessionOnly_SuppressDLCMerge)}" />
                 </MenuItem>
                 <MenuItem
                     Header="{DynamicResource string_debug}"
@@ -2180,7 +2203,7 @@
                                                 Margin="2,0,2,0"
                                                 Foreground="{DynamicResource {x:Static adonisUi:Brushes.SuccessBrush}}"
                                                 Icon="Solid_CheckCircle"/>
-                                       
+
                                             </Grid>
 
                                             <TextBlock
