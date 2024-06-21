@@ -409,10 +409,13 @@ namespace ME3TweaksModManager
                 }
 
                 Settings.StaticPropertyChanged += gf.NotifyGenerationChanged; // Notify of generation change
-                Settings.StaticPropertyChanged += SettingsChangeListener.OnSettingChanged;
                 gf.PropertyChanged += ModGameVisibilityChanged;
                 M3LoadedMods.Instance.GameFilters.Add(gf);
             }
+
+            // Setup settings listeners
+            Settings.StaticPropertyChanged += SettingsChangeListener.OnSettingChanged;
+
 
             // Loa
 
@@ -3087,7 +3090,6 @@ namespace ME3TweaksModManager
         {
             RepopulatingTargets = true;
             InstallationTargets.ClearEx();
-            MenuAvailableGames.ClearEx();
             SelectedGameTarget = null;
             MEDirectories.ReloadGamePaths(true); //this is redundant on the first boot but whatever.
             M3Log.Information(@"Populating game targets");
@@ -3312,9 +3314,7 @@ namespace ME3TweaksModManager
                 }
             }
 
-            // Populate the list of available games, for menus
-            MenuAvailableGames.AddRange(InstallationTargets.Where(x => x.Game.IsMEGame()).Select(x => x.Game).Distinct().OrderBy(x => x));
-
+            UpdateMenuTargets();
             //BackupService.SetInstallStatuses(InstallationTargets);
             RepopulatingTargets = false;
         }
@@ -5185,6 +5185,12 @@ namespace ME3TweaksModManager
             }
 
             return queuedUserControls.Any(x => x.GetType() == type);
+        }
+
+        public void UpdateMenuTargets()
+        {
+            // Populate the list of available games, for menus
+            MenuAvailableGames.ReplaceAll(InstallationTargets.Where(x => x.Game.IsMEGame()).Select(x => x.Game).Distinct().OrderBy(x => x));
         }
     }
 }
