@@ -15,31 +15,39 @@
             x:Key="GameToImageIconConverter" />
     </UserControl.Resources>
     <DockPanel>
-        <StackPanel
-            Orientation="Horizontal"
+        <DockPanel
             DockPanel.Dock="Bottom"
-            HorizontalAlignment="Right"
             Margin="0,5,0,0">
             <Button
+                DockPanel.Dock="Right"
                 MinWidth="70"
-                Content="{DynamicResource string_debugReload}"
+                Content="{DynamicResource string_close}"
                 Margin="5,0,0,0"
-                Command="{Binding DebugReloadCommand}"
-                Padding="7,4"
-                Visibility="{x:Static mm:App.DebugOnlyVisibility}" />
-            <Button
-                MinWidth="70"
-                Content="{DynamicResource string_deleteFromLibrary}"
-                Margin="5,0,0,0"
-                Command="{Binding DeleteModCommand}"
+                Click="Close_Clicked"
                 Padding="7,4" />
             <Button
+                DockPanel.Dock="Right"
+                MinWidth="70"
+                Content="Reload mod"
+                Margin="5,0,0,0"
+                Command="{Binding ReloadCommand}"
+                Padding="7,4" />
+            <Button
+                DockPanel.Dock="Right"
+                MinWidth="70"
+                Content="{DynamicResource string_Openmodfolder}"
+                Margin="5,0,0,0"
+                Command="{Binding EditModdescCommand}"
+                Padding="7,4"/>
+            <Button
+                DockPanel.Dock="Right"
                 MinWidth="70"
                 Content="{DynamicResource string_openModdesciniFile}"
                 Margin="5,0,0,0"
                 Command="{Binding EditModdescCommand}"
                 Padding="7,4"/>
             <Button
+                DockPanel.Dock="Right"
                 MinWidth="70"
                 ToolTip="{Binding SelectedMod.ModWebsite}"
                 Content="{DynamicResource string_visitWebsite}"
@@ -47,19 +55,21 @@
                 Command="{Binding VisitWebsiteCommand}"
                 Padding="7,4" />
             <Button
+                DockPanel.Dock="Right"
                 MinWidth="70"
-                Content="{DynamicResource string_restoreFromME3Tweaks}"
+                Content="Force update check"
                 Margin="5,0,0,0"
                 Command="{Binding RestoreSelectedModCommand}"
-                Visibility="{Binding IsEnabled, RelativeSource={RelativeSource Self}, Converter={StaticResource BoolToVisibilityConverter}}"
                 Padding="7,4" />
+
             <Button
+                HorizontalAlignment="Left"
                 MinWidth="70"
-                Content="{DynamicResource string_close}"
+                Content="{DynamicResource string_deleteFromLibrary}"
                 Margin="5,0,0,0"
-                Click="Close_Clicked"
+                Command="{Binding DeleteModCommand}"
                 Padding="7,4" />
-        </StackPanel>
+        </DockPanel>
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition
