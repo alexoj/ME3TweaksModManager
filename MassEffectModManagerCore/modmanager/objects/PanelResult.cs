@@ -1,7 +1,9 @@
 ﻿using LegendaryExplorerCore.Gammtek.Extensions.Collections.Generic;
 using LegendaryExplorerCore.Helpers;
+using ME3TweaksCore.ME3Tweaks.M3Merge;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.objects.mod;
+using static JetBrains.FormatRipper.FileExplorer.FileTypeExplorer;
 
 namespace ME3TweaksModManager.modmanager.objects
 {
@@ -123,11 +125,12 @@ namespace ME3TweaksModManager.modmanager.objects
         }
 
         /// <summary>
-        /// Gets a list of DLC merge mod targets for this result
+        /// Gets a list of targets that have pending items to place into the M3 Merge DLC
         /// </summary>
         /// <returns></returns>
         public IEnumerable<GameTarget> GetMergeTargets()
         {
+            // Only email merge and squadmate merge put into merge dlc right now
             return TargetsToEmailMergeSync.Concat(TargetsToSquadmateMergeSync).Distinct();
         }
 
@@ -144,6 +147,38 @@ namespace ME3TweaksModManager.modmanager.objects
             if (TargetsToPlotManagerSync.Any()) return true;
             if (TargetsToSquadmateMergeSync.Any()) return true;
             return false;
+        }
+
+        /// <summary>
+        /// Adds all relevant game-specific merges for the specified target
+        /// </summary>
+        /// <param name="target"></param>
+        public void AddTargetMerges(GameTarget target)
+        {
+            if (target.Game.SupportsPlotManagerSync())
+            {
+                TargetsToPlotManagerSync.Add(target);
+            }
+
+            if (target.Game == MEGame.LE1)
+            {
+                TargetsToLE1Merge.Add(target);
+            }
+
+            if (target.Game.SupportsAutoTOC())
+            {
+                TargetsToAutoTOC.Add(target);
+            }
+
+            if (target.Game.SupportsSquadmateMerge()) // ME2 is not supported for squadmate merge
+            {
+                TargetsToSquadmateMergeSync.Add(target);
+            }
+
+            if (target.Game.SupportsEmailMerge())
+            {
+                TargetsToEmailMergeSync.Add(target);
+            }
         }
     }
 }

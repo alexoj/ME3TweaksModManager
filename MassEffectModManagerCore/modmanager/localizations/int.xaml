@@ -73,7 +73,7 @@
     <system:String x:Key="string_tooltip_consoleCommandKeybinder">Allows you to configure what keys are used for opening the console in each game</system:String>
     <system:String x:Key="string_Additionalmoddingtools">Additional modding tools</system:String>
     <system:String x:Key="string_ALOTInstaller">ALOT Installer</system:String>
-    <system:String x:Key="string_ALOTInstallerTooltip">Installer for A Lot Of Textures, a graphical upgrade mod supporting all three games (Original Trilogy)</system:String>
+    <system:String x:Key="string_ALOTInstallerTooltip">Installer for A Lot Of Textures, a graphical upgrade mod supporting all three original trilogy games</system:String>
     <system:String x:Key="string_MassEffectINIModder">Mass Effect INI Modder</system:String>
     <system:String x:Key="string_MEIMTooltip">Tool for configuring many different settings for the original Mass Effect (2008)</system:String>
     <system:String x:Key="string_MassEffectModder">Mass Effect Modder</system:String>
@@ -442,8 +442,6 @@
     <system:String x:Key="string_tooltip_addStarterKitContent">Allows you to add content to a DLC mod that is normally added when using Starter Kit, such as a startup file</system:String>
     <system:String x:Key="string_installStandaloneFiles">Install standalone files</system:String>
     <!-- Contains 'Install .mem file', 'install headmorph' under it -->
-    <system:String x:Key="string_runLE1CoalescedMerge">Run LE1 Coalesced Merge</system:String>
-    <system:String x:Key="string_tooltip_runLE1CoalescedMerge">Merges all DLC M3 Coalesced Delta files into the main LE1 Coalesced file</system:String>
     <system:String x:Key="string_trilogySaveEditor">Trilogy Save Editor</system:String>
     <system:String x:Key="string_tooltip_trilogySaveEditor">Save editor for Mass Effect Trilogy and Legendary Edition</system:String>
     <system:String x:Key="string_blankItemToAvoidBreakingTheInterface">Blank item to avoid breaking the interface</system:String>

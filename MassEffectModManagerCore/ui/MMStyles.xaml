@@ -37,6 +37,7 @@
     <converters1:ImageTooltipVerticalOffsetConverter x:Key="ImageTooltipVerticalOffsetConverter" />
     <converters1:MultiBoolToVisibilityConverter x:Key="MultiBoolToVisibilityConverter"/>
     <converters1:EnumToVisibilityConverter x:Key="EnumToVisibilityConverter"/>
+    <converters1:MEGameToGameNameConverter x:Key="MEGameToGameNameConverter"/>
 
     <Style x:Key="TargetSelectorContainerStyle" TargetType="ComboBoxItem" BasedOn="{StaticResource {x:Type ComboBoxItem}}">
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
@@ -312,8 +313,8 @@
                     Opacity="0.75"
                     VerticalAlignment="Center"
                     Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
-                    <TextBlock DockPanel.Dock="Top" Text="{Binding Path=Title}" TextWrapping="Wrap" FontWeight="Bold"/>
-                    <TextBlock Text="{Binding Path=Description}" TextWrapping="Wrap"/>
+                <TextBlock DockPanel.Dock="Top" Text="{Binding Path=Title}" TextWrapping="Wrap" FontWeight="Bold"/>
+                <TextBlock Text="{Binding Path=Description}" TextWrapping="Wrap"/>
             </DockPanel>
 
             <DockPanel.ToolTip>

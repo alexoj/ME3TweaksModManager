@@ -33,15 +33,23 @@ namespace ME3TweaksModManager.modmanager.loaders
         /// <returns></returns>
         public static string GetCurrentModLibraryDirectory()
         {
-            var libraryPath = Settings.ModLibraryPath;
-            if (Directory.Exists(libraryPath))
+            if (IsSharedLibrary())
             {
-                return libraryPath;
+                return Settings.ModLibraryPath;
             }
             else
             {
                 return Path.Combine(M3Utilities.GetMMExecutableDirectory(), @"mods");
             }
+        }
+
+        /// <summary>
+        /// If Mod Manager settings indicate it is using a shared library path or one local to this instance. This, technically, may desync as the value is not stored in memory, e.g. if the underlying library folder goes missing.
+        /// </summary>
+        /// <returns></returns>
+        public static bool IsSharedLibrary()
+        {
+            return Settings.ModLibraryPath != null && Directory.Exists(Settings.ModLibraryPath);
         }
 
         /// <summary>
@@ -486,7 +494,7 @@ namespace ME3TweaksModManager.modmanager.loaders
                 {
                     foreach (var target in window.InstallationTargets.ToList()) // We do .ToList() in case user adds target while this information is computing.
                     {
-                        if (target.Game.IsLEGame() && target.RegistryActive && (gamesToLoad == null || gamesToLoad.Contains(target.Game)) && AllLoadedMods.Any(x=>x.Game == target.Game))
+                        if (target.Game.IsLEGame() && target.RegistryActive && (gamesToLoad == null || gamesToLoad.Contains(target.Game)) && AllLoadedMods.Any(x => x.Game == target.Game))
                         {
                             BackgroundTaskEngine.SubmitBackgroundTaskUpdate(LoadingTask, $"Determining which mods are installed ({target.Game})");
                             var gs = target.GetInfoRequiredToDetermineIfInstalled();
@@ -532,15 +540,22 @@ namespace ME3TweaksModManager.modmanager.loaders
 
         public static bool ChooseModLibraryPath(Window centeringWindow, bool loadModsAfterSelecting)
         {
-            CommonOpenFileDialog m = new CommonOpenFileDialog
+            MessageBoxResult libraryType = MessageBoxResult.Yes;
+            if (Settings.DeveloperMode)
             {
-                IsFolderPicker = true,
-                EnsurePathExists = true,
-                Title = M3L.GetString(M3L.string_selectModLibraryFolder)
-            };
-            if (m.ShowDialog(centeringWindow) == CommonFileDialogResult.Ok)
+                libraryType = M3L.ShowDialog(centeringWindow,
+                    "Use a shared library that works in all copies of Mod Manager, or use a local one to this instance?\n\nTypically only Mod Manager testers benefit from local instance storage.",
+                    "Select library type",
+                    MessageBoxButton.YesNoCancel,
+                    MessageBoxImage.Question,
+                    MessageBoxResult.Cancel,
+                    "Shared",
+                    "Local");
+            }
+
+            if (libraryType == MessageBoxResult.No)
             {
-                Settings.ModLibraryPath = m.FileName;
+                Settings.ModLibraryPath = null;
                 if (loadModsAfterSelecting)
                 {
                     Instance.LoadMods();
@@ -548,10 +563,28 @@ namespace ME3TweaksModManager.modmanager.loaders
 
                 return true;
             }
-            else
+
+            if (libraryType == MessageBoxResult.Yes)
             {
-                return false;
+                // Shared
+                CommonOpenFileDialog m = new CommonOpenFileDialog
+                {
+                    IsFolderPicker = true,
+                    EnsurePathExists = true,
+                    Title = M3L.GetString(M3L.string_selectModLibraryFolder)
+                };
+                if (m.ShowDialog(centeringWindow) == CommonFileDialogResult.Ok)
+                {
+                    Settings.ModLibraryPath = m.FileName;
+                    if (loadModsAfterSelecting)
+                    {
+                        Instance.LoadMods();
+                    }
+
+                    return true;
+                }
             }
+            return false;
         }
 
         /// <summary>

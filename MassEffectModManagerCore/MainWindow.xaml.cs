@@ -672,6 +672,7 @@ namespace ME3TweaksModManager
 
         }
 
+        public ICommand GenerateStarterKitCommand { get; set; }
         public ICommand StartGameSpecificSaveCommand { get; set; }
         public ICommand ChangeCurrentLaunchConfigCommand { get; set; }
         public ICommand OpenASIManagerCommand { get; set; }
@@ -701,8 +702,8 @@ namespace ME3TweaksModManager
         public ICommand SelectedModCheckForUpdatesCommand { get; set; }
         public ICommand RestoreModFromME3TweaksCommand { get; set; }
         public ICommand GrantWriteAccessCommand { get; set; }
-        public ICommand AutoTOCCommand { get; set; }
-        public ICommand SyncPlotManagerCommand { get; set; }
+        public RelayCommand AutoTOCCommand { get; set; }
+        public ICommand RunTargetMergeCommand { get; set; }
         public RelayCommand CompileCoalescedCommand { get; set; }
         public RelayCommand DecompileCoalescedCommand { get; set; }
         public ICommand ConsoleKeyKeybinderCommand { get; set; }
@@ -731,7 +732,6 @@ namespace ME3TweaksModManager
         public ICommand AddStarterKitContentCommand { get; set; }
         public ICommand InstallHeadmorphCommand { get; set; }
         public ICommand ApplyM3HeadmorphCommand { get; set; }
-        public ICommand LE1CoalescedMergeCommand { get; set; }
         public ICommand BetaDiagToolOpenAllPackagesCommand { get; set; }
 
 
@@ -757,9 +757,8 @@ namespace ME3TweaksModManager
             SelectedModCheckForUpdatesCommand = new GenericCommand(CheckSelectedModForUpdate, SelectedModIsME3TweaksUpdatable);
             RestoreModFromME3TweaksCommand = new GenericCommand(RestoreSelectedMod, SelectedModIsME3TweaksUpdatable);
             GrantWriteAccessCommand = new GenericCommand(() => CheckTargetPermissions(true, true), HasAtLeastOneTarget);
-            AutoTOCCommand = new RelayCommand(RunAutoTOCOnGame, HasGameTarget);
-            SyncPlotManagerCommand = new RelayCommand(SyncPlotManagerForGame, HasGameTarget);
-            LE1CoalescedMergeCommand = new GenericCommand(RunLE1CoalescedMerge, CanRunLE1CoalescedMerge);
+            AutoTOCCommand = new RelayCommand(RunAutoTOCOnGame, CanAutoTOC);
+            RunTargetMergeCommand = new RelayCommand(RunTargetMerge); // All games have at least one merge feature
             ConsoleKeyKeybinderCommand = new GenericCommand(OpenConsoleKeyKeybinder, CanOpenConsoleKeyKeybinder);
             LoginToNexusCommand = new GenericCommand(ShowNexusPanel, CanShowNexusPanel);
             EndorseSelectedModCommand = new GenericCommand(EndorseWrapper, CanEndorseMod);
@@ -797,9 +796,17 @@ namespace ME3TweaksModManager
             InstallHeadmorphCommand = new GenericCommand(BeginInstallingHeadmorph, CanInstallHeadmorph);
             ApplyM3HeadmorphCommand = new GenericCommand(BeginInstallingM3Headmorph, CanInstallM3Headmorph);
             StartGameSpecificSaveCommand = new GenericCommand(SelectSpecificSaveForBoot, () => SelectedGameTarget.Game.IsLEGame());
-
+            GenerateStarterKitCommand = new RelayCommand(GenerateStarterKit);
             BetaDiagToolOpenAllPackagesCommand = new GenericCommand(DiagAllOpenPackages, CanRunGameDiagTool);
 
+        }
+
+        private void GenerateStarterKit(object obj)
+        {
+            if (obj is MEGame game)
+            {
+                new StarterKitGeneratorWindow(game) { Owner = this }.ShowDialog();
+            }
         }
 
         private void CheckNonWhitelistedModsForUpdatesWrapper()
@@ -871,18 +878,6 @@ namespace ME3TweaksModManager
         private void StartGameWithResume()
         {
             InternalStartGame(SelectedGameTarget, skipLauncher: true, autoboot: true);
-        }
-
-        private bool CanRunLE1CoalescedMerge()
-        {
-            return InstallationTargets.Any(x => x.Game == MEGame.LE1);
-        }
-
-        private void RunLE1CoalescedMerge()
-        {
-            var target = GetCurrentTarget(MEGame.LE1);
-            if (target == null) return;
-            MergeLE1CoalescedForTarget(target);
         }
 
         private void BeginInstallingM3Headmorph()
@@ -1242,6 +1237,17 @@ namespace ME3TweaksModManager
             optionsPanel.Close += (a, b) => { ReleaseBusyControl(); };
             ShowBusyControl(optionsPanel);
         }
+
+        private bool CanAutoTOC(object obj)
+        {
+            if (obj is MEGame game && game.SupportsAutoTOC())
+            {
+                return HasGameTarget(game);
+            }
+
+            return false;
+        }
+
         private bool HasGameTarget(object obj)
         {
             if (obj is MEGame game)
@@ -3307,7 +3313,7 @@ namespace ME3TweaksModManager
             }
 
             // Populate the list of available games, for menus
-            MenuAvailableGames.AddRange(InstallationTargets.Where(x => x.Game.IsMEGame()).Select(x => x.Game).Distinct());
+            MenuAvailableGames.AddRange(InstallationTargets.Where(x => x.Game.IsMEGame()).Select(x => x.Game).Distinct().OrderBy(x => x));
 
             //BackupService.SetInstallStatuses(InstallationTargets);
             RepopulatingTargets = false;
@@ -4060,18 +4066,6 @@ namespace ME3TweaksModManager
             return dynamicMenuItems;
         }
 
-        private void GenerateStarterKit_Clicked(object sender, RoutedEventArgs e)
-        {
-            MEGame g = MEGame.Unknown;
-            if (sender == GenerateStarterKitME1_MenuItem) g = MEGame.ME1;
-            if (sender == GenerateStarterKitME2_MenuItem) g = MEGame.ME2;
-            if (sender == GenerateStarterKitME3_MenuItem) g = MEGame.ME3;
-            if (sender == GenerateStarterKitLE1_MenuItem) g = MEGame.LE1;
-            if (sender == GenerateStarterKitLE2_MenuItem) g = MEGame.LE2;
-            if (sender == GenerateStarterKitLE3_MenuItem) g = MEGame.LE3;
-            new StarterKitGeneratorWindow(g) { Owner = this }.ShowDialog();
-        }
-
         private void LaunchExternalTool_Clicked(object sender, RoutedEventArgs e)
         {
             string tool = null;
@@ -4724,18 +4718,20 @@ namespace ME3TweaksModManager
         }
 
 
-        private void SyncPlotManagerForGame(object obj)
+        private void RunTargetMerge(object obj)
         {
             if (obj is MEGame game)
             {
                 var target = GetCurrentTarget(game);
                 if (target != null)
                 {
-                    SyncPlotManagerForTarget(target);
+                    PanelResult pr = new PanelResult();
+                    pr.AddTargetMerges(target);
+                    HandlePanelResult(pr);
                 }
                 else
                 {
-                    M3Log.Error(@"SyncPlotManagerForGame game target was null! This shouldn't be possible");
+                    M3Log.Error(@"RunTargetMerge game target was null! This shouldn't be possible");
                 }
             }
         }

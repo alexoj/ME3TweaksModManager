@@ -14,6 +14,7 @@ using LegendaryExplorerCore.Unreal;
 using ME3TweaksCore.Config;
 using ME3TweaksCore.GameFilesystem;
 using ME3TweaksCore.Helpers;
+using ME3TweaksCore.ME3Tweaks.M3Merge;
 using ME3TweaksCore.ME3Tweaks.M3Merge.PlotManager;
 using ME3TweaksCore.NativeMods;
 using ME3TweaksCore.Objects;
@@ -1579,30 +1580,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             // Only make changes if user didn't cancel
             if (!InstallationCancelled)
             {
-                if (InstallOptionsPackage.ModBeingInstalled.Game.IsGame1() || InstallOptionsPackage.ModBeingInstalled.Game.IsGame2())
-                {
-                    Result.TargetsToPlotManagerSync.Add(InstallOptionsPackage.InstallTarget);
-                }
-
-                if (InstallOptionsPackage.ModBeingInstalled.Game == MEGame.LE1)
-                {
-                    Result.TargetsToLE1Merge.Add(InstallOptionsPackage.InstallTarget);
-                }
-
-                if (InstallOptionsPackage.ModBeingInstalled.Game == MEGame.ME3 || InstallOptionsPackage.ModBeingInstalled.Game.IsLEGame())
-                {
-                    Result.TargetsToAutoTOC.Add(InstallOptionsPackage.InstallTarget);
-                }
-
-                if (InstallOptionsPackage.ModBeingInstalled.Game.IsGame3() || InstallOptionsPackage.ModBeingInstalled.Game == MEGame.LE2) // ME2 is not supported for squadmate merge
-                {
-                    Result.TargetsToSquadmateMergeSync.Add(InstallOptionsPackage.InstallTarget);
-                }
-
-                if (InstallOptionsPackage.ModBeingInstalled.Game.IsGame2())
-                {
-                    Result.TargetsToEmailMergeSync.Add(InstallOptionsPackage.InstallTarget);
-                }
+                Result.AddTargetMerges(InstallOptionsPackage.InstallTarget);
             }
 
             var telemetryInfo = new Dictionary<string, string>()
