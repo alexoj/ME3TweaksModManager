@@ -84,9 +84,19 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private bool RestoreAllBasegameInProgress;
 
+        /// <summary>
+        /// If 'RestoreAllBasegame' can be clicked
+        /// </summary>
+        /// <returns></returns>
         private bool CanRestoreAllBasegame()
         {
-            return IsPanelOpen && SelectedTarget != null && SelectedTarget.Game != MEGame.Unknown && !MUtilities.IsGameRunning(SelectedTarget.Game) && SelectedTarget?.ModifiedBasegameFiles.Count > 0 && !RestoreAllBasegameInProgress && BackupService.GetGameBackupPath(SelectedTarget.Game) != null; //check if ifles being restored
+            return IsPanelOpen && SelectedTarget != null && SelectedTarget.Game != MEGame.Unknown
+                   && BackupService.GetBackupStatus(SelectedTarget.Game).BackedUp
+                   && !RestoreAllBasegameInProgress
+                   && !MUtilities.IsGameRunning(SelectedTarget.Game)
+                   // Check there is at least one file we can restore
+                   && SelectedTarget.ModifiedBasegameFiles.Count(x =>
+                       !SelectedTarget.TextureModded || !x.FilePath.RepresentsPackageFilePath()) > 0;
         }
 
         public string ModifiedFilesFilterText { get; set; }
@@ -107,24 +117,27 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private void RestoreAllBasegame()
         {
+            bool restorePackages = true;
             bool restore = false;
             if (SelectedTarget.TextureModded)
             {
                 if (!Settings.DeveloperMode)
                 {
-                    M3L.ShowDialog(Window.GetWindow(this), M3L.GetString(M3L.string_dialogRestoringFilesWhileAlotIsInstalledNotAllowed), M3L.GetString(M3L.string_cannotRestoreSfarFiles), MessageBoxButton.OK, MessageBoxImage.Error);
+                    M3L.ShowDialog(window, M3L.GetString(M3L.string_dialogRestoringFilesWhileAlotIsInstalledNotAllowed), M3L.GetString(M3L.string_cannotRestoreSfarFiles), MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
                 else
                 {
-                    var res = M3L.ShowDialog(Window.GetWindow(this), M3L.GetString(M3L.string_dialogRestoringFilesWhileAlotIsInstalledNotAllowedDevMode), M3L.GetString(M3L.string_invalidTexturePointersWarning), MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                    // Developer mode: Allow bypass.
+                    var res = M3L.ShowDialog(window, M3L.GetString(M3L.string_dialogRestoringFilesWhileAlotIsInstalledNotAllowedDevMode), M3L.GetString(M3L.string_invalidTexturePointersWarning), MessageBoxButton.YesNo, MessageBoxImage.Warning);
                     restore = res == MessageBoxResult.Yes;
 
+                    
                 }
             }
             else
             {
-                restore = M3L.ShowDialog(Window.GetWindow(this), M3L.GetString(M3L.string_restoreAllModifiedFilesQuestion), M3L.GetString(M3L.string_confirmRestoration), MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
+                restore = M3L.ShowDialog(window, M3L.GetString(M3L.string_restoreAllModifiedFilesQuestion), M3L.GetString(M3L.string_confirmRestoration), MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes;
 
             }
             if (restore)
