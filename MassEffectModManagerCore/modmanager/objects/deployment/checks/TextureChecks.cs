@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ME3TweaksCore.Misc;
 using ME3TweaksCore.Services.ThirdPartyModIdentification;
 
 namespace ME3TweaksModManager.modmanager.objects.deployment.checks
@@ -198,6 +199,12 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                     {
                         item.AddSignificantIssue(M3L.GetString(M3L.string_interp_detectedTFCFromAnotherModUnknown, tfcName));
                     }
+                }
+
+                // Future warning for moddesc 9.1 (maybe 10), unsure. Include at least 
+                if (!tfcName.ContainsAny(dlcFolderDests, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    item.AddInfoWarning($"Future versions of moddesc (possibly 9.1 or higher) will require TFC names to include the entire DLC foldername, to ensure unique TFC names. Consider conforming to this now so it doesn't become an issue later. Relevant TFC: {tfcName}");
                 }
 
                 Debug.WriteLine(tfc);
