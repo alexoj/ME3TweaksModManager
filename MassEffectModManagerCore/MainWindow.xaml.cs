@@ -46,6 +46,7 @@ using ME3TweaksModManager.modmanager;
 using ME3TweaksModManager.modmanager.deployment;
 using ME3TweaksModManager.modmanager.headmorph;
 using ME3TweaksModManager.modmanager.helpers;
+using ME3TweaksModManager.modmanager.importer;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.me3tweaks;
 using ME3TweaksModManager.modmanager.me3tweaks.online;
@@ -98,6 +99,11 @@ namespace ME3TweaksModManager
         public bool IsBusy { get; set; }
 
         public ObservableCollectionExtended<MEGame> MenuAvailableGames { get; } = new();
+
+        /// <summary>
+        /// If the search box is open.
+        /// </summary>
+        public bool SearchBoxOpen { get; set; }
 
         /// <summary>
         /// Content of the current Busy Indicator modal
@@ -1183,13 +1189,23 @@ namespace ME3TweaksModManager
 
         private void CloseSearchBox()
         {
-            ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, false);
+            if (SearchBoxOpen)
+            {
+                ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, false);
+                SearchBoxOpen = false;
+            }
+
             M3LoadedMods.Instance.ModSearchText = null;
         }
 
         private void ShowSearchBox()
         {
-            ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, true);
+            if (!SearchBoxOpen)
+            {
+                ClipperHelper.ShowHideVerticalContent(ModListSearchBoxPanel, true);
+                SearchBoxOpen = true;
+            }
+
             Keyboard.Focus(ModSearchBox);
         }
 
@@ -1830,7 +1846,7 @@ namespace ME3TweaksModManager
             bw.RunWorkerAsync();
         }
 
-        private bool SelectedModIsME3TweaksUpdatable() => SelectedMod?.IsUpdatable ?? false;
+        private bool SelectedModIsME3TweaksUpdatable() => SelectedMod?.IsME3TweaksUpdatable ?? false;
 
 
         private void SubmitTelemetryForMod()
@@ -4272,9 +4288,14 @@ namespace ME3TweaksModManager
                                 return;
                             if (impInstallCancel == MessageBoxResult.Yes)
                             {
-                                // Import
-                                // Todo: Copy to mod library
-
+                                var task = BackgroundTaskEngine.SubmitBackgroundJob("TextureImport", "Importing texture mods to library", "Imported texture mods");
+                                Task.Run(() =>
+                                {
+                                    ModArchiveImport.ImportTextureFiles(memFiles, memGame);
+                                }).ContinueWithOnUIThread(x =>
+                                {
+                                    BackgroundTaskEngine.SubmitJobCompletion(task);
+                                });
                             }
 
                             if (impInstallCancel == MessageBoxResult.No)

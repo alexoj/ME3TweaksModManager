@@ -74,12 +74,24 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                     using var package = MEPackageHandler.UnsafePartialLoad(f, x => x.IsTexture() && !x.IsDefaultObject); // 06/12/2022 - Use unsafe partial load to increase performance
                     if (package.Game != item.ModToValidateAgainst.Game)
                         continue; // Don't bother checking this
-                    if (package.LECLTagData.WasSavedWithMEM)
+                    if (package.Game.IsLEGame() && package.LECLTagData.WasSavedWithMEM)
                     {
                         // Cannot ship texture touched files.
                         M3Log.Error($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
                         item.AddBlockingError($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
-                        return;
+                        continue; // No further checks on this file.
+                    }
+                    else if (package.Game.IsOTGame())
+                    {
+                        using var fs = File.OpenRead(f);
+                        fs.Seek(-MEPackage.MEMPackageTagLength, SeekOrigin.End);
+                        if (MEPackage.MEMPackageTag.SequenceEqual(fs.ReadToBuffer(MEPackage.MEMPackageTagLength)))
+                        {
+                            M3Log.Error($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
+                            item.AddBlockingError($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
+                        }
+
+                        continue; // No further checks on this file.
                     }
 
                     var textures = package.Exports.Where(x => x.IsTexture() && !x.IsDefaultObject).ToList();
@@ -91,35 +103,40 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                         {
                             // 05/29/2022 - Does this affect LE?
 
-                            // CHECK NEVERSTREAM
-                            // 1. Has more than six mips.
-                            // 2. Has no external mips.
+                            // 06/19/2024 - Disable this for LE as it references texture LODs which we don't touch.
                             Texture2D tex = new Texture2D(texture);
 
-                            var topMip = tex.GetTopMip();
-                            if (topMip.storageType == StorageTypes.pccUnc)
+                            if (package.Game.IsOTGame())
                             {
-                                // It's an internally stored texture
-                                if (!tex.NeverStream && tex.Mips.Count(x => x.storageType != StorageTypes.empty) > 6)
-                                {
-                                    // NEVERSTREAM SHOULD HAVE BEEN SET.
-                                    M3Log.Error(@"Found texture missing 'NeverStream' attribute " + texture.InstancedFullPath);
-                                    item.AddBlockingError(M3L.GetString(M3L.string_interp_fatalMissingNeverstreamFlag, relativePath, texture.UIndex, texture.InstancedFullPath));
-                                }
-                            }
+                                // CHECK NEVERSTREAM
+                                // 1. Has more than six mips.
+                                // 2. Has no external mips.
 
-                            if (package.Game == MEGame.ME3) // ME3 only. does not affect LE3
-                            {
-                                // CHECK FOR 4K NORM
-                                var compressionSettings = texture.GetProperty<EnumProperty>(@"CompressionSettings");
-                                if (compressionSettings != null && compressionSettings.Value == @"TC_NormalMapUncompressed")
+                                var topMip = tex.GetTopMip();
+                                if (topMip.storageType == StorageTypes.pccUnc)
                                 {
-                                    var mipTailBaseIdx = texture.GetProperty<IntProperty>(@"MipTailBaseIdx");
-                                    if (mipTailBaseIdx != null && mipTailBaseIdx == 12)
+                                    // It's an internally stored texture
+                                    if (!tex.NeverStream && tex.Mips.Count(x => x.storageType != StorageTypes.empty) > 6)
                                     {
-                                        // It's 4K (2^12)
-                                        M3Log.Error(@"Found 4K Norm. These are not used by game (they use up to 1 mip below the diff) and waste large amounts of memory. Drop the top mip to correct this issue. " + texture.InstancedFullPath);
-                                        item.AddBlockingError(M3L.GetString(M3L.string_interp_fatalFound4KNorm, relativePath, texture.UIndex, texture.InstancedFullPath));
+                                        // NEVERSTREAM SHOULD HAVE BEEN SET.
+                                        M3Log.Error(@"Found texture missing 'NeverStream' attribute " + texture.InstancedFullPath);
+                                        item.AddBlockingError(M3L.GetString(M3L.string_interp_fatalMissingNeverstreamFlag, relativePath, texture.UIndex, texture.InstancedFullPath));
+                                    }
+                                }
+
+                                if (package.Game == MEGame.ME3) // ME3 only. does not affect LE
+                                {
+                                    // CHECK FOR 4K NORM
+                                    var compressionSettings = texture.GetProperty<EnumProperty>(@"CompressionSettings");
+                                    if (compressionSettings != null && compressionSettings.Value == @"TC_NormalMapUncompressed")
+                                    {
+                                        var mipTailBaseIdx = texture.GetProperty<IntProperty>(@"MipTailBaseIdx");
+                                        if (mipTailBaseIdx != null && mipTailBaseIdx == 12)
+                                        {
+                                            // It's 4K (2^12)
+                                            M3Log.Error(@"Found 4K Norm. These are not used by game (they use up to 1 mip below the diff) and waste large amounts of memory. Drop the top mip to correct this issue. " + texture.InstancedFullPath);
+                                            item.AddBlockingError(M3L.GetString(M3L.string_interp_fatalFound4KNorm, relativePath, texture.UIndex, texture.InstancedFullPath));
+                                        }
                                     }
                                 }
                             }
@@ -208,6 +225,28 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                 }
 
                 Debug.WriteLine(tfc);
+            }
+
+            // Mod Manager 9: Do not allow multiple same-named TFCs
+            // Warn on older cmmver.
+            // Check for multiple same-tfcs
+            var duplicates = allTFCs
+                .GroupBy(i => i)
+                .Where(g => g.Count() > 1)
+                .Select(g => g.Key).ToList();
+
+            if (duplicates.Any())
+            {
+                if (item.ModToValidateAgainst.ModDescTargetVersion >= 9.0)
+                {
+                    item.AddBlockingError(
+                        $"Mods targetting moddesc 9.0 and higher cannot ship multiple same-named TFCs: {string.Join(',', duplicates)}. It is very easy to crash the game doing this and does not work well with tools. Place all textures the mod can use into a single TFC, and then break the packages up into alternates.");
+                }
+                else
+                {
+                    item.AddSignificantIssue(
+                        $"Mods should not ship multiple same-named TFCs: {string.Join(',', duplicates)}. It is very easy to crash the game doing this and does not work well with tools. Place all textures the mod can use into a single TFC, and then break the packages up into alternates.");
+                }
             }
 
             if (!item.HasAnyMessages())

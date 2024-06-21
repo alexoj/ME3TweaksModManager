@@ -323,7 +323,7 @@ namespace ME3TweaksModManager.modmanager.nexusmodsintegration
         /// <returns></returns>
         public static async Task<ModFileDownloadLink[]> GetDownloadLinkForMod(string domain, int modid)
         {
-            var mf =  await NexusModsUtilities.GetClient().ModFiles.GetModFiles(domain, modid, FileCategory.Main);
+            var mf = await NexusModsUtilities.GetClient().ModFiles.GetModFiles(domain, modid, FileCategory.Main);
             if (mf != null && mf.Files.Length == 1)
             {
                 return await GetDownloadLinkForFile(domain, modid, mf.Files[0].FileID);
@@ -461,13 +461,13 @@ namespace ME3TweaksModManager.modmanager.nexusmodsintegration
                     if (ProperVersion.IsGreaterThan(actualVersion, mod.ParsedModVersion))
                     {
                         M3OnlineContent.NexusModUpdateInfo mui = new M3OnlineContent.NexusModUpdateInfo
-                            {
-                                NexusModsId = mod.NexusModID,
-                                GameId = mod.Game.ToGameNum(),
-                                UpdatedTime = nMod.Updated.DateTime,
-                                versionstr = nMod.Version,
-                                mod = mod,
-                            };
+                        {
+                            NexusModsId = mod.NexusModID,
+                            GameId = mod.Game.ToGameNum(),
+                            UpdatedTime = nMod.Updated.DateTime,
+                            versionstr = nMod.Version,
+                            mod = mod,
+                        };
                         var changelogMap = client.Mods.GetModChangeLogs(domain, mod.NexusModID).Result;
                         if (changelogMap.TryGetValue(nMod.Version, out var logs))
                         {
@@ -506,10 +506,17 @@ namespace ME3TweaksModManager.modmanager.nexusmodsintegration
 
         public static async Task<int?> GetMainFileForMod(string domain, int modid)
         {
-            var mf = await NexusModsUtilities.GetClient().ModFiles.GetModFiles(domain, modid, FileCategory.Main);
-            if (mf != null && mf.Files.Length == 1)
+            try
             {
-                return mf.Files[0].FileID;
+                var mf = await NexusModsUtilities.GetClient().ModFiles.GetModFiles(domain, modid, FileCategory.Main);
+                if (mf != null && mf.Files.Length == 1)
+                {
+                    return mf.Files[0].FileID;
+                }
+            }
+            catch (Exception e)
+            {
+                M3Log.Error($@"Error getting main file for {domain} {modid} mod: {e.Message}");
             }
 
             return null;

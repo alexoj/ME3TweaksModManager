@@ -1,6 +1,7 @@
 ﻿using LegendaryExplorerCore.Helpers;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksCore.ME3Tweaks.M3Merge;
+using ME3TweaksCore.Services.ThirdPartyModIdentification;
 using ME3TweaksModManager.modmanager.me3tweaks.services;
 using Newtonsoft.Json;
 using ME3TweaksModManager.modmanager.objects.mod.merge;
@@ -25,6 +26,7 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                 DialogTitle = M3L.GetString(M3L.string_detectedMiscellaneousIssues),
                 ValidationFunction = CheckModForMiscellaneousIssues
             });
+
 
             if (check.ModBeingDeployed.Game.IsGame3() || check.ModBeingDeployed.Game == MEGame.LE2)
             {
@@ -266,7 +268,7 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                 }
             }
 
-            // Check for ALOT markers
+            // Check for texture markers
             var packageFiles = referencedFiles.Where(x => x.RepresentsPackageFilePath());
             foreach (var p in packageFiles)
             {
@@ -419,6 +421,19 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                 if (File.Exists(m3zaFile))
                 {
                     item.AddInfoWarning(M3L.GetString(M3L.string_interp_compressedTlkDataInfo, ModJob.JobHeader.GAME1_EMBEDDED_TLK, Mod.Game1EmbeddedTlkCompressedFilename));
+                }
+            }
+            #endregion
+
+            #region Check if in TMPI already
+
+            var dlcFolders = item.ModToValidateAgainst.GetAllPossibleCustomDLCFolders();
+            foreach (var dlc in dlcFolders)
+            {
+                var tpmi = TPMIService.GetThirdPartyModInfo(dlc, item.ModToValidateAgainst.Game);
+                if (tpmi != null)
+                {
+                    item.AddInfoWarning($"Mod with foldername '{dlc}' already exists in the Third Party Identification Service as '{tpmi.modname}'. Is this yours? If not, your mod will likely be blacklisted - mods cannot use the same folder name as others in the same game.");
                 }
             }
             #endregion

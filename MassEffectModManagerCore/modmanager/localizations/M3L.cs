@@ -904,8 +904,8 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_backupAtX = "string_interp_backupAtX";
 		public const string string_noBackupForThisGame = "string_noBackupForThisGame";
 		public const string string_interp_cannotDeleteModsWhileXIsRunning = "string_interp_cannotDeleteModsWhileXIsRunning";
-		public const string string_interp_deletingXwhileAlotInstalledUnsupported = "string_interp_deletingXwhileAlotInstalledUnsupported";
-		public const string string_deletingWillPutAlotInUnsupportedConfig = "string_deletingWillPutAlotInUnsupportedConfig";
+		public const string string_interp_deletingXwhileTexturesInstalled = "string_interp_deletingXwhileTexturesInstalled";
+		public const string string_deletingWillPutGameInUnsupportedConfig = "string_deletingWillPutGameInUnsupportedConfig";
 		public const string string_interp_removeXFromTheGameInstallationQuestion = "string_interp_removeXFromTheGameInstallationQuestion";
 		public const string string_interp_cannotRestoreFilesWhileXIsRunning = "string_interp_cannotRestoreFilesWhileXIsRunning";
 		public const string string_interp_restoringXWhileAlotInstalledIsNotAllowed = "string_interp_restoringXWhileAlotInstalledIsNotAllowed";

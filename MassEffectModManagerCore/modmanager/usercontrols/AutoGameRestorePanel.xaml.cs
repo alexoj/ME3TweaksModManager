@@ -10,8 +10,18 @@ namespace ME3TweaksModManager.modmanager.usercontrols
     /// <summary>
     /// Handler for game auto restore
     /// </summary>
+    [AddINotifyPropertyChangedInterface]
     public partial class AutoGameRestorePanel : MMBusyPanelBase
     {
+        public int Percent { get; private set; }
+
+        public void OnPercentChanged()
+        {
+            PercentVisible = Percent >= 0;
+        }
+        public bool PercentVisible { get; private set; }
+
+
         public string ActionText { get; private set; }
 
         private GameTarget _target;
@@ -41,7 +51,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     GetRestoreEverythingString = _ => "", // In automated mode this is not used.
                     UseOptimizedTextureRestore = () => Settings.UseOptimizedTextureRestore,
                     ShouldLogEveryCopiedFile = () => Settings.LogBackupAndRestore,
-                    UpdateStatusCallback = x=> ActionText = x
+                    UpdateStatusCallback = x => ActionText = x,
+                    UpdateProgressCallback = (x, y) => Percent = (int)(x * 100f / y),
+                    SetProgressIndeterminateCallback = x => { if (x) Percent = -1; }
                 };
                 restoreController.PerformRestore(_target, _target.TargetPath);
             };
@@ -50,6 +62,12 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 OnClosing(DataEventArgs.Empty);
             };
             nbw.RunWorkerAsync();
+        }
+
+        public override bool CanBeForceClosed()
+        {
+            // This is a restore panel
+            return false;
         }
 
         /// <summary>

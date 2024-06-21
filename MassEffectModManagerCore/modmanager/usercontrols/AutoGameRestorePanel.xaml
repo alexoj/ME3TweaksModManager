@@ -10,7 +10,11 @@
                               d:DesignHeight="200" d:DesignWidth="300"
                               DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <DockPanel VerticalAlignment="Center">
-        <TextBlock DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontSize="14" FontWeight="Light" Text="{Binding ActionText}" TextWrapping="Wrap" TextAlignment="Center"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" DockPanel.Dock="Bottom">
+            <TextBlock HorizontalAlignment="Center" FontSize="14" FontWeight="Light" Text="{Binding ActionText}" TextWrapping="Wrap" TextAlignment="Center"/>
+            <TextBlock HorizontalAlignment="Center" FontSize="14" Margin="5,0,0,0"  FontWeight="Light" Text="{Binding Percent, StringFormat='{}{0}%'}"
+                       Visibility="{Binding PercentVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+        </StackPanel>
         <TextBlock DockPanel.Dock="Bottom" HorizontalAlignment="Center" FontSize="22" FontWeight="Light" Text="{DynamicResource string_restoringGame}"/>
         <fa5:ImageAwesome Icon="Solid_Spinner" Spin="True" SpinDuration="1" Width="32" Height="32" Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" Margin="10" />
     </DockPanel>

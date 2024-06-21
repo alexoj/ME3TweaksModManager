@@ -6,6 +6,7 @@ using System.Windows.Input;
 using LegendaryExplorerCore.Misc;
 using LegendaryExplorerCore.Packages;
 using ME3TweaksCoreWPF.UI;
+using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.ui;
 
@@ -25,17 +26,24 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         public Mod SelectedMod { get; set; }
         public ICommand RestoreSelectedModCommand { get; set; }
-        public ICommand DebugReloadCommand { get; set; }
+        public ICommand ReloadCommand { get; set; }
         public ICommand DeleteModCommand { get; set; }
         public ICommand VisitWebsiteCommand { get; set; }
         public ICommand EditModdescCommand { get; set; }
+        public ICommand OpenModFolderCommand { get; set; }
         private void LoadCommands()
         {
             RestoreSelectedModCommand = new GenericCommand(CloseToRestoreMod, CanRestoreMod);
-            DebugReloadCommand = new GenericCommand(DebugReloadMod, CanDebugReload);
+            ReloadCommand = new GenericCommand(AttemptModReload, CanReload);
+            OpenModFolderCommand = new GenericCommand(OpenModFolder, CanReload);
             DeleteModCommand = new GenericCommand(DeleteMod, ModIsSelected);
             VisitWebsiteCommand = new GenericCommand(VisitWebsite, CanVisitWebsite);
             EditModdescCommand = new GenericCommand(EditModdesc, ModIsSelected);
+        }
+
+        private void OpenModFolder()
+        {
+            M3Utilities.OpenExplorer(SelectedMod.ModPath);
         }
 
         private void EditModdesc()
@@ -63,26 +71,30 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private bool CanVisitWebsite() => SelectedMod != null && SelectedMod.ModWebsite != Mod.DefaultWebsite;
 
-        private void DebugReloadMod()
+        private void AttemptModReload()
         {
-#if DEBUG
-            Mod m = new Mod(SelectedMod.ModDescPath, MEGame.Unknown);
-            Debug.WriteLine(@"Is valid: " + m.ValidMod);
-#endif
+            var position = FailedMods.IndexOf(SelectedMod);
+            var selectedmod = SelectedMod;
+            FailedMods.RemoveAt(position);
+
+            Mod m = new Mod(selectedmod.ModDescPath, MEGame.Unknown);
+            FailedMods.Insert(position, m);
+            SelectedMod = m;
+
+            if (m.ValidMod)
+            {
+                Result.ReloadMods = true;
+            }
         }
 
         private bool CanRestoreMod()
         {
-            return SelectedMod != null && SelectedMod.IsME3TweaksUpdatable;
+            return SelectedMod != null && SelectedMod.IsUpdatable;
         }
 
-        private bool CanDebugReload()
+        private bool CanReload()
         {
-#if DEBUG
             return SelectedMod != null;
-#else
-            return false;
-#endif
         }
 
         private void CloseToRestoreMod()

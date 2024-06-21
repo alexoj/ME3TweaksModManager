@@ -297,8 +297,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     if (selectedTarget.TextureModded)
                     {
                         var res = M3L.ShowDialog(Window.GetWindow(this),
-                            M3L.GetString(M3L.string_interp_deletingXwhileAlotInstalledUnsupported, mod.ModName),
-                            M3L.GetString(M3L.string_deletingWillPutAlotInUnsupportedConfig), MessageBoxButton.YesNo,
+                            M3L.GetString(M3L.string_interp_deletingXwhileTexturesInstalled, mod.ModName),
+                            M3L.GetString(M3L.string_deletingWillPutGameInUnsupportedConfig), MessageBoxButton.YesNo,
                             MessageBoxImage.Error);
                         return res == MessageBoxResult.Yes;
                     }

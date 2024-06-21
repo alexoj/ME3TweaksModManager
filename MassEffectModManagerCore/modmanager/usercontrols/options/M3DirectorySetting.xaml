@@ -36,8 +36,16 @@
                 Margin="0,0,2,0"
                 IsReadOnly="True"
                 IsEnabled="False"
-                IsReadOnlyCaretVisible="False"
-                Foreground="{DynamicResource {x:Static adonisUi:Brushes.SlightlyDimmedForegroundBrush}}" />
+                IsReadOnlyCaretVisible="False">
+                <xctk:WatermarkTextBox.WatermarkTemplate>
+                    <DataTemplate>
+                        <ContentControl Content="{Binding}"
+                                            Foreground="{DynamicResource {x:Static adonisUi:Brushes.SlightlyDimmedForegroundBrush}}"
+                                            Focusable="False"
+                                            Margin="0,0,3,0" />
+                    </DataTemplate>
+                </xctk:WatermarkTextBox.WatermarkTemplate>
+            </xctk:WatermarkTextBox>
             <Button
                 Content="{Binding ButtonString}"
                 Grid.Column="1"

@@ -61,6 +61,7 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
+                Visibility="{Binding SelectedMod.IsME3TweaksUpdatable, Converter={StaticResource BoolToVisibilityConverter}}"
                 Header="{DynamicResource string_RestoremodfromME3Tweaks}"
                 Command="{Binding RestoreModFromME3TweaksCommand}"
                 ToolTip="{DynamicResource string_tooltip_forcesUpdateCheck}">
