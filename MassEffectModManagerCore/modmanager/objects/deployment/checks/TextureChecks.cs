@@ -204,7 +204,7 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                 // Future warning for moddesc 9.1 (maybe 10), unsure. Include at least 
                 if (!tfcName.ContainsAny(dlcFolderDests, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    item.AddInfoWarning($"Future versions of moddesc (possibly 9.1 or higher) will require TFC names to include the entire DLC foldername, to ensure unique TFC names. Consider conforming to this now so it doesn't become an issue later. Relevant TFC: {tfcName}");
+                    item.AddInfoWarning($"Future versions of moddesc (possibly 9.1 or higher) will require TFC names to include the entire DLC foldername, to ensure unique TFC names. Consider conforming to this now, so it doesn't become an issue later. Relevant TFC: {tfcName}");
                 }
 
                 Debug.WriteLine(tfc);
