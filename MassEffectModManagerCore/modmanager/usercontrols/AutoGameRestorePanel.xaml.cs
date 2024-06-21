@@ -1,8 +1,10 @@
 ﻿using System.Threading;
+using System.Windows;
 using System.Windows.Input;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Services.Restore;
 using ME3TweaksModManager.modmanager.helpers;
+using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.ui;
 
 namespace ME3TweaksModManager.modmanager.usercontrols
@@ -14,6 +16,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols
     public partial class AutoGameRestorePanel : MMBusyPanelBase
     {
         public int Percent { get; private set; }
+
+        /// <summary>
+        /// If the restoration succeeded
+        /// </summary>
+        public bool RestoreSucceeded { get; private set; }
 
         public void OnPercentChanged()
         {
@@ -55,10 +62,15 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     UpdateProgressCallback = (x, y) => Percent = (int)(x * 100f / y),
                     SetProgressIndeterminateCallback = x => { if (x) Percent = -1; }
                 };
-                restoreController.PerformRestore(_target, _target.TargetPath);
+                RestoreSucceeded = restoreController.PerformRestore(_target, _target.TargetPath);
             };
             nbw.RunWorkerCompleted += (a, b) =>
             {
+                if (b.Error != null)
+                {
+                    M3Log.Exception(b.Error, @"Error restoring from backup:");
+                    M3L.ShowDialog(window, $"There was an error restoring from backup: {b.Error.Message}", M3L.GetString(M3L.string_errorRestoringGame), MessageBoxButton.OK, MessageBoxImage.Error);
+                }
                 OnClosing(DataEventArgs.Empty);
             };
             nbw.RunWorkerAsync();

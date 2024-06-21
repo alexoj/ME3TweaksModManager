@@ -1080,7 +1080,7 @@
     <system:String x:Key="string_showInstalledOptions">Show installed options</system:String>
     <system:String x:Key="string_hideInstalledOptions">Hide installed options</system:String>
     <system:String x:Key="string_noTextureModsAreInstalled">No texture mods are installed</system:String>
-    <system:String x:Key="string_textureModded_packagesAndTFCsHidden">Package files and TFC files are not shown because this game is texture modded. All packages file are modified and TFCs cannot be modified when the game has been texture modded.</system:String>
+    <system:String x:Key="string_textureModded_packagesAndTFCsHidden">Texture-only modified package files are not shown, as all package files will be texture-modified when a game has been texture modded. Texture modded files cannot be restored, you must restore your game from backup.</system:String>
     <system:String x:Key="string_loading">Loading</system:String>
 
     <!-- Log uploader-->
@@ -1260,7 +1260,7 @@
     <system:String x:Key="string_error">Error!</system:String>
     <system:String x:Key="string_fullGameRestore">Full game restore</system:String>
     <system:String x:Key="string_restoringTextureLODs">Restoring from backup will reset your texture quality settings back to the defaults. Make sure you run the game through Mod Manager so the correct texture LODs are set.</system:String>
-    <system:String x:Key="string_entireGameDirectoryWillBeDeletedOT">The game directory will be reset to mirror your backup directory as well as reset your texture Level of Detail (LOD) settings. If you are trying to do granular restoration, including removing DLC mods or restoring specific files/SFARs, use the restore options from the Manage Target button instead.</system:String>
+    <system:String x:Key="string_entireGameDirectoryWillBeDeletedOT">The game directory will be reset to mirror your backup directory, as well as reset your texture Level of Detail (LOD) settings. If you are trying to do granular restoration, including removing DLC mods or restoring specific files/SFARs, use the restore options from the Manage Target button instead.</system:String>
     <system:String x:Key="string_entireGameDirectoryWillBeDeletedLE">The game directory will be reset to mirror your backup directory. If you are trying to do granular restoration, including removing DLC mods or restoring specific files, use the restore options from the Manage Target button instead.</system:String>
     <!-- 0=Utilities.GetGameName(Game) -->
     <system:String x:Key="string_useBetaFeatureQuestion">Use beta feature?</system:String>
@@ -1268,6 +1268,7 @@
     <!-- 0={File} -->
     <system:String x:Key="string_interp_failedToRestoreGameDueToErrorX">Failed to restore game due to error: {0}</system:String>
     <!-- 0={Error message} -->
+    <system:String x:Key="string_errorRestoringGame">Error restoring game</system:String>
 
     <!-- Test archive generator-->
     <system:String x:Key="string_hashingFiles">Hashing files</system:String>
