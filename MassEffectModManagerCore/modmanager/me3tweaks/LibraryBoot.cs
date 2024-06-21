@@ -5,6 +5,7 @@ using ME3TweaksCore.Diagnostics;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCoreWPF.NativeMods;
 using ME3TweaksCoreWPF.Targets;
+using ME3TweaksModManager.me3tweakscoreextended;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.me3tweaks.services;
 using ME3TweaksModManager.modmanager.objects.gametarget;
@@ -49,7 +50,7 @@ namespace ME3TweaksModManager.modmanager.me3tweaks
                 GenerateInstalledDlcModDelegate = M3InstalledDLCMod.GenerateInstalledDLCMod,
                 GenerateInstalledExtraFileDelegate = InstalledExtraFileWPF.GenerateInstalledExtraFileWPF,
                 GenerateSFARObjectDelegate = SFARObjectWPF.GenerateSFARObjectWPF,
-                GenerateModifiedFileObjectDelegate = ModifiedFileObjectWPF.GenerateModifiedFileObjectWPF,
+                GenerateModifiedFileObjectDelegate = M3ModifiedFileObject.GenerateModifiedFileObject,
                 GenerateKnownInstalledASIModDelegate = KnownInstalledASIModWPF.GenerateKnownInstalledASIModWPF,
                 GenerateUnknownInstalledASIModDelegate = UnknownInstalledASIModWPF.GenerateUnknownInstalledASIModWPF,
                 BetaMode = Settings.BetaMode,
