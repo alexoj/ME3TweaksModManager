@@ -20,6 +20,7 @@ using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.memoryanalyzer;
 using ME3TweaksModManager.modmanager.objects.mod;
+using ME3TweaksModManager.modmanager.windows.dialog;
 using ME3TweaksModManager.ui;
 using MvvmValidation;
 
@@ -605,7 +606,7 @@ namespace ME3TweaksModManager.modmanager.windows
         public static Mod CreateStarterKitMod(StarterKitOptions skOption, Action<string> UITextCallback)
         {
             var modPath = DLCModGenerator.CreateStarterKitMod(M3LoadedMods.GetModDirectoryForGame(skOption.ModGame)
-                , skOption, UITextCallback, out var moddescAddinDelegates);
+                , skOption, UITextCallback, out var moddescAddinDelegates, ModSourcing.GetGamePatchModFolder);
             if (skOption.GenerateModdesc)
             {
                 var dlcFolderName = $@"DLC_MOD_{skOption.ModDLCFolderNameSuffix}";

@@ -2,8 +2,10 @@
 using System.Windows;
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
+using ME3TweaksCore.GameFilesystem;
 using ME3TweaksCore.ME3Tweaks.StarterKit;
 using ME3TweaksModManager.extensions;
+using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.mod;
@@ -74,7 +76,7 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
                 OperationInProgress = true;
                 List<Action<DuplicatingIni>> moddescAddinDelegates = new List<Action<DuplicatingIni>>();
                 if (SelectedMod.Game == MEGame.LE1)
-                { 
+                {
                     StarterKitAddins.AddLE1ModSettingsMenu(SelectedMod, SelectedMod.Game, Path.Combine(SelectedMod.ModPath, dlcFolderPath), moddescAddinDelegates);
                 }
                 else if (SelectedMod.Game == MEGame.LE3)
@@ -135,8 +137,7 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
             Task.Run(() =>
             {
                 OperationInProgress = true;
-                return StarterKitAddins.GenerateSquadmateMergeFiles(SelectedMod.Game, hench, dlcFolderPath,
-                    new List<Dictionary<string, object>>());
+                return StarterKitAddins.GenerateSquadmateMergeFiles(SelectedMod.Game, hench, dlcFolderPath, new List<Dictionary<string, object>>(), ModSourcing.GetGamePatchModFolder);
             }).ContinueWithOnUIThread(x =>
             {
                 OperationInProgress = false;
