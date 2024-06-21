@@ -14,6 +14,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.options
     {
         private readonly Type _type;
         private readonly string _settingPropertyName;
+        private Func<string> _getWatermark;
 
         public ICommand ButtonClickedCommand { get; init; }
 
@@ -58,7 +59,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols.options
             SettingDescription = M3L.GetString(descriptionKey);
             ButtonString = M3L.GetString(buttonKey);
 #endif
-            DirectoryWatermark = getDirectoryWatermarkValue();
+            _getWatermark = getDirectoryWatermarkValue;
+
+            UpdateWaterMark();
 
             _type = classType;
             _settingPropertyName = settingPropertyName;
@@ -68,6 +71,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols.options
 
         public string DirectoryWatermark { get; set; }
         public string ButtonString { get; set; }
+
+        public void UpdateWaterMark()
+        {
+            DirectoryWatermark = _getWatermark();
+        }
 
         private void M3DirectorySetting_OnLoaded(object sender, RoutedEventArgs e)
         {

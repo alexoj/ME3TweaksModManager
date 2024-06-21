@@ -32,7 +32,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     GroupName = M3L.GetString(M3L.string_mainOptions),
                     GroupDescription = "Standard options for ME3Tweaks Mod Manager",
                     AllSettings = [
-                        new M3DirectorySetting(settingsType, nameof(Settings.ModLibraryPath), M3L.string_modLibraryLocation, M3L.string_description_modsImportedAreStoredInLibrary, GetModLibraryWatermark, M3L.string_browse, ChangeLibraryDir),
+                        new M3DirectorySetting(settingsType, nameof(Settings.ModLibraryPath), M3L.string_modLibraryLocation, M3L.string_description_modsImportedAreStoredInLibrary, GetModLibraryWatermark, M3L.string_configure, ChangeLibraryDir),
                         new M3DirectorySetting(settingsType, nameof(Settings.ModDownloadCacheFolder), M3L.string_nexusModsDownloadFolder, M3L.string_description_nexusModsDownloadFolder, GetNexusDownloadLocationWatermark, M3L.string_configure, ChangeNexusModsDownloadCacheDir),
 
                         new M3BooleanSetting(settingsType, nameof(Settings.DeveloperMode), M3L.string_Developermode, M3L.string_wp_description_developermod),
@@ -41,8 +41,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         new M3BooleanSetting(settingsType, nameof(Settings.ConfigureNXMHandlerOnBoot), M3L.string_configureNxmHandlerOnBoot, M3L.string_tooltip_configureNxmHandlerOnBoot),
                         new M3BooleanSetting(settingsType, nameof(Settings.DoubleClickModInstall), M3L.string_doubleClickModInLibraryToInstall, M3L.string_description_doubleClickModInLibraryToInstall),
 
-                        new M3ImageOptionsSetting(M3L.string_applicationTheme, 
-                            new SingleImageOption(@"/images/lighttheme.png", M3L.string_light, SetLightTheme), 
+                        new M3ImageOptionsSetting(M3L.string_applicationTheme,
+                            new SingleImageOption(@"/images/lighttheme.png", M3L.string_light, SetLightTheme),
                             new SingleImageOption(@"/images/darktheme.png", M3L.string_dark, SetDarkTheme))
 
                     ]
@@ -135,7 +135,22 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
         private string GetModLibraryWatermark()
         {
-            return M3LoadedMods.GetCurrentModLibraryDirectory();
+            if (!Settings.DeveloperMode && !Settings.BetaMode)
+            {
+                // Do not show the default instance info.
+                return M3LoadedMods.GetCurrentModLibraryDirectory();
+            }
+
+            // Dev mode, allow showing default instance.
+            if (M3LoadedMods.IsSharedLibrary())
+            {
+                return M3LoadedMods.GetCurrentModLibraryDirectory();
+            }
+            else
+            {
+                return "Default: Local instance library ('mods' folder)";
+            }
+
         }
 
         public ICommand CloseCommand { get; set; }
@@ -153,7 +168,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 if (M3LoadedMods.ChooseModLibraryPath(window, false))
                 {
                     Result.ReloadMods = true;
-                    m3ds.DirectoryWatermark = Settings.ModLibraryPath;
+                    m3ds.UpdateWaterMark();
                 }
             }
         }
@@ -187,9 +202,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         Settings.ModDownloadCacheFolder = m.FileName;
                     }
                 }
-             
+
                 // Refresh the control
-                m3ds.DirectoryWatermark = GetNexusDownloadLocationWatermark();
+                m3ds.UpdateWaterMark();
             }
         }
 
@@ -225,48 +240,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 //Settings.Save();
                 mainwindow.SetTheme(false);
             }
-        }
-
-        private void ChangeSetting_Clicked(object sender, RoutedEventArgs e)
-        {
-            //When this method is called, the value has already changed. So check against the opposite boolean state.
-            //var callingMember = sender as FrameworkElement;
-
-            //if (callingMember == BetaMode_MenuItem && Settings.BetaMode)
-            //{
-            //    var result = M3L.ShowDialog(mainwindow, M3L.GetString(M3L.string_dialog_optingIntoBeta), M3L.GetString(M3L.string_enablingBetaMode), MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            //    if (result == MessageBoxResult.No)
-            //    {
-            //        Settings.BetaMode = false; //turn back off.
-            //        return;
-            //    }
-            //}
-            //else if (callingMember == EnableTelemetry_MenuItem && !Settings.EnableTelemetry)
-            //{
-            //    //user trying to turn it off 
-            //    var result = M3L.ShowDialog(mainwindow, M3L.GetString(M3L.string_dialogTurningOffTelemetry), M3L.GetString(M3L.string_turningOffTelemetry), MessageBoxButton.YesNo, MessageBoxImage.Warning);
-            //    if (result == MessageBoxResult.No)
-            //    {
-            //        Settings.EnableTelemetry = true; //keep on.
-            //        return;
-            //    }
-
-            //    M3Log.Warning(@"Turning off telemetry :(");
-            //    //Turn off telemetry.
-            //    Analytics.SetEnabledAsync(false);
-            //    Crashes.SetEnabledAsync(false);
-            //}
-            //else if (callingMember == EnableTelemetry_MenuItem)
-            //{
-            //    //turning telemetry on
-            //    M3Log.Information(@"Turning on telemetry :)");
-            //    Analytics.SetEnabledAsync(true);
-            //    Crashes.SetEnabledAsync(true);
-            //}
-            //else
-            //{
-            //    //unknown caller. Might just be settings on/off for logging.
-            //}
         }
     }
 }
