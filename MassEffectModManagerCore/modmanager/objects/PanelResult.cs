@@ -3,7 +3,6 @@ using LegendaryExplorerCore.Helpers;
 using ME3TweaksCore.ME3Tweaks.M3Merge;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.objects.mod;
-using static JetBrains.FormatRipper.FileExplorer.FileTypeExplorer;
 
 namespace ME3TweaksModManager.modmanager.objects
 {
