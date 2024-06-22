@@ -823,7 +823,7 @@ namespace ME3TweaksModManager
         {
             if (NexusModsUtilities.UserInfo == null)
             {
-                M3L.ShowDialog(this, "You must be authenticated to NexusMods in ME3Tweaks Mod Manager to use this feature.", "Not logged in", MessageBoxButton.OK, MessageBoxImage.Error);
+                M3L.ShowDialog(this, M3L.GetString(M3L.string_youMustBeAuthenticatedToNexusModsInME3TweaksModManagerToUseThisFeature), M3L.GetString(M3L.string_notLoggedIn), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
             NamedBackgroundWorker nbw = new NamedBackgroundWorker(@"Non-Whitelisted Mod update check");
@@ -837,7 +837,7 @@ namespace ME3TweaksModManager
             var dlcJob = SelectedMod.GetJob(ModJob.JobHeader.CUSTOMDLC);
             if (dlcJob == null)
             {
-                M3L.ShowDialog(this, $"{SelectedMod.ModName} does not use the CUSTOMDLC task header.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_selectedModNoAltKeysNoCUSTOMDLCTask, SelectedMod.ModName), M3L.GetString(M3L.string_message), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
@@ -845,13 +845,13 @@ namespace ME3TweaksModManager
             if (alternates.Count == 0)
             {
 
-                M3L.ShowDialog(this, $"{SelectedMod.ModName} does not have any alternates on its CUSTOMDLC task header.", "Message", MessageBoxButton.OK, MessageBoxImage.Information);
+                M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_modDoesNotHaveAlternatesOnCustomDLC, SelectedMod.ModName), M3L.GetString(M3L.string_message), MessageBoxButton.OK, MessageBoxImage.Information);
                 return;
             }
 
             var mapping = alternates.Select(x => $@"{(x.GroupName != null ? $@"{x.GroupName} - " : @"")}{x.FriendlyName} => {x.OptionKey}").ToList(); // do not localize
 
-            ListDialog ld = new ListDialog(mapping, $"{SelectedMod.ModName} DLC Option Keys", $"{SelectedMod.ModName} uses the following option keys in its CUSTOMDLC job. You can use these keys to detect if these options were chosen when the mod was installed.", this);
+            ListDialog ld = new ListDialog(mapping, M3L.GetString(M3L.string_interp_modNameDLCOptionKeys, SelectedMod.ModName), M3L.GetString(M3L.string_dialog_modUsesTheseOptionKeys, SelectedMod.ModName), this);
             ld.Show();
         }
 
@@ -861,17 +861,17 @@ namespace ME3TweaksModManager
             ShowRunAndDone(updateUIString =>
             {
                 issues = DiagnosticTools.VerifyPackages(SelectedGameTarget,
-                                       (x, y) => updateUIString?.Invoke($"Checking packages {x}/{y}"));
-                return $"Finished package check: {issues.Count} issues found";
+                                       (x, y) => updateUIString?.Invoke(M3L.GetString(M3L.string_interp_checkingPackagesXY, x, y)));
+                return M3L.GetString(M3L.string_interp_finishedPackageCheckIssuesCountIssuesFound, issues.Count);
 
-            }, "Checking packages", "Finished checking packages", () =>
+            }, M3L.GetString(M3L.string_checkingPackages), M3L.GetString(M3L.string_finishedCheckingPackages), () =>
+            {
+                if (issues.Count > 0)
                 {
-                    if (issues.Count > 0)
-                    {
-                        ListDialog ld = new ListDialog(issues, "Package check found issues", "The following packages failed to open:", this);
-                        ld.Show();
-                    }
-                });
+                    ListDialog ld = new ListDialog(issues, M3L.GetString(M3L.string_packageCheckFoundIssues), M3L.GetString(M3L.string_theFollowingPackagesFailedToOpen), this);
+                    ld.Show();
+                }
+            });
         }
 
         private bool CanRunGameDiagTool()
@@ -1538,8 +1538,8 @@ namespace ME3TweaksModManager
             if (!BackupService.GetBackupStatus(queue.Game).BackedUp)
             {
                 var shouldRestore = M3L.ShowDialog(this,
-                    $"{queue.ModName} is designed to restore your game before installation, however a backup is not available. This may lead to undesirable behavior due to different game states at install time.\n\nContinue installing without restoring a backup?",
-                    "Backup not available",
+                    M3L.GetString(M3L.string_dialog_restoreRequestedButUnavailable, queue.ModName),
+                    M3L.GetString(M3L.string_backupNotAvailable),
                     MessageBoxButton.YesNo,
                     MessageBoxImage.Warning,
                     MessageBoxResult.No);
@@ -1556,8 +1556,8 @@ namespace ME3TweaksModManager
             else
             {
                 var shouldRestore = M3L.ShowDialog(this,
-                    $"{queue.ModName} is designed to restore your game before installation. Restoring your game from backup will wipe out all modifications to your game (saves will not be touched).\n\nRestore your game before install?",
-                    "Game restore requested",
+                    M3L.GetString(M3L.string_dialog_restoreRequestedConfirmation, queue.ModName),
+                    M3L.GetString(M3L.string_gameRestoreRequested),
                     MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Question,
                     MessageBoxResult.Yes); // Should this be cancel so if you click X?
@@ -3533,10 +3533,11 @@ namespace ME3TweaksModManager
                 var reason = MEMProcessHandler.GetReasonShouldNotTerminate();
                 if (reason != null)
                 {
-                    reason += "\n\nContinue closing the application?";
+                    reason += "\n\n" // do not localize
+                              + M3L.GetString(M3L.string_continueClosingTheApplicationQuestion);
                 }
 
-                var dialog = M3L.ShowDialog(this, reason, "Background process running", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                var dialog = M3L.ShowDialog(this, reason, M3L.GetString(M3L.string_backgroundProcessRunning), MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
                 if (dialog == MessageBoxResult.No)
                 {
                     // Do not cancel.
@@ -3561,19 +3562,21 @@ namespace ME3TweaksModManager
                     if (bpb.CanBeForceClosed())
                     {
                         ReleaseBusyControl();
-                        Title += " - Cleaning up, please wait";
+                        Title += @" - "
+                        + M3L.GetString(M3L.string_cleaningUpPleaseWait);
 
-                        M3L.ShowDialog(this, "Mod Manager is performing cleanup options and will automatically close when complete.\n\nYou can forcibly close Mod Manager if necessary by holding left shift when clicking the X button if it gets into a state where it doesn't want to close.",
-                            "Operation in progress", MessageBoxButton.OK, MessageBoxImage.Information);
+                        M3L.ShowDialog(this, M3L.GetString(M3L.string_modManagerIsPerformingCleanupOptionsAndWillAutomaticallyCloseWhenCompletennYouCanForciblyCloseModManagerIfNecessaryByHoldingLeftShiftWhenClickingTheXButtonIfItGetsIntoAStateWhereItDoesntWantToClose),
+                            M3L.GetString(M3L.string_operationInProgress), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     else
                     {
                         bpb.SignalAppClosing();
                         M3Log.Information(@"Cannot force close current open panel, we will wait until it closes to perform cleanup");
 
-                        Title += " - Cleaning up, please wait";
-                        M3L.ShowDialog(this, "Mod Manager will complete its current task and then close automatically.\n\nYou can forcibly close Mod Manager if necessary by holding left shift when clicking the X button if it gets into a state where it doesn't want to close.",
-                            "Operation in progress", MessageBoxButton.OK, MessageBoxImage.Information);
+                        Title += @" - "
+                        + M3L.GetString(M3L.string_cleaningUpPleaseWait);
+                        M3L.ShowDialog(this, M3L.GetString(M3L.string_modManagerWillCompleteItsCurrentTaskAndThenCloseAutomaticallynnYouCanForciblyCloseModManagerIfNecessaryByHoldingLeftShiftWhenClickingTheXButtonIfItGetsIntoAStateWhereItDoesntWantToClose),
+                            M3L.GetString(M3L.string_operationInProgress), MessageBoxButton.OK, MessageBoxImage.Information);
                     }
                     return;
                 }
@@ -3786,7 +3789,7 @@ namespace ME3TweaksModManager
                     shouldBringToFG = true;
 #if DEBUG
                     Activate();
-                    var result = M3L.ShowDialog(this, "Use experimental download manager for this link?", "Use experiment", MessageBoxButton.YesNo);
+                    var result = M3L.ShowDialog(this, M3L.GetString(M3L.string_useExperimentalDownloadManagerForThisLinkQuestion), M3L.GetString(M3L.string_useExperiment), MessageBoxButton.YesNo);
                     if (result == MessageBoxResult.Yes)
                         DownloadManager.QueueNXMDownload(CommandLinePending.PendingNXMLink);
                     else
@@ -4288,21 +4291,21 @@ namespace ME3TweaksModManager
                             }
 
 
-                            var impInstallCancel = M3L.ShowDialog(this, "Import or install these .mem files?"
+                            var impInstallCancel = M3L.ShowDialog(this, M3L.GetString(M3L.string_importOrInstallTheseMemFilesQuestion)
                                 + "\n\n" // do not localize
                                 + string.Join("\n - ", memFiles.Select(Path.GetFileName)), // do not localize
-                                "Import or install",
+                                M3L.GetString(M3L.string_importOrInstall),
                                   MessageBoxButton.YesNoCancel,
                                   MessageBoxImage.Question,
                                   MessageBoxResult.Yes,
-                                  yesContent: "Import",
+                                  yesContent: M3L.GetString(M3L.string_import),
                                   noContent: M3L.GetString(M3L.string_install));
 
                             if (impInstallCancel == MessageBoxResult.Cancel)
                                 return;
                             if (impInstallCancel == MessageBoxResult.Yes)
                             {
-                                var task = BackgroundTaskEngine.SubmitBackgroundJob("TextureImport", "Importing texture mods to library", "Imported texture mods");
+                                var task = BackgroundTaskEngine.SubmitBackgroundJob(M3L.GetString(M3L.string_textureImport), M3L.GetString(M3L.string_importingTextureModsToLibrary), M3L.GetString(M3L.string_importedTextureMods));
                                 Task.Run(() =>
                                 {
                                     ModArchiveImport.ImportTextureFiles(memFiles, memGame);
@@ -4589,7 +4592,7 @@ namespace ME3TweaksModManager
                             catch (Exception ex)
                             {
                                 M3Log.Error($@"Error decompiling m3m mod file: {ex.Message}");
-                                M3L.ShowDialog(this, $"Error decompiling m3m file: {ex.Message}", "Error decompiling m3m", MessageBoxButton.OK, MessageBoxImage.Error);
+                                M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_errorDecompilingM3MMessage, ex.Message), M3L.GetString(M3L.string_errorDecompilingM3m), MessageBoxButton.OK, MessageBoxImage.Error);
                             }
 
                             break;
@@ -4798,8 +4801,8 @@ namespace ME3TweaksModManager
             }
 
             ShowRunAndDone((updateUIString) => Bio2DAMerge.RunBio2DAMerge(target),
-                "Merging 2DA tables",
-                "Merged 2DA tables",
+                M3L.GetString(M3L.string_merging2DATables),
+                M3L.GetString(M3L.string_merged2DATables),
                 null);
         }
 
@@ -5186,7 +5189,7 @@ namespace ME3TweaksModManager
                 if (fileGame != game)
                 {
                     M3Log.Error($@"User attempting to install multiple game's mems, this is not supported.");
-                    M3L.ShowDialog(this, "All .mem files must be for the same game.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    M3L.ShowDialog(this, M3L.GetString(M3L.string_allMemFilesMustBeForTheSameGame), M3L.GetString(M3L.string_error), MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
 

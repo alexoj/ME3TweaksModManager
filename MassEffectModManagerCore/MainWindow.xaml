@@ -1,5 +1,22 @@
 ﻿<Window
-    x:Class="ME3TweaksModManager.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI" xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI" xmlns:fa5="http://schemas.fontawesome.com/icons/" xmlns:packages="clr-namespace:LegendaryExplorerCore.Packages;assembly=LegendaryExplorerCore" xmlns:loaders="clr-namespace:ME3TweaksModManager.modmanager.loaders" xmlns:modmanager="clr-namespace:ME3TweaksModManager.modmanager" xmlns:local="clr-namespace:ME3TweaksModManager" xmlns:ui="clr-namespace:ME3TweaksModManager.ui" xmlns:usercontrols="clr-namespace:ME3TweaksModManager.modmanager.usercontrols" xmlns:objects="clr-namespace:ME3TweaksModManager.modmanager.objects" xmlns:mod="clr-namespace:ME3TweaksModManager.modmanager.objects.mod" xmlns:controls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
+    x:Class="ME3TweaksModManager.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+    xmlns:adonisExtensions="clr-namespace:AdonisUI.Extensions;assembly=AdonisUI"
+    xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+    xmlns:fa5="http://schemas.fontawesome.com/icons/"
+    xmlns:packages="clr-namespace:LegendaryExplorerCore.Packages;assembly=LegendaryExplorerCore"
+    xmlns:loaders="clr-namespace:ME3TweaksModManager.modmanager.loaders"
+    xmlns:modmanager="clr-namespace:ME3TweaksModManager.modmanager"
+    xmlns:local="clr-namespace:ME3TweaksModManager"
+    xmlns:ui="clr-namespace:ME3TweaksModManager.ui"
+    xmlns:usercontrols="clr-namespace:ME3TweaksModManager.modmanager.usercontrols"
+    xmlns:objects="clr-namespace:ME3TweaksModManager.modmanager.objects"
+    xmlns:mod="clr-namespace:ME3TweaksModManager.modmanager.objects.mod"
+    xmlns:controls="clr-namespace:AdonisUI.Controls;assembly=AdonisUI"
     mc:Ignorable="d"
     Closing="ModManagerWindow_Closing"
     ContentRendered="ModManager_ContentRendered"
@@ -123,7 +140,7 @@
                 Style="{StaticResource MenuItemHeaderStyle}"
                 Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}" />
             <MenuItem
-                ToolTip="Mod Manager's editor for moddesc.ini files"
+                ToolTip="{DynamicResource string_tooltip_moddescEditor}"
                 Header="{DynamicResource string_Moddesceditor}"
                 Command="{Binding ModdescEditorCommand}"
                 Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}">
@@ -172,10 +189,10 @@
                 </MenuItem.Icon>
             </MenuItem>
             <MenuItem
-                Header="List DLC Alternate OptionKeys"
+                Header="{DynamicResource string_listOptionKeys}"
                 Command="{Binding ShowAlternateOptionKeysCommand}"
                 Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}"
-                ToolTip="List the OptionKeys for each alternate this mod can install (for DLC mods only).&#10;This can be used in other mods to change installation behavior when those options are chosen in this mod when this mod is installed beforehand">
+                ToolTip="{DynamicResource string_tooltip_listOptionKeys}">
                 <MenuItem.Icon>
                     <fa5:ImageAwesome
                         Style="{StaticResource EnableDisableImageStyle}"
@@ -208,7 +225,7 @@
             <MenuItem
                 Header="{DynamicResource string_mE3TweaksUpdaterService}"
                 Style="{StaticResource MenuItemHeaderStyle}"
-                ui:SharedUIBindings.DevModeGenerationOT="True"/>
+                ui:SharedUIBindings.DevModeGenerationOT="True" />
             <MenuItem
                 Header="{DynamicResource string_Prepareforupdaterservice}"
                 Command="{Binding UpdaterServiceCommand}"
@@ -228,7 +245,7 @@
                 Header="{DynamicResource string_editUpdaterServiceSettings}"
                 Command="{Binding UpdaterServiceSettingsCommand}"
                 ToolTip="{DynamicResource string_tooltip_updaterServiceSettings}"
-                ui:SharedUIBindings.DevModeGenerationOT="True"/>
+                ui:SharedUIBindings.DevModeGenerationOT="True" />
             <MenuItem
                 Header="{DynamicResource string_thirdPartyIdentificationService}"
                 Style="{StaticResource MenuItemHeaderStyle}"
@@ -316,7 +333,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
-                        ToolTip="Configure settings for Mod Manager"
+                        ToolTip="{DynamicResource string_tooltip_configureSettingsForModManager}"
                         Command="{Binding ModManagerOptionsCommand}"
                         Header="{DynamicResource string_Options}">
                         <MenuItem.Icon>
@@ -607,9 +624,9 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
-                        Header="Check non-whitelisted mods for updates"
+                        Header="{DynamicResource string_checkForUpdatesNonWhitelisted}"
                         Command="{Binding CheckNonWhitelistedModsForUpdates}"
-                        ToolTip="Mods not opted into the NexusMods Update Service will not automatically check for updates as it may cause update loops.&#10;This update check will check for mods not opted in for updates">
+                        ToolTip="{DynamicResource string_tooltip_checkForUpdatesNonWhitelisted}">
                         <MenuItem.Icon>
                             <fa5:ImageAwesome
                                 Style="{StaticResource EnableDisableImageStyle}"
@@ -620,8 +637,8 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
-                        Header="Show which mods can check for updates"
-                        ToolTip="Adds an icon to mods in the library that indicate if they can check for updates.&#10;This only will stay enabled for this session"
+                        Header="{DynamicResource string_showWhichModsCanCheckForUpdates}"
+                        ToolTip="{DynamicResource string_tooltip_showWhichModsCanCheckForUpdates}"
                         IsCheckable="True"
                         IsChecked="{Binding Path=(modmanager:Settings.SessionOnly_ShowWhichModsCanCheckForUpdates), Mode=TwoWay}"
                         StaysOpenOnClick="True">
@@ -649,8 +666,8 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
-                        Header="Search mod library"
-                        ToolTip="Filter mods by name shown in the mod library list"
+                        Header="{DynamicResource string_searchModLibrary}"
+                        ToolTip="{DynamicResource string_tooltip_searchModLibrary}"
                         InputGestureText="CTRL + F"
                         Command="{Binding SearchModsCommand}">
                         <MenuItem.Icon>
@@ -668,7 +685,7 @@
                         Style="{StaticResource MenuItemHeaderStyle}"
                         ui:SharedUIBindings.GenerationLE="True" />
                     <MenuItem
-                        ToolTip="Install texture mods from .mem files&#10;Texture mods MUST be installed AFTER all other content mods"
+                        ToolTip="{DynamicResource string_tooltip_installMemFiles}"
                         Header="{DynamicResource string_installMemFile}"
                         Command="{Binding InstallMEMFileCommand}"
                         ui:SharedUIBindings.GenerationLE="True">
@@ -683,7 +700,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
-                        ToolTip="Install .ron, .me2headmorph, and .me3headmorph files to saves"
+                        ToolTip="{DynamicResource string_tooltip_installHeadmorph}"
                         Header="{DynamicResource string_installHeadmorph}"
                         Command="{Binding InstallHeadmorphCommand}"
                         ui:SharedUIBindings.GenerationLE="True">
@@ -702,7 +719,7 @@
                         Style="{StaticResource MenuItemHeaderStyle}"
                         Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}" />
                     <MenuItem
-                        ToolTip="View file overrides in DLC mods"
+                        ToolTip="{DynamicResource string_tooltip_conflictDetector}"
                         Header="{DynamicResource string_CustomDLCConflictDetector}"
                         Command="{Binding ConflictDetectorCommand}"
                         Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}">
@@ -740,7 +757,7 @@
                     Header="{DynamicResource string_Tools}"
                     Padding="4">
                     <MenuItem
-                        ToolTip="Runs the official game configuration tool"
+                        ToolTip="{DynamicResource string_tooltip_officialConfigurationTool}"
                         ui:SharedUIBindings.GenerationOT="True"
                         Header="{DynamicResource string_Runofficialgameconfigurationtool}">
                         <MenuItem.Icon>
@@ -789,7 +806,7 @@
                         </MenuItem>
                     </MenuItem>
                     <MenuItem
-                        ToolTip="Starter Kit generates a blank, fully functioning DLC mod, ready for you to start building your mod on top of"
+                        ToolTip="{DynamicResource string_tooltip_starterKit}"
                         Header="{DynamicResource string_GenerateStarterKit}"
                         ItemsSource="{Binding MenuAvailableGames}">
                         <MenuItem.Icon>
@@ -810,18 +827,29 @@
                                 Height="16" />
                         </MenuItem.Resources>
                         <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem"  BasedOn="{StaticResource {x:Type MenuItem}}">
-                                <Setter Property="Header" Value="{Binding Converter={StaticResource MEGameToGameNameConverter}}"/>
-                                <Setter Property="Icon" Value="{StaticResource IconResource}"/>
-                                <Setter Property="Visibility" Value="Visible"/>
-                                <Setter Property="Command" Value="{Binding ElementName=MainWindow_Ref, Path=GenerateStarterKitCommand}"/>
-                                <Setter Property="CommandParameter" Value="{Binding}"/>
+                            <Style
+                                TargetType="MenuItem"
+                                BasedOn="{StaticResource {x:Type MenuItem}}">
+                                <Setter
+                                    Property="Header"
+                                    Value="{Binding Converter={StaticResource MEGameToGameNameConverter}}" />
+                                <Setter
+                                    Property="Icon"
+                                    Value="{StaticResource IconResource}" />
+                                <Setter
+                                    Property="Visibility"
+                                    Value="Visible" />
+                                <Setter
+                                    Property="Command"
+                                    Value="{Binding ElementName=MainWindow_Ref, Path=GenerateStarterKitCommand}" />
+                                <Setter
+                                    Property="CommandParameter"
+                                    Value="{Binding}" />
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
-
                     <MenuItem
-                        ToolTip="The bink bypasses allow additional modding features for the games they are installed in.&#10;By default, they enable console on Tab and Tilde; to change these, use Console Key Keybinder"
+                        ToolTip="{DynamicResource string_tooltip_binkBypass}"
                         Header="{DynamicResource string_Binkw32Bypasses}">
                         <MenuItem.Icon>
                             <fa5:ImageAwesome
@@ -912,7 +940,7 @@
                     <MenuItem
                         Header="{DynamicResource string_autoTOC}"
                         ItemsSource="{Binding MenuAvailableGames}"
-                        ToolTip="AutoTOC updates all Table of Content files, which list files that the game can load.&#10;You shouldn't need to this manually, Mod Manager will perform it as necessary">
+                        ToolTip="{DynamicResource string_tooltip_autoTOC}">
                         <MenuItem.Icon>
                             <fa5:ImageAwesome
                                 Style="{StaticResource EnableDisableImageStyle}"
@@ -931,18 +959,30 @@
                                 Height="16" />
                         </MenuItem.Resources>
                         <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem"  BasedOn="{StaticResource {x:Type MenuItem}}">
-                                <Setter Property="Header" Value="{Binding Converter={StaticResource MEGameToGameNameConverter}}"/>
-                                <Setter Property="Icon" Value="{StaticResource IconResource}"/>
-                                <Setter Property="Visibility" Value="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                <Setter Property="Command" Value="{Binding ElementName=MainWindow_Ref, Path=AutoTOCCommand}"/>
-                                <Setter Property="CommandParameter" Value="{Binding}"/>
+                            <Style
+                                TargetType="MenuItem"
+                                BasedOn="{StaticResource {x:Type MenuItem}}">
+                                <Setter
+                                    Property="Header"
+                                    Value="{Binding Converter={StaticResource MEGameToGameNameConverter}}" />
+                                <Setter
+                                    Property="Icon"
+                                    Value="{StaticResource IconResource}" />
+                                <Setter
+                                    Property="Visibility"
+                                    Value="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <Setter
+                                    Property="Command"
+                                    Value="{Binding ElementName=MainWindow_Ref, Path=AutoTOCCommand}" />
+                                <Setter
+                                    Property="CommandParameter"
+                                    Value="{Binding}" />
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
                     <MenuItem
-                        Header="Target Merge"
-                        ToolTip="Target Merge runs all merge operations for all DLC mods, bringing them all in sync.&#10;You shouldn't need to do this manually, Mod Manager will perform it as necessary"
+                        Header="{DynamicResource string_targetMerge}"
+                        ToolTip="{DynamicResource string_tooltip_targetMerge}"
                         ItemsSource="{Binding MenuAvailableGames}">
                         <MenuItem.Resources>
                             <!-- This is some stupid BS WPF does with icon sharing. x:Shared must be set -->
@@ -962,12 +1002,24 @@
                                 Width="16" />
                         </MenuItem.Icon>
                         <MenuItem.ItemContainerStyle>
-                            <Style TargetType="MenuItem"  BasedOn="{StaticResource {x:Type MenuItem}}">
-                                <Setter Property="Header" Value="{Binding Converter={StaticResource MEGameToGameNameConverter}}"/>
-                                <Setter Property="Icon" Value="{StaticResource IconResource}"/>
-                                <Setter Property="Visibility" Value="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                                <Setter Property="Command" Value="{Binding ElementName=MainWindow_Ref, Path=RunTargetMergeCommand}"/>
-                                <Setter Property="CommandParameter" Value="{Binding}"/>
+                            <Style
+                                TargetType="MenuItem"
+                                BasedOn="{StaticResource {x:Type MenuItem}}">
+                                <Setter
+                                    Property="Header"
+                                    Value="{Binding Converter={StaticResource MEGameToGameNameConverter}}" />
+                                <Setter
+                                    Property="Icon"
+                                    Value="{StaticResource IconResource}" />
+                                <Setter
+                                    Property="Visibility"
+                                    Value="{Binding RelativeSource={RelativeSource Self}, Path=IsEnabled, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <Setter
+                                    Property="Command"
+                                    Value="{Binding ElementName=MainWindow_Ref, Path=RunTargetMergeCommand}" />
+                                <Setter
+                                    Property="CommandParameter"
+                                    Value="{Binding}" />
                             </Style>
                         </MenuItem.ItemContainerStyle>
                     </MenuItem>
@@ -1326,19 +1378,19 @@
                     <!--<MenuItem
                         Header="{DynamicResource string_blankItemToAvoidBreakingTheInterface}" />-->
                     <MenuItem
-                        ToolTip="Makes Mod Manager open all packages from the current game and report which files (if any) had issues being opened. May detect corrupted packages"
-                        Header="Diagnostic tool: Open all packages from current target game"
-                        Command="{Binding BetaDiagToolOpenAllPackagesCommand}"/>
+                        ToolTip="{DynamicResource string_tooltip_diagnosticTool_OpenAllPackages}"
+                        Header="{DynamicResource string_diagnosticTool_OpenAllPackages}"
+                        Command="{Binding BetaDiagToolOpenAllPackagesCommand}" />
                     <MenuItem
-                        Header="Beta setting: Show mod installation status in library"
-                        ToolTip="WARNING: THIS WILL NOT BE RELIABLE FOR ALL MODS"
+                        Header="{DynamicResource string_showModInstallationStatusInLbrary}"
+                        ToolTip="{DynamicResource string_tooltip_notReliableForAllMods}"
                         IsCheckable="True"
                         StaysOpenOnClick="True"
                         IsChecked="{Binding Path=(modmanager:Settings.ShowInstalledModsInLibrary)}" />
                     <MenuItem
                         Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}"
-                        Header="SESSION ONLY Beta setting: Suppress target merges"
-                        ToolTip="DANGER: DO NOT TURN THIS ON IF YOU DON'T KNOW WHAT IT MEANS. YOU WILL BREAK THINGS"
+                        Header="{DynamicResource string_suppressTargetMerges}"
+                        ToolTip="{DynamicResource string_tooltip_suppressTargetMerges}"
                         IsCheckable="True"
                         StaysOpenOnClick="True"
                         IsChecked="{Binding Path=(modmanager:Settings.SessionOnly_SuppressDLCMerge)}" />
@@ -1355,7 +1407,7 @@
                         Click="RouteDebugCall"
                         Name="ReloadSelectedMod_MenuItem" />
                     <MenuItem
-                        Header="Run DetermineIfInstalled"
+                        Header="{DynamicResource string_runDetermineIfInstalled}"
                         Click="RouteDebugCall"
                         Name="DebugDetermineIfInstalled_MenuItem" />
                     <MenuItem
@@ -1457,7 +1509,7 @@
                         Header="{DynamicResource string_About}"
                         Style="{StaticResource MenuItemHeaderStyle}" />
                     <MenuItem
-                        ToolTip="Shows the Mod Manager tutorial that showed when you first ran Mod Manager"
+                        ToolTip="{DynamicResource string_tooltip_introTutorial}"
                         Header="{DynamicResource string_debug_showIntroTutorial}"
                         Command="{Binding OpenTutorialCommand}">
                         <MenuItem.Icon>
@@ -1626,7 +1678,7 @@
                             <controls:SplitButton.SplitMenu>
                                 <ContextMenu>
                                     <MenuItem
-                                        ToolTip="Allows you to change how Mod Manager runs the selected game"
+                                        ToolTip="{DynamicResource string_tooltip_launchConfig}"
                                         Header="{DynamicResource string_changeCurrentLaunchConfiguration}"
                                         Command="{Binding ChangeCurrentLaunchConfigCommand}"
                                         Visibility="{Binding SelectedGameTarget.Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='LEGame'}">
@@ -1640,7 +1692,7 @@
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem
-                                        ToolTip="Allows you to boot into any save file automatically on game start"
+                                        ToolTip="{DynamicResource string_tooltip_autobootSave}"
                                         Header="{DynamicResource string_bootIntoSpecificSaveFile}"
                                         Command="{Binding StartGameSpecificSaveCommand}"
                                         Visibility="{Binding SelectedGameTarget.Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='LEGame'}">
@@ -1713,14 +1765,14 @@
                     Grid.Column="1"
                     Grid.ColumnSpan="3">
                     <ToggleButton
-                        ToolTip="Click to toggle Original Trilogy features in Mod Manager"
+                        ToolTip="{DynamicResource string_tooltip_generationOT}"
                         DockPanel.Dock="Right"
                         Content="{DynamicResource string_originalTrilogy}"
                         VerticalAlignment="Center"
                         Style="{DynamicResource {x:Static adonisUi:Styles.DefaultToAccentToggleButton}}"
                         IsChecked="{Binding Path=(modmanager:Settings.GenerationSettingOT)}" />
                     <ToggleButton
-                        ToolTip="Click to toggle Legendary Edition features on/off in Mod Manager"
+                        ToolTip="{DynamicResource string_tooltip_generationLE}"
                         DockPanel.Dock="Right"
                         Content="{DynamicResource string_legendaryEdition}"
                         VerticalAlignment="Center"
@@ -1935,7 +1987,7 @@
                                 </Button.Content>
                             </Button>
                             <xctk:WatermarkTextBox
-                                Watermark="Type to search"
+                                Watermark="{DynamicResource string_typeToSearch}"
                                 Name="ModSearchBox"
                                 Text="{Binding ModSearchText, Source={x:Static loaders:M3LoadedMods.Instance}, UpdateSourceTrigger=PropertyChanged}" />
                         </DockPanel>
@@ -2022,7 +2074,7 @@
                                                 Width="16"
                                                 Height="16"
                                                 Margin="0,0,5,0" />
-                                            <fa5:ImageAwesome 
+                                            <fa5:ImageAwesome
                                                 DockPanel.Dock="Right"
                                                 Width="16"
                                                 Height="16"
@@ -2030,13 +2082,16 @@
                                                 Foreground="{DynamicResource {x:Static adonisUi:Brushes.AccentInteractionBorderBrush}}"
                                                 Icon="Solid_Cloud">
                                                 <fa5:ImageAwesome.Visibility>
-                                                    <MultiBinding Converter="{StaticResource MultiBoolToVisibilityConverter}">
-                                                        <Binding Path="(modmanager:Settings.SessionOnly_ShowWhichModsCanCheckForUpdates)"/>
-                                                        <Binding Path="IsUpdatable" />
+                                                    <MultiBinding
+                                                        Converter="{StaticResource MultiBoolToVisibilityConverter}">
+                                                        <Binding
+                                                            Path="(modmanager:Settings.SessionOnly_ShowWhichModsCanCheckForUpdates)" />
+                                                        <Binding
+                                                            Path="IsUpdatable" />
                                                     </MultiBinding>
                                                 </fa5:ImageAwesome.Visibility>
                                             </fa5:ImageAwesome>
-                                            <fa5:ImageAwesome 
+                                            <fa5:ImageAwesome
                                                 Visibility="{Binding IsCheckingForUpdates, Converter={StaticResource BoolToVisibilityConverter}}"
                                                 DockPanel.Dock="Right"
                                                 Width="16"
@@ -2045,28 +2100,28 @@
                                                 Foreground="Gray"
                                                 Icon="Solid_CloudDownloadAlt">
                                                 <fa5:ImageAwesome.Triggers>
-                                                    <EventTrigger RoutedEvent="Loaded">
-                                                        <BeginStoryboard Storyboard="{StaticResource OpacityPulseElement}"/>
+                                                    <EventTrigger
+                                                        RoutedEvent="Loaded">
+                                                        <BeginStoryboard
+                                                            Storyboard="{StaticResource OpacityPulseElement}" />
                                                     </EventTrigger>
                                                 </fa5:ImageAwesome.Triggers>
                                             </fa5:ImageAwesome>
                                             <Grid
                                                 DockPanel.Dock="Right">
-                                                <fa5:ImageAwesome 
+                                                <fa5:ImageAwesome
                                                     Visibility="{Binding IsInstalledToTarget, Converter={StaticResource BoolToVisibilityConverter}}"
                                                     Width="16"
                                                     Margin="2,0,2,0"
                                                     Foreground="White"
-                                                    Icon="Solid_Circle"/>
-                                                <fa5:ImageAwesome 
-                                                Visibility="{Binding IsInstalledToTarget, Converter={StaticResource BoolToVisibilityConverter}}"
-                                                Width="16"
-                                                Margin="2,0,2,0"
-                                                Foreground="{DynamicResource {x:Static adonisUi:Brushes.SuccessBrush}}"
-                                                Icon="Solid_CheckCircle"/>
-
+                                                    Icon="Solid_Circle" />
+                                                <fa5:ImageAwesome
+                                                    Visibility="{Binding IsInstalledToTarget, Converter={StaticResource BoolToVisibilityConverter}}"
+                                                    Width="16"
+                                                    Margin="2,0,2,0"
+                                                    Foreground="{DynamicResource {x:Static adonisUi:Brushes.SuccessBrush}}"
+                                                    Icon="Solid_CheckCircle" />
                                             </Grid>
-
                                             <TextBlock
                                                 Text="{Binding ModName}" />
                                         </DockPanel>
@@ -2178,7 +2233,7 @@
                     <DockPanel
                         DockPanel.Dock="Top">
                         <Button
-                            ToolTip="Endorse this mod on NexusMods"
+                            ToolTip="{DynamicResource string_tooltip_endorseThisModOnNexusMods}"
                             Content="{Binding CurrentModEndorsementStatus}"
                             DockPanel.Dock="Right"
                             Visibility="{Binding SelectedMod, Converter={StaticResource NullHiddenConverter}}"
