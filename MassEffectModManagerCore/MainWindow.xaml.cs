@@ -5159,7 +5159,7 @@ namespace ME3TweaksModManager
                 Filter = filter,
                 Multiselect = true,
                 CustomPlaces = M3CustomPlaces.TextureLibraryCustomPlace, // Only one
-                InitialDirectory = M3LoadedMods.GetTextureLibraryDirectory()
+                InitialDirectory = M3LoadedMods.GetTextureLibraryDirectory(SelectedGameTarget?.Game ?? MEGame.Unknown)
             };
             var result = m.ShowDialog(this);
             if (result != true)

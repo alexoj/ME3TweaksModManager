@@ -95,7 +95,7 @@
     <system:String x:Key="string_DynamicHelp">Dynamic Help</system:String>
     <system:String x:Key="string_Diagnostics">Diagnostics</system:String>
     <system:String x:Key="string_ModManagerLogsDiagnostics">Mod Manager Logs &amp; Diagnostics</system:String>
-    <system:String x:Key="string_TroubleshootingtoolsforME3Tweaks">Troubleshooting tools for ME3Tweaks</system:String>
+    <system:String xml:space="preserve" x:Key="string_TroubleshootingtoolsforME3Tweaks">Troubleshooting tools for Mod Manager and games.&#10;This tool is extensively used by both users and developers</system:String>
     <system:String x:Key="string_About">About</system:String>
     <system:String x:Key="string_moddescfileformatspecification">Mod Manager documentation for developers</system:String>
     <system:String x:Key="string_ReferenceinformationModdesc">Reference information about the moddesc.ini specification</system:String>
@@ -262,7 +262,7 @@
     <system:String x:Key="string_interp_visitSelectedModWebSite">Visit {0}'s web site</system:String>
     <!-- 0=SelectedMod.ModName -->
     <system:String  x:Key="string_openModdesciniFile">Open moddesc.ini file</system:String>
-    <system:String  x:Key="string_tooltip_openModdescIniFile">Open this mod's moddesc.ini file for editing</system:String>
+    <system:String  x:Key="string_tooltip_openModdescIniFile">Opens this mod's moddesc.ini file in a text editor</system:String>
     <system:String  x:Key="string_autoUpdateLODs2K">Auto update LODs (2K, good quality)</system:String>
     <system:String  x:Key="string_autoUpdateLODs4K">Auto update LODs (4K, best quality)</system:String>
     <system:String xml:space="preserve" x:Key="string_tooltip_autoLods2K">This setting will provide a modest improvement over default textures when paired with a high quality texture mod such as ALOT. This option uses less memory and will provide better game stability when used with large mods.</system:String>
@@ -460,7 +460,7 @@
     <system:String x:Key="string_textureModsImported">Texture mod(s) imported</system:String>
     <system:String x:Key="string_mergingCoalescedFiles">Merging coalesced files</system:String>
     <system:String x:Key="string_mergedCoalescedFiles">Merged coalesced files</system:String>
-    <system:String x:Key="string_selectMemFile">Select .mem file</system:String>
+    <system:String x:Key="string_selectMemFile">Select .mem files</system:String>
     <system:String x:Key="string_interp_headmorphRequiresDLCCouldNotDetermine">This headmorph requires {0} version {1} or higher to be installed, but Mod Manager could not determine the installed version. Install {0} with Mod Manager, then install this headmorph.</system:String>
     <!-- 0={Mod name} 1={version string} 2={version string} -->
     <system:String x:Key="string_interp_headmorphRequiresDLCBadVersionString">This headmorph requires {0} version {1} or higher to be installed, but Mod Manager could not determine the installed version from its version string {2}. Contact the developer of this mod to fix this issue.</system:String>

@@ -123,6 +123,7 @@
                 Style="{StaticResource MenuItemHeaderStyle}"
                 Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}" />
             <MenuItem
+                ToolTip="Mod Manager's editor for moddesc.ini files"
                 Header="{DynamicResource string_Moddesceditor}"
                 Command="{Binding ModdescEditorCommand}"
                 Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}">
@@ -207,12 +208,12 @@
             <MenuItem
                 Header="{DynamicResource string_mE3TweaksUpdaterService}"
                 Style="{StaticResource MenuItemHeaderStyle}"
-                Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}" />
+                ui:SharedUIBindings.DevModeGenerationOT="True"/>
             <MenuItem
                 Header="{DynamicResource string_Prepareforupdaterservice}"
                 Command="{Binding UpdaterServiceCommand}"
                 ToolTip="{DynamicResource string_tooltip_uploadToUpdaterService}"
-                Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}">
+                ui:SharedUIBindings.DevModeGenerationOT="True">
                 <MenuItem.Icon>
                     <fa5:ImageAwesome
                         Style="{StaticResource EnableDisableImageStyle}"
@@ -227,7 +228,7 @@
                 Header="{DynamicResource string_editUpdaterServiceSettings}"
                 Command="{Binding UpdaterServiceSettingsCommand}"
                 ToolTip="{DynamicResource string_tooltip_updaterServiceSettings}"
-                Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}" />
+                ui:SharedUIBindings.DevModeGenerationOT="True"/>
             <MenuItem
                 Header="{DynamicResource string_thirdPartyIdentificationService}"
                 Style="{StaticResource MenuItemHeaderStyle}"
@@ -667,7 +668,7 @@
                         Style="{StaticResource MenuItemHeaderStyle}"
                         ui:SharedUIBindings.GenerationLE="True" />
                     <MenuItem
-                        ToolTip=""
+                        ToolTip="Install texture mods from .mem files&#10;Texture mods MUST be installed AFTER all other content mods"
                         Header="{DynamicResource string_installMemFile}"
                         Command="{Binding InstallMEMFileCommand}"
                         ui:SharedUIBindings.GenerationLE="True">
@@ -682,6 +683,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
+                        ToolTip="Install .ron, .me2headmorph, and .me3headmorph files to saves"
                         Header="{DynamicResource string_installHeadmorph}"
                         Command="{Binding InstallHeadmorphCommand}"
                         ui:SharedUIBindings.GenerationLE="True">
@@ -700,6 +702,7 @@
                         Style="{StaticResource MenuItemHeaderStyle}"
                         Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}" />
                     <MenuItem
+                        ToolTip="View file overrides in DLC mods"
                         Header="{DynamicResource string_CustomDLCConflictDetector}"
                         Command="{Binding ConflictDetectorCommand}"
                         Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}">
@@ -1453,6 +1456,7 @@
                         Header="{DynamicResource string_About}"
                         Style="{StaticResource MenuItemHeaderStyle}" />
                     <MenuItem
+                        ToolTip="Shows the Mod Manager tutorial that showed when you first ran Mod Manager"
                         Header="{DynamicResource string_debug_showIntroTutorial}"
                         Command="{Binding OpenTutorialCommand}">
                         <MenuItem.Icon>
@@ -1621,6 +1625,7 @@
                             <controls:SplitButton.SplitMenu>
                                 <ContextMenu>
                                     <MenuItem
+                                        ToolTip="Allows you to change how Mod Manager runs the selected game"
                                         Header="{DynamicResource string_changeCurrentLaunchConfiguration}"
                                         Command="{Binding ChangeCurrentLaunchConfigCommand}"
                                         Visibility="{Binding SelectedGameTarget.Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='LEGame'}">
@@ -1634,6 +1639,7 @@
                                         </MenuItem.Icon>
                                     </MenuItem>
                                     <MenuItem
+                                        ToolTip="Allows you to boot into any save file automatically on game start"
                                         Header="{DynamicResource string_bootIntoSpecificSaveFile}"
                                         Command="{Binding StartGameSpecificSaveCommand}"
                                         Visibility="{Binding SelectedGameTarget.Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='LEGame'}">
@@ -1706,12 +1712,14 @@
                     Grid.Column="1"
                     Grid.ColumnSpan="3">
                     <ToggleButton
+                        ToolTip="Click to toggle Original Trilogy features in Mod Manager"
                         DockPanel.Dock="Right"
                         Content="{DynamicResource string_originalTrilogy}"
                         VerticalAlignment="Center"
                         Style="{DynamicResource {x:Static adonisUi:Styles.DefaultToAccentToggleButton}}"
                         IsChecked="{Binding Path=(modmanager:Settings.GenerationSettingOT)}" />
                     <ToggleButton
+                        ToolTip="Click to toggle Legendary Edition features on/off in Mod Manager"
                         DockPanel.Dock="Right"
                         Content="{DynamicResource string_legendaryEdition}"
                         VerticalAlignment="Center"
@@ -2169,6 +2177,7 @@
                     <DockPanel
                         DockPanel.Dock="Top">
                         <Button
+                            ToolTip="Endorse this mod on NexusMods"
                             Content="{Binding CurrentModEndorsementStatus}"
                             DockPanel.Dock="Right"
                             Visibility="{Binding SelectedMod, Converter={StaticResource NullHiddenConverter}}"
