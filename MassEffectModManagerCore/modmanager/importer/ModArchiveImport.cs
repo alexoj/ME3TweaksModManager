@@ -437,11 +437,6 @@ namespace ME3TweaksModManager.modmanager.importer
                 ActionText = newText;
             }
 
-            void SignalOTALOTFilesDetected()
-            {
-                OTALOTTextureFilesImported = true;
-            }
-
             void AddTextureModCallback(MEMMod memFile)
             {
                 Application.Current.Dispatcher.Invoke(delegate
@@ -462,7 +457,7 @@ namespace ME3TweaksModManager.modmanager.importer
                 });
             }
 
-            ScanFailureReason = ModArchiveInspector.FindModsInArchive(pathOverride ?? archive, AddCompressedModCallback, OnModFailedToLoad, AddTextureModCallback, AddBIQCallback, ActionTextUpdateCallback, SignalOTALOTFilesDetected, archiveStream: ArchiveStream, forcedMD5: calculatedMD5);
+            ScanFailureReason = ModArchiveInspector.FindModsInArchive(pathOverride ?? archive, AddCompressedModCallback, OnModFailedToLoad, AddTextureModCallback, AddBIQCallback, ActionTextUpdateCallback, archiveStream: ArchiveStream, forcedMD5: calculatedMD5);
         }
 
         private void BeginImportingMods()

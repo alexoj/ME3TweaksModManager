@@ -39,7 +39,6 @@ namespace ME3TweaksModManager.modmanager.importer
             Action<MEMMod> addTextureMod = null,
             Action<BatchLibraryInstallQueue> addBiq = null,
             Action<string> currentOperationTextCallback = null,
-            Action showALOTLauncher = null,
             string forcedMD5 = null,
             int forcedSize = -1,
             Stream archiveStream = null)
@@ -221,37 +220,12 @@ namespace ME3TweaksModManager.modmanager.importer
             }
             else if (textureModEntries.Any())
             {
-                if (isAlotFile)
+                //found some .mem files
+                foreach (var entry in textureModEntries.Where(x => Path.GetExtension(x.FileName) == @".mem"))
                 {
-                    //is alot installer
-                    M3Log.Information(@"This file contains texture files and ALOTInstaller.exe - this is an ALOT main file");
-                    var textureLibraryPath = M3Utilities.GetALOTInstallerTextureLibraryDirectory();
-                    if (textureLibraryPath != null)
-                    {
-                        //we have destination
-                        var destPath = Path.Combine(textureLibraryPath, Path.GetFileName(filepath));
-                        if (!File.Exists(destPath))
-                        {
-                            M3Log.Information(
-                                M3L.GetString(M3L.string_thisFileIsNotInTheTextureLibraryMovingItToTheTextureLibrary));
-                            currentOperationTextCallback?.Invoke(
-                                M3L.GetString(M3L.string_movingALOTFileToTextureLibraryPleaseWait));
-                            archiveFile.Dispose();
-                            File.Move(filepath, destPath, true);
-                            showALOTLauncher?.Invoke();
-                            useTPIS = false;
-                        }
-                    }
-                }
-                else
-                {
-                    //found some .mem files
-                    foreach (var entry in textureModEntries.Where(x => Path.GetExtension(x.FileName) == @".mem"))
-                    {
-                        MEMMod memFile = new MEMMod(entry.FileName) { SizeRequiredtoExtract = (long)entry.Size, SelectedForImport = true, IsInArchive = true };
-                        addTextureMod(memFile);
-                        useTPIS = false;
-                    }
+                    MEMMod memFile = new MEMMod(entry.FileName) { SizeRequiredtoExtract = (long)entry.Size, SelectedForImport = true, IsInArchive = true };
+                    addTextureMod(memFile);
+                    useTPIS = false;
                 }
             }
             else if (batchQueueEntries.Any())

@@ -64,14 +64,6 @@
                     ToolTip="{DynamicResource string_tooltip_installModArchiveWindow}" />
                 <Button
                     DockPanel.Dock="Right"
-                    Content="{DynamicResource string_launchALOTInstaller}"
-                    Padding="8,3"
-                    Margin="5,0"
-                    ToolTip="{DynamicResource string_tooltip_launchesALOTInstaller}"
-                    Command="{Binding LaunchALOTInstallerCommand}"
-                    Visibility="{Binding OTALOTTextureFilesImported, Converter={StaticResource BoolToVisibilityConverter}}" />
-                <Button
-                    DockPanel.Dock="Right"
                     Content="{Binding CancelButtonText}"
                     Padding="7,5"
                     Command="{Binding CancelCommand}" />
@@ -85,7 +77,7 @@
                         Padding="8,3"
                         ToolTip="{DynamicResource string_tooltip_compressPackages}"
                         IsChecked="{Binding MAI.CompressPackages}"
-                        Visibility="{Binding ArchiveScanned, Converter={StaticResource BoolToVisibilityConverter}}"
+                        Visibility="{Binding MAI.CurrentState, Converter={StaticResource EnumToVisibilityConverter}, ConverterParameter='Min_SCANCOMPLETED'}"
                         IsEnabled="{Binding CanCompressPackages}" />
                 </StackPanel>
                 <!--<TextBlock

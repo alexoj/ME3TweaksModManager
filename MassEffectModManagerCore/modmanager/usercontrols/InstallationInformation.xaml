@@ -179,7 +179,9 @@
                                                     Width="*" />
                                             </Grid.ColumnDefinitions>
                                             <TextBlock
+                                                TextWrapping="Wrap"
                                                 Grid.Row="0"
+                                                MaxWidth="500"
                                                 Grid.Column="0"
                                                 Foreground="{Binding TextColor}"
                                                 FontWeight="SemiBold"

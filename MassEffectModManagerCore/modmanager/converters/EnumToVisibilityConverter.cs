@@ -53,9 +53,9 @@ namespace ME3TweaksModManager.modmanager.converters
                             j++;
                         }
 
-                        if (isMax && myIndex < testIndex)
+                        if (isMax && myIndex < testIndex && testIndex != -1)
                             continue; // OK
-                        if (isMin && myIndex > testIndex)
+                        if (isMin && myIndex > testIndex && testIndex != -1)
                             continue; // OK
                     }
 
