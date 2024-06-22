@@ -667,6 +667,7 @@
                         Style="{StaticResource MenuItemHeaderStyle}"
                         ui:SharedUIBindings.GenerationLE="True" />
                     <MenuItem
+                        ToolTip=""
                         Header="{DynamicResource string_installMemFile}"
                         Command="{Binding InstallMEMFileCommand}"
                         ui:SharedUIBindings.GenerationLE="True">

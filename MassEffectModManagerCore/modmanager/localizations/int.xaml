@@ -398,7 +398,7 @@
     <system:String x:Key="string_tooltip_decompileCoalGameLE1LE2">Decompile a Coalesced file to individual ini files for editing</system:String>
     <system:String x:Key="string_tooltip_compileCoalGame3">Compile an ME3/LE3 Coalesced from individual xml files</system:String>
     <system:String x:Key="string_tooltip_compileCoalGameLE1LE2">Compile a LE1/LE2 Coalesced from individual ini files</system:String>
-    <system:String x:Key="string_installMemFile">Install .mem file</system:String>
+    <system:String x:Key="string_installMemFile">Install .mem file(s)</system:String>
     <system:String x:Key="string_selectCoalescedFile">Select Coalesced file</system:String>
     <system:String x:Key="string_errorDecompilingCoalescedFile">Error decompiling Coalesced file</system:String>
     <system:String xml:space="preserve" x:Key="string_interp_errorDecompilingCoalescedFile">An error occurred decompiling the Coalesced file:\n{0}</system:String>

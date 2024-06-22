@@ -427,7 +427,7 @@ namespace ME3TweaksModManager
 
             CheckProgramDataWritable();
             AttachListeners();
-            
+
             //Must be done after UI has initialized
             //if (InstallationTargets.Count > 0)
             //{
@@ -799,7 +799,7 @@ namespace ME3TweaksModManager
             NexusModsFileSearchCommand = new GenericCommand(OpenNexusSearch); // no conditions for this
             CompileCoalescedCommand = new RelayCommand(CompileCoalesced); // no conditions for this
             DecompileCoalescedCommand = new RelayCommand(DecompileCoalesced); // no conditions for this
-            InstallMEMFileCommand = new GenericCommand(InstallMEMFile, CanInstallMEMFile);
+            InstallMEMFileCommand = new GenericCommand(InstallMEMFiles, CanInstallMEMFile);
             ChangeCurrentLaunchConfigCommand = new GenericCommand(OpenLaunchOptionSelector, () => SelectedGameTarget?.Game.IsLEGame() ?? false);
             TrilogySaveEditorCommand = new GenericCommand(OpenTSE);
             AddStarterKitContentCommand = new GenericCommand(OpenStarterKitContentSelector, IsModSelectedInDevMode);
@@ -1467,7 +1467,7 @@ namespace ME3TweaksModManager
                         }
                         else
                         {
-                            if (queue.ContainsTextureMods() && (queue.UseSavedOptions || 
+                            if (queue.ContainsTextureMods() && (queue.UseSavedOptions ||
                                                                 // If all options are standalone we don't really care if there are saved options so just show it here
                                                                 queue.ModsToInstall.Where(x => !x.ModMissing).All(x => x.IsStandalone)))
                             {
@@ -5150,36 +5150,58 @@ namespace ME3TweaksModManager
             Settings.OneTimeMessage_LE1CoalescedOverwriteWarning = true;
         }
 
-        private void InstallMEMFile()
+        private void InstallMEMFiles()
         {
             string filter = M3L.GetString(M3L.string_massEffectModderFiles) + @"|*.mem";
             OpenFileDialog m = new OpenFileDialog
             {
                 Title = M3L.GetString(M3L.string_selectMemFile),
                 Filter = filter,
+                Multiselect = true,
+                CustomPlaces = M3CustomPlaces.TextureLibraryCustomPlace, // Only one
+                InitialDirectory = M3LoadedMods.GetTextureLibraryDirectory()
             };
             var result = m.ShowDialog(this);
             if (result != true)
                 return;
 
-            var game = ModFileFormats.GetGameMEMFileIsFor(m.FileName);
-            if (!game.IsLEGame())
+            MEGame game = MEGame.Unknown;
+            GameTarget target = null;
+
+            foreach (var file in m.FileNames)
             {
-                M3Log.Error($@"User attempting to install mem to unsupported game: {game}");
-                M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_gameUnsupportedForTextureModding, game), M3L.GetString(M3L.string_unsupportedGame), MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
+                var fileGame = ModFileFormats.GetGameMEMFileIsFor(m.FileName);
+                if (game == MEGame.Unknown)
+                {
+                    game = fileGame;
+                }
+                if (!game.IsLEGame())
+                {
+                    M3Log.Error($@"User attempting to install mem to unsupported game: {game}");
+                    M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_gameUnsupportedForTextureModding, game),
+                        M3L.GetString(M3L.string_unsupportedGame), MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                if (fileGame != game)
+                {
+                    M3Log.Error($@"User attempting to install multiple game's mems, this is not supported.");
+                    M3L.ShowDialog(this, "All .mem files must be for the same game.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
+
+                target ??= GetCurrentTarget(game);
+                if (target == null)
+                {
+                    M3Log.Error($@"User attempting to install mem to game that is not currently a target: {game}");
+                    M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_notTargetAvailableForX, game),
+                        M3L.GetString(M3L.string_gameNotAvailable), MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
             }
 
-            var target = GetCurrentTarget(game);
-            if (target == null)
-            {
-                M3Log.Error($@"User attempting to install mem to game that is not currently a target: {game}");
-                M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_notTargetAvailableForX, game), M3L.GetString(M3L.string_gameNotAvailable), MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
 
-
-            TextureInstallerPanel tip = new TextureInstallerPanel(target, [m.FileName]);
+            TextureInstallerPanel tip = new TextureInstallerPanel(target, m.FileNames.ToList());
             tip.Close += (a, b) =>
             {
                 ReleaseBusyControl();
