@@ -80,6 +80,12 @@ namespace ME3TweaksModManager
     public partial class MainWindow : Window, INotifyPropertyChanged
     {
         /// <summary>
+        /// Reference to the main window of ME3Tweaks Mod Manager, once loaded
+        /// </summary>
+        public static MainWindow Instance { get; private set; }
+
+
+        /// <summary>
         /// If set to true, the app will automatically close itself after performing some cleanup
         /// </summary>
         public bool IsOnTrackToClose { get; set; }
@@ -421,6 +427,7 @@ namespace ME3TweaksModManager
 
             CheckProgramDataWritable();
             AttachListeners();
+            
             //Must be done after UI has initialized
             //if (InstallationTargets.Count > 0)
             //{
@@ -2853,6 +2860,13 @@ namespace ME3TweaksModManager
 
         private void ModManager_ContentRendered(object sender, EventArgs e)
         {
+            // We set this only after initialization. It should not be used before.
+            if (Instance == null)
+            {
+                // This should never occur in our programming style, but who knows...
+                Instance = this;
+            }
+
             DPIScaling.SetScalingFactor(this);
 #if PRERELEASE
             // MessageBox.Show(M3L.GetString(M3L.string_prereleaseNotice));

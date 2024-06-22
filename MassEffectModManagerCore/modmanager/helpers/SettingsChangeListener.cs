@@ -14,9 +14,10 @@ namespace ME3TweaksModManager.modmanager.helpers
             }
             else if (e.PropertyName is nameof(Settings.GenerationSettingLE) or nameof(Settings.GenerationSettingOT))
             {
-                if (Application.Current.MainWindow is MainWindow mw)
+                if (MainWindow.Instance != null)
                 {
-                    mw.UpdateMenuTargets();
+                    // Must run on UI thread.
+                    Application.Current.Dispatcher.Invoke(()=> MainWindow.Instance.UpdateMenuTargets());
                 }
             }
         }

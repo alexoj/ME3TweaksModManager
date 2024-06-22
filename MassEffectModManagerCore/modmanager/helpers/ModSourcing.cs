@@ -28,9 +28,9 @@ namespace ME3TweaksModManager.modmanager.helpers
                 return null;
 
             var modLibraryFolder = M3LoadedMods.FindDLCModFolderInLibrary(game, patchName);
-            if (modLibraryFolder == null && Application.Current.MainWindow is MainWindow mw) // This probably has to run on UI thread to cast...
+            if (modLibraryFolder == null) // This probably should be run on the UI thread. But it makes my code ugly, so I'm not going to do that. 06/21/2024
             {
-                var target = mw.GetCurrentTarget(game);
+                var target = MainWindow.Instance.GetCurrentTarget(game);
                 if (target.TextureModded)
                     return null; // We cannot find a usable source
 

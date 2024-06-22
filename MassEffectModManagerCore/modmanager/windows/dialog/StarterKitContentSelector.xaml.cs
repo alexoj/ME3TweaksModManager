@@ -3,6 +3,7 @@ using System.Windows;
 using LegendaryExplorerCore.Helpers;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksCore.GameFilesystem;
+using ME3TweaksCore.ME3Tweaks.M3Merge;
 using ME3TweaksCore.ME3Tweaks.StarterKit;
 using ME3TweaksModManager.extensions;
 using ME3TweaksModManager.modmanager.helpers;
@@ -137,7 +138,7 @@ namespace ME3TweaksModManager.modmanager.windows.dialog
             Task.Run(() =>
             {
                 OperationInProgress = true;
-                return StarterKitAddins.GenerateSquadmateMergeFiles(SelectedMod.Game, hench, dlcFolderPath, new List<Dictionary<string, object>>(), ModSourcing.GetGamePatchModFolder);
+                return StarterKitAddins.GenerateSquadmateMergeFiles(SelectedMod.Game, hench, dlcFolderPath, SQMOutfitMerge.LoadSquadmateMergeInfo(SelectedMod.Game, dlcFolderPath) , ModSourcing.GetGamePatchModFolder);
             }).ContinueWithOnUIThread(x =>
             {
                 OperationInProgress = false;
