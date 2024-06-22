@@ -94,7 +94,7 @@
     <system:String x:Key="string_Help">Help</system:String>
     <system:String x:Key="string_DynamicHelp">Dynamic Help</system:String>
     <system:String x:Key="string_Diagnostics">Diagnostics</system:String>
-    <system:String x:Key="string_ModManagerLogsDiagnostics">Mod Manager Logs &amp; Diagnostics</system:String>
+    <system:String x:Key="string_ModManagerLogsDiagnostics">Mod Manager Logs &amp; Game Diagnostics</system:String>
     <system:String xml:space="preserve" x:Key="string_TroubleshootingtoolsforME3Tweaks">Troubleshooting tools for Mod Manager and games.&#10;This tool is extensively used by both users and developers</system:String>
     <system:String x:Key="string_About">About</system:String>
     <system:String x:Key="string_moddescfileformatspecification">Mod Manager documentation for developers</system:String>

@@ -1326,6 +1326,7 @@
                     <!--<MenuItem
                         Header="{DynamicResource string_blankItemToAvoidBreakingTheInterface}" />-->
                     <MenuItem
+                        ToolTip="Makes Mod Manager open all packages from the current game and report which files (if any) had issues being opened. May detect corrupted packages"
                         Header="Diagnostic tool: Open all packages from current target game"
                         Command="{Binding BetaDiagToolOpenAllPackagesCommand}"/>
                     <MenuItem
