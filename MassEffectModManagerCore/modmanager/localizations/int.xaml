@@ -1230,6 +1230,8 @@
     <system:String x:Key="string_dialog_biqAlreadyExists">An install group with the name {0} already exists. Importing this group will overwrite the existing group.</system:String>
     <!-- 0={Install group name} -->
     <system:String x:Key="string_installGroupAlreadyExists">Install group already exists</system:String>
+    <system:String x:Key="string_interp_importingX">Importing {0}</system:String>
+    <!-- 0={Filename} -->
 
     <!-- Mod updater -->
     <system:String x:Key="string_modupdatesavailable">Mod updates available</system:String>

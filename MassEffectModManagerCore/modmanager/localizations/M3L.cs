@@ -1063,6 +1063,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_description_invalidBatchQueueArchive = "string_description_invalidBatchQueueArchive";
 		public const string string_dialog_biqAlreadyExists = "string_dialog_biqAlreadyExists";
 		public const string string_installGroupAlreadyExists = "string_installGroupAlreadyExists";
+		public const string string_interp_importingX = "string_interp_importingX";
 		public const string string_modupdatesavailable = "string_modupdatesavailable";
 		public const string string_downloadUpdate = "string_downloadUpdate";
 		public const string string_downloadUpdateFromNexusMods = "string_downloadUpdateFromNexusMods";

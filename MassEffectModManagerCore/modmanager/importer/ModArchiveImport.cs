@@ -852,7 +852,7 @@ namespace ME3TweaksModManager.modmanager.importer
                 M3Log.Information($@"Importing {memFile} to {destPath}");
                 if (task != null)
                 {
-                    BackgroundTaskEngine.SubmitBackgroundTaskUpdate(task, $"Importing {Path.GetFileName(memFile)}");
+                    BackgroundTaskEngine.SubmitBackgroundTaskUpdate(task, M3L.GetString(M3L.string_interp_importingX, Path.GetFileName(memFile)));
                 }
                 File.Copy(memFile, destPath, true);
             }
