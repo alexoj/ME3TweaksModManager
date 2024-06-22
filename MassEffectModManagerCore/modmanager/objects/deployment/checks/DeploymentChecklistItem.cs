@@ -139,5 +139,17 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
             Icon = EFontAwesomeIcon.Solid_Ban;
             Spinning = false;
         }
+
+        /// <summary>
+        /// Returns if the only messages are informational.
+        /// </summary>
+        /// <returns></returns>
+        public bool HasOnlyInfoMessages()
+        {
+            if (!GetInfoWarnings().Any())
+                return false;
+
+            return (GetSignificantIssues().Count == 0 && GetBlockingErrors().Count == 0);
+        }
     }
 }

@@ -246,7 +246,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     SetNextStep("Inventorying game state after texture install");
                     var basegameFileDbUpdates = new List<BasegameFileRecord>();
                     numDone = 0;
-                    foreach (var f in trackedFileToOriginalMD5Map)
+                    foreach (var f in trackedFileToOriginalMD5Map.Where(x=> x.Key.RepresentsPackageFilePath()))
                     {
                         var path = Path.Combine(Target.TargetPath, f.Key);
                         var existingInfo = BasegameFileIdentificationService.GetBasegameFileSource(Target, path, f.Value);

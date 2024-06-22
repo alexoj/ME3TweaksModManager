@@ -849,5 +849,14 @@ namespace ME3TweaksModManager.modmanager.loaders
 
             return null;
         }
+
+        /// <summary>
+        /// Get the mod library deployment folder
+        /// </summary>
+        /// <returns></returns>
+        public static string GetDeploymentDirectory()
+        {
+            return Directory.CreateDirectory(Path.Combine(GetCurrentModLibraryDirectory(), @"DeployedMods")).FullName;
+        }
     }
 }

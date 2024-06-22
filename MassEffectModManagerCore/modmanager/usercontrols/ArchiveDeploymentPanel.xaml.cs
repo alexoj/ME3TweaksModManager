@@ -158,7 +158,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             SaveFileDialog d = new SaveFileDialog
             {
                 Filter = $@"{M3L.GetString(M3L.string_7zipArchiveFile)}|*.7z",
-                FileName = premadeName
+                FileName = premadeName,
+                InitialDirectory = M3LoadedMods.GetDeploymentDirectory()
             };
             var result = d.ShowDialog();
             if (result.HasValue && result.Value)
