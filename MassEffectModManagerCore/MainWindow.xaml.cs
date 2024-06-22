@@ -5170,7 +5170,7 @@ namespace ME3TweaksModManager
 
             foreach (var file in m.FileNames)
             {
-                var fileGame = ModFileFormats.GetGameMEMFileIsFor(m.FileName);
+                var fileGame = ModFileFormats.GetGameMEMFileIsFor(file);
                 if (game == MEGame.Unknown)
                 {
                     game = fileGame;
