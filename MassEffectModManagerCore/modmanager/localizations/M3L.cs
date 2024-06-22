@@ -2158,5 +2158,10 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_importingSaveFileFromME3Tweaks = "string_importingSaveFileFromME3Tweaks";
 		public const string string_importedSaveFileFromME3Tweaks = "string_importedSaveFileFromME3Tweaks";
 		public const string string_interp_errorImportingSaveFileX = "string_interp_errorImportingSaveFileX";
+		public const string string_interp_determiningInstalledModsX = "string_interp_determiningInstalledModsX";
+		public const string string_dialog_pickLibraryType = "string_dialog_pickLibraryType";
+		public const string string_selectLibraryType = "string_selectLibraryType";
+		public const string string_shared = "string_shared";
+		public const string string_local = "string_local";
 	}
 }

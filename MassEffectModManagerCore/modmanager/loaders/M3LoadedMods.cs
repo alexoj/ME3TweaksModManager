@@ -534,7 +534,7 @@ namespace ME3TweaksModManager.modmanager.loaders
                             AllLoadedMods.Any(x => x.Game == target.Game))
                         {
                             BackgroundTaskEngine.SubmitBackgroundTaskUpdate(LoadingTask,
-                                $"Determining which mods are installed ({target.Game})");
+                                M3L.GetString(M3L.string_interp_determiningInstalledModsX, target.Game));
                             var gs = target.GetInfoRequiredToDetermineIfInstalled();
                             foreach (var mod in AllLoadedMods.Where(x => x.Game == target.Game))
                             {
@@ -583,13 +583,13 @@ namespace ME3TweaksModManager.modmanager.loaders
             if (Settings.DeveloperMode)
             {
                 libraryType = M3L.ShowDialog(centeringWindow,
-                    "Use a shared library that works in all copies of Mod Manager, or use a local one to this instance?\n\nTypically only Mod Manager testers benefit from local instance storage.",
-                    "Select library type",
+                    M3L.GetString(M3L.string_dialog_pickLibraryType),
+                    M3L.GetString(M3L.string_selectLibraryType),
                     MessageBoxButton.YesNoCancel,
                     MessageBoxImage.Question,
                     MessageBoxResult.Cancel,
-                    "Shared",
-                    "Local");
+                    M3L.GetString(M3L.string_shared),
+                    M3L.GetString(M3L.string_local));
             }
 
             if (libraryType == MessageBoxResult.No)

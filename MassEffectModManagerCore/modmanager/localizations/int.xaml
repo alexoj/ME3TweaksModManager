@@ -2850,4 +2850,14 @@
     <system:String x:Key="string_importedSaveFileFromME3Tweaks">Imported save file from ME3Tweaks</system:String>
     <system:String x:Key="string_interp_errorImportingSaveFileX">Error importing save file: {0}</system:String>
     <!-- 0={Error message} -->
+
+    <!-- M3 Loaded Mods -->
+    <system:String x:Key="string_interp_determiningInstalledModsX">Determining which mods are installed ({0})</system:String>
+    <!-- 0={target.Game} -->
+    <system:String xml:space="preserve" x:Key="string_dialog_pickLibraryType">Use a shared library that works in all copies of Mod Manager, or use a local one to this instance?\n\nTypically only Mod Manager testers benefit from local instance storage.</system:String>
+    <system:String x:Key="string_selectLibraryType">Select library type</system:String>
+    <system:String x:Key="string_shared">Shared</system:String>
+    <!-- 'Shared' library -->
+    <system:String x:Key="string_local">Local</system:String>
+    <!-- 'Local' library -->
 </ResourceDictionary>
