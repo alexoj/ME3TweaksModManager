@@ -179,7 +179,8 @@
                         Visibility="{Binding Path=(modmanager:Settings.DeveloperMode), Converter={StaticResource BoolToVisibilityConverter}}"
                         HorizontalAlignment="Right"
                         Margin="5,0,0,4"
-                        Command="{Binding DeployQueueCommand}">
+                        Command="{Binding DeployQueueCommand}"
+                        ToolTip="Create sharable version of this install group">
                     <Button.Content>
                         <StackPanel
                                 Orientation="Horizontal">

@@ -89,10 +89,13 @@
             VerticalAlignment="Stretch">
             <TabItem
                 Name="InstalledDLCMods_Tab"
-                Header="{DynamicResource string_installedDLCmods}"
                 Padding="0"
                 VerticalAlignment="Stretch"
                 Visibility="{Binding Game, Converter={StaticResource InstallationInformationTabVisibilityConverter}, ConverterParameter='DLCMods'}">
+                <TabItem.Header>
+                    <TextBlock Text="{DynamicResource string_installedDLCmods}" 
+                               ToolTip="Mods that are installed into DLC folders of the game"/>
+                </TabItem.Header>
                 <DockPanel
                     Margin="-8"
                     VerticalAlignment="Stretch">
@@ -251,12 +254,15 @@
                 </DockPanel>
             </TabItem>
             <TabItem
-                Header="{DynamicResource string_modifiedBasegameFiles}"
                 Name="ModifiedBasegameFiles_Tab"
                 Margin="0"
                 Padding="0"
                 VerticalAlignment="Stretch"
                 Visibility="{Binding Game, Converter={StaticResource InstallationInformationTabVisibilityConverter}, ConverterParameter='Basegame'}">
+                <TabItem.Header>
+                    <TextBlock Text="{DynamicResource string_modifiedBasegameFiles}" 
+                               ToolTip="Files that ship from BioWare that have been modified will be listed here,&#10;such as from merge mods, TLK merge, config merge, etc"/>
+                </TabItem.Header>
                 <DockPanel
                     Margin="-8"
                     VerticalAlignment="Stretch">
@@ -381,11 +387,14 @@
                 </DockPanel>
             </TabItem>
             <TabItem
-                Header="{DynamicResource string_modifiedDLCarchivesSFAR}"
                 Name="ModifiedSFARs_Tab"
                 Visibility="{Binding Game, Converter={StaticResource InstallationInformationTabVisibilityConverter}, ConverterParameter='SFAR'}"
                 Margin="0"
                 Padding="0">
+                <TabItem.Header>
+                    <TextBlock Text="{DynamicResource string_modifiedDLCarchivesSFAR}" 
+                               ToolTip="ME3 Official DLC is stored in SFAR files. Some modding tools will unpack these files, others will inject directly into them"/>
+                </TabItem.Header>
                 <DockPanel
                     VerticalAlignment="Stretch"
                     Margin="-8">
@@ -499,11 +508,14 @@
                 </DockPanel>
             </TabItem>
             <TabItem
-                Header="{DynamicResource string_officialDLC}"
                 Name="OfficialDLC_Tab"
                 Margin="0"
                 Padding="0"
                 Visibility="{Binding Game, Converter={StaticResource InstallationInformationTabVisibilityConverter}, ConverterParameter='OfficialDLC'}">
+                <TabItem.Header>
+                    <TextBlock Text="{DynamicResource string_officialDLC}" 
+                               ToolTip="List of installed DLC"/>
+                </TabItem.Header>
                 <DockPanel
                     VerticalAlignment="Stretch"
                     Margin="-8">
@@ -552,11 +564,14 @@
                 </DockPanel>
             </TabItem>
             <TabItem
-                Header="{DynamicResource string_textures}"
                 Name="Textures_Tab"
                 Margin="0"
                 Padding="0"
                 Visibility="{Binding Game, Converter={StaticResource InstallationInformationTabVisibilityConverter}, ConverterParameter='Textures'}">
+                <TabItem.Header>
+                    <TextBlock Text="{DynamicResource string_textures}" 
+                               ToolTip="List of all texture mods that were installed with texture modding tools"/>
+                </TabItem.Header>
                 <DockPanel
                     VerticalAlignment="Stretch"
                     Margin="-8">
@@ -679,11 +694,14 @@
                 </DockPanel>
             </TabItem>
             <TabItem
-                Header="{DynamicResource string_other}"
                 Name="Other_Tab"
                 Margin="0"
                 Padding="0"
                 Visibility="{Binding Game, Converter={StaticResource InstallationInformationTabVisibilityConverter}, ConverterParameter='Other'}">
+                <TabItem.Header>
+                    <TextBlock Text="{DynamicResource string_other}" 
+                               ToolTip="Extra information about this game installation"/>
+                </TabItem.Header>
                 <StackPanel
                     VerticalAlignment="Stretch"
                     Margin="-8">
