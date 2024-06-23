@@ -1924,6 +1924,17 @@
     <!-- Shown above the list of selected 2DAs tables -->
     <system:String x:Key="string_select2DAsToAdd">Select 2DAs to add</system:String>
     <system:String x:Key="string_errorGeneratingMod">Error generating mod</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeMiranda">Squadmate outfit merge: Miranda</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeJacob">Squadmate outfit merge: Jacob</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeMordin">Squadmate outfit merge: Mordin</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeJack">Squadmate outfit merge: Jack</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeGrunt">Squadmate outfit merge: Grunt</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeSamaraMorinth">Squadmate outfit merge: Samara/Morinth</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeThane">Squadmate outfit merge: Thane</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeLegion">Squadmate outfit merge: Legion</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeKasumi">Squadmate outfit merge: Kasumi</system:String>
+    <system:String x:Key="string_squadmateOutfitMergeZaeed">Squadmate outfit merge: Zaeed</system:String>
+
 
     <!-- List Dialog -->
     <system:String xml:space="preserve" x:Key="string_dialogCouldNotSetDataToClipboard">Could not set data to clipboard:\n</system:String>
