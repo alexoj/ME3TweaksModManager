@@ -2307,6 +2307,7 @@
     <system:String x:Key="string_dialog_selectGameInstallGroup">Select which game to create an install group for.</system:String>
     <system:String x:Key="string_debugTriggerDataReload">Debug: Trigger data reload</system:String>
     <!-- This is only shown in debug builds. It is used to test when a mod becomes available in the library -->
+    <system:String x:Key="string_gameRestore">Game restore</system:String>
 
     <!-- Batch Mod class -->
     <system:String x:Key="string_notConfigured">Not configured</system:String>
@@ -2886,6 +2887,7 @@
     <system:String x:Key="string_interp_addedStartupFile">Added startup file</system:String>
     <system:String x:Key="string_interp_failedToAddStartupFileX">Failed to add startup file: {0}</system:String>
     <!-- 0={error message} -->
+
     <!-- Save Selector -->
     <system:String xml:space="preserve" x:Key="string_tooltip_loadAllSaves">Parses all save files from all careers&#10;The default state is unchecked, which only loads the most recent 50 saves from every career</system:String>
     <system:String x:Key="string_loadAllSavesMayUseALotOfMemory">Load all saves (adds extra time to loading)</system:String>
@@ -2901,6 +2903,8 @@
     <system:String x:Key="string_interp_unknownMapX">Unknown map: {0}</system:String>
     <!-- 0={Map name (will be in form of BIOA_XXX or BioP_CitHot} -->
     <system:String x:Key="string_saveSelector">Save Selector</system:String>
+    <system:String x:Key="string_xSaves">{0} save(s)</system:String>
+    <!-- 0 = int. Just try your best on this one. -->
 
     <!-- Game launcher -->
     <system:String x:Key="string_autobootSave">Autoboot save</system:String>
