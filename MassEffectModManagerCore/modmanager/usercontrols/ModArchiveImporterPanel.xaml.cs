@@ -45,8 +45,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         // Must be ME2 or ME3, cannot have a transform, we allow it, archive has been scanned, we haven't started an operation
         // Mods that use the updater service cannot be compressed to ensure the update checks are reliable
         // Excludes Legendary Edition games.
-        public bool CanCompressPackages => MAI.CompressedMods.Any(x => x is Mod m && m.Game is MEGame.ME2 or MEGame.ME3) 
-                                           && MAI.CompressedMods.All(x => x is Mod m && m.ExeExtractionTransform == null && m.ModClassicUpdateCode == 0) 
+        public bool CanCompressPackages => MAI.CompressedMods.Any(x => x is Mod m && m.Game is MEGame.ME2 or MEGame.ME3)
+                                           && MAI.CompressedMods.All(x => x is Mod m && m.ExeExtractionTransform == null && m.ModClassicUpdateCode == 0)
                                            && MAI.CurrentState == EModArchiveImportState.SCANCOMPLETED;
         /// <summary>
         /// List of mods listed in the importer panel
@@ -94,11 +94,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols
 
                     // Todo: Change to link, maybe via NTFS streams?
                     // To support other providers
-                    
 
-                    if (MAI.CompressedMods.Count == 1 && MAI.CompressedMods[0] is BatchLibraryInstallQueue queue)
+
+                    if (MAI.CompressedMods.Count == 1 && MAI.CompressedMods[0] is BatchLibraryInstallQueue)
                     {
-                        ImportModsText = "Import install group";
+                        ImportModsText = M3L.GetString(M3L.string_importInstallGroup);
                     }
 
                     TriggerPropertyChangedFor(nameof(CanCompressPackages));

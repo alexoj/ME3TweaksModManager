@@ -1256,6 +1256,7 @@
     <system:String x:Key="string_installGroupAlreadyExists">Install group already exists</system:String>
     <system:String x:Key="string_interp_importingX">Importing {0}</system:String>
     <!-- 0={Filename} -->
+    <system:String x:Key="string_importInstallGroup">Import install group</system:String>
 
     <!-- Mod updater -->
     <system:String x:Key="string_modupdatesavailable">Mod updates available</system:String>

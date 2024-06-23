@@ -633,7 +633,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_errorInstallingTLKMergesX = "string_interp_errorInstallingTLKMergesX";
 		public const string string_title_errorInstallingTLKMerge = "string_title_errorInstallingTLKMerge";
 		public const string string_modRequiresAMDProcessor = "string_modRequiresAMDProcessor";
-		public const string string_previewPanelTitle = "string_previewPanelTitle";
+		public const string string_welcomeTo = "string_welcomeTo";
 		public const string string_selectYourLanguage = "string_selectYourLanguage";
 		public const string string_howToChangeLanguage = "string_howToChangeLanguage";
 		public const string string_previewPanelIntro = "string_previewPanelIntro";
@@ -911,9 +911,10 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_theFollowingModsFailedToLoad = "string_theFollowingModsFailedToLoad";
 		public const string string_failedMods = "string_failedMods";
 		public const string string_failureInformation = "string_failureInformation";
-		public const string string_debugReload = "string_debugReload";
 		public const string string_deleteFromLibrary = "string_deleteFromLibrary";
 		public const string string_visitWebsite = "string_visitWebsite";
+		public const string string_reloadMod = "string_reloadMod";
+		public const string string_forceUpdateCheck = "string_forceUpdateCheck";
 		public const string string_dialogRestoringFilesWhileAlotIsInstalledNotAllowed = "string_dialogRestoringFilesWhileAlotIsInstalledNotAllowed";
 		public const string string_cannotRestoreSfarFiles = "string_cannotRestoreSfarFiles";
 		public const string string_dialogRestoringFilesWhileAlotIsInstalledNotAllowedDevMode = "string_dialogRestoringFilesWhileAlotIsInstalledNotAllowedDevMode";
@@ -990,6 +991,14 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_noTextureModsAreInstalled = "string_noTextureModsAreInstalled";
 		public const string string_textureModded_packagesAndTFCsHidden = "string_textureModded_packagesAndTFCsHidden";
 		public const string string_loading = "string_loading";
+		public const string string_tooltip_dlcModsTab = "string_tooltip_dlcModsTab";
+		public const string string_enableAll = "string_enableAll";
+		public const string string_disableAll = "string_disableAll";
+		public const string string_tooltip_modifiedBasegameFilesTab = "string_tooltip_modifiedBasegameFilesTab";
+		public const string string_tooltip_modifiedSFARsTab = "string_tooltip_modifiedSFARsTab";
+		public const string string_tooltip_installedDLCTab = "string_tooltip_installedDLCTab";
+		public const string string_tooltip_texturesTab = "string_tooltip_texturesTab";
+		public const string string_tooltip_otherTab = "string_tooltip_otherTab";
 		public const string string_selectALogToView = "string_selectALogToView";
 		public const string string_collectingLogInformation = "string_collectingLogInformation";
 		public const string string_interp_serverRejectedTheUpload = "string_interp_serverRejectedTheUpload";
@@ -1073,6 +1082,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_dialog_biqAlreadyExists = "string_dialog_biqAlreadyExists";
 		public const string string_installGroupAlreadyExists = "string_installGroupAlreadyExists";
 		public const string string_interp_importingX = "string_interp_importingX";
+		public const string string_importInstallGroup = "string_importInstallGroup";
 		public const string string_modupdatesavailable = "string_modupdatesavailable";
 		public const string string_downloadUpdate = "string_downloadUpdate";
 		public const string string_downloadUpdateFromNexusMods = "string_downloadUpdateFromNexusMods";
