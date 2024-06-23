@@ -143,7 +143,7 @@
                             Text="{Binding CharacterName}"
                             FontWeight="Bold" />
                         <TextBlock
-                            Text="{Binding SaveFiles.BindableCount, StringFormat=\{0\} save(s)}" />
+                            Text="{Binding SaveFiles.BindableCount, Converter={StaticResource LocalizationConverter}, ConverterParameter='string_xSaves'}" />
                     </StackPanel>
                 </DataTemplate>
             </ListBox.ItemTemplate>
