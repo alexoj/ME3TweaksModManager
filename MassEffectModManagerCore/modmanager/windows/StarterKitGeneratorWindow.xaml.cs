@@ -16,6 +16,7 @@ using ME3TweaksCore.Localization;
 using ME3TweaksCore.ME3Tweaks.StarterKit;
 using ME3TweaksCore.Services.ThirdPartyModIdentification;
 using ME3TweaksCoreWPF.UI;
+using ME3TweaksModManager.extensions;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.memoryanalyzer;
@@ -248,6 +249,8 @@ namespace ME3TweaksModManager.modmanager.windows
         {
             M3MemoryAnalyzer.AddTrackedMemoryItem(@"Starter Kit Window", this);
             M3Log.Information(@"Opening Starter Kit window");
+
+            this.ApplyDarkNetWindowTheme();
 
             PendingGame = Game;
             CustomDLCMountsForGame.Filter = FilterTMPIEntries;
