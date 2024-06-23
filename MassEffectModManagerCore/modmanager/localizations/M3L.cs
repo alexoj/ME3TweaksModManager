@@ -1083,6 +1083,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_requiresBackup = "string_requiresBackup";
 		public const string string_tooltip_downloadAll = "string_tooltip_downloadAll";
 		public const string string_downloadAll = "string_downloadAll";
+		public const string string_interp_checkingForModUpdatesX = "string_interp_checkingForModUpdatesX";
 		public const string string_anUpdateToME3TweaksModManagerIsAvailable = "string_anUpdateToME3TweaksModManagerIsAvailable";
 		public const string string_downloadingUpdate = "string_downloadingUpdate";
 		public const string string_preparingToApplyUpdate = "string_preparingToApplyUpdate";

@@ -192,7 +192,7 @@ namespace ME3TweaksModManager.modmanager.loaders
             var client = NexusModsUtilities.GetClient();
             foreach (var m in updatableMods)
             {
-                BackgroundTaskEngine.SubmitBackgroundTaskUpdate(bgTask, $"Checking for mod updates ({m.ModName})");
+                BackgroundTaskEngine.SubmitBackgroundTaskUpdate(bgTask, M3L.GetString(M3L.string_interp_checkingForModUpdatesX, m.ModName));
                 var updateInfo = NexusModsUtilities.GetLatestVersion(m);
                 if (updateInfo != null)
                 {
