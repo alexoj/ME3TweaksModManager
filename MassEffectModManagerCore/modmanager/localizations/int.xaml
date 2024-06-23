@@ -2545,6 +2545,7 @@
     <!-- 'cmmver' is a descriptor and should NOT be changed. That value is part of moddesc.ini. -->
     <system:String x:Key="string_mde_interp_removeHeadmorphReferenceX">Remove headmorph reference '{0}'?</system:String>
     <!-- 0={Headmorph option title} -->
+    <system:String x:Key="string_mde_cloneAlternate">Clones this alternate, placing it directly beneath this one</system:String>
 
     <!-- Nexus File Search (Query) -->
     <system:String x:Key="string_nexusModsFileSearch">NexusMods File Search</system:String>
