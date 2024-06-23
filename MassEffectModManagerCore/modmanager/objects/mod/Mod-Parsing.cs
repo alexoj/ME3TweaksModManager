@@ -263,7 +263,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                                 str += $@" v{asi.Version}";
                             }
 
-                            str += " (Invalid)";
+                            str += @" (" + "Invalid" + @")";
                             sb.AppendLine(str);
                         }
                         else

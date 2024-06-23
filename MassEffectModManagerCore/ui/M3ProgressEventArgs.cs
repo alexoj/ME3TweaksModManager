@@ -16,8 +16,8 @@
         {
             if (amountCompleted < 0 || amountCompleted > total)
             {
-                throw new ArgumentOutOfRangeException("amountCompleted",
-                    "The amount of completed work (" + amountCompleted + ") must be less than the total (" + total + ").");
+                throw new ArgumentOutOfRangeException(@"amountCompleted",
+                    @"The amount of completed work (" + amountCompleted + @") must be less than the total (" + total + @").");
             }
 
             _amountDone = amountCompleted;

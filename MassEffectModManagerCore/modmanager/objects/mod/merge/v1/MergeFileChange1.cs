@@ -36,7 +36,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         /// <summary>
         /// The comment on this field. Optional.
         /// </summary>
-        [JsonProperty("comment")]
+        [JsonProperty(@"comment")]
         public string Comment { get; set; }
 
         public void ApplyChanges(IMEPackage package, MergeAssetCache1 assetsCache, MergeModPackage mmp, Action<int> addMergeWeightCompletion)

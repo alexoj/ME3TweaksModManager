@@ -22,7 +22,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 return UIMountPriority;
 
             if (IsInArchive)
-                throw new Exception("Cannot get a mod's mount priority while it is in an archive! This is a bug.");
+                throw new Exception(@"Cannot get a mod's mount priority while it is in an archive! This is a bug.");
 
             var custDLC = GetJob(ModJob.JobHeader.CUSTOMDLC);
             if (custDLC == null || custDLC.CustomDLCFolderMapping.Count == 0)

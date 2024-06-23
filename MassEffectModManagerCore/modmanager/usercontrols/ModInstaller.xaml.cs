@@ -165,7 +165,12 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     M3Log.Error($@"Oodle dll could not be sourced from game: {InstallOptionsPackage.InstallTarget.TargetPath}. Installation cannot proceed");
                     InstallationSucceeded = false;
                     InstallationCancelled = true;
-                    M3L.ShowDialog(mainwindow, "The compression library for opening and saving Legendary Edition packages could not be located. Ensure your game is properly installed. If you continue to have issues, please come to the ME3Tweaks Discord.", M3L.GetString(M3L.string_cannotInstallMod), MessageBoxButton.OK, MessageBoxImage.Error);
+                    var message = "The compression library for opening and saving Legendary Edition packages could not be located.";
+                    if (InstallOptionsPackage.InstallTarget.Supported)
+                    {
+                        message += " " + "Ensure your game is properly installed and has been run once. If you continue to have issues, please come to the ME3Tweaks Discord.";
+                    }
+                    M3L.ShowDialog(mainwindow, message, M3L.GetString(M3L.string_cannotInstallMod), MessageBoxButton.OK, MessageBoxImage.Error);
                     OnClosing(DataEventArgs.Empty);
                     return;
                 }
@@ -956,7 +961,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 {
                     Action = "Tracking mergemod changes";
                     mmp.FinalizeFileTransitionMap();
-                    foreach (var f in mmp.FileTransitionMap.Where(x=>x.Value.WasSavedOnce))
+                    foreach (var f in mmp.FileTransitionMap.Where(x => x.Value.WasSavedOnce))
                     {
                         addBasegameTrackedFile(f.Value.OriginalMD5, f.Key, f.Value.FinalMD5);
                     }
