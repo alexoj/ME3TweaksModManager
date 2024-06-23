@@ -165,10 +165,10 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     M3Log.Error($@"Oodle dll could not be sourced from game: {InstallOptionsPackage.InstallTarget.TargetPath}. Installation cannot proceed");
                     InstallationSucceeded = false;
                     InstallationCancelled = true;
-                    var message = "The compression library for opening and saving Legendary Edition packages could not be located.";
+                    var message = M3L.GetString(M3L.string_oodleNotFound);
                     if (InstallOptionsPackage.InstallTarget.Supported)
                     {
-                        message += " " + "Ensure your game is properly installed and has been run once. If you continue to have issues, please come to the ME3Tweaks Discord.";
+                        message += " " + M3L.GetString(M3L.string_ensureGameIsValidDiscord);
                     }
                     M3L.ShowDialog(mainwindow, message, M3L.GetString(M3L.string_cannotInstallMod), MessageBoxButton.OK, MessageBoxImage.Error);
                     OnClosing(DataEventArgs.Empty);
@@ -959,7 +959,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 // Run at the end of all merge mods so we get the final hash.
                 void convertMergeModRecordsToFileIdentificationRecords()
                 {
-                    Action = "Tracking mergemod changes";
+                    Action = M3L.GetString(M3L.string_trackingMergemodChanges);
                     mmp.FinalizeFileTransitionMap();
                     foreach (var f in mmp.FileTransitionMap.Where(x => x.Value.WasSavedOnce))
                     {

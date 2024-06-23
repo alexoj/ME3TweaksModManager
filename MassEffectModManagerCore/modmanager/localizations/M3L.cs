@@ -633,6 +633,9 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_errorInstallingTLKMergesX = "string_interp_errorInstallingTLKMergesX";
 		public const string string_title_errorInstallingTLKMerge = "string_title_errorInstallingTLKMerge";
 		public const string string_modRequiresAMDProcessor = "string_modRequiresAMDProcessor";
+		public const string string_oodleNotFound = "string_oodleNotFound";
+		public const string string_ensureGameIsValidDiscord = "string_ensureGameIsValidDiscord";
+		public const string string_trackingMergemodChanges = "string_trackingMergemodChanges";
 		public const string string_welcomeTo = "string_welcomeTo";
 		public const string string_selectYourLanguage = "string_selectYourLanguage";
 		public const string string_howToChangeLanguage = "string_howToChangeLanguage";
@@ -1984,6 +1987,8 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_version = "string_version";
 		public const string string_useLatestVersion = "string_useLatestVersion";
 		public const string string_dialog_deleteMultilistConfirm = "string_dialog_deleteMultilistConfirm";
+		public const string string_tooltip_deleteMultilist = "string_tooltip_deleteMultilist";
+		public const string string_tooltip_deleteFileFromMultilist = "string_tooltip_deleteFileFromMultilist";
 		public const string string_nexusModsFileSearch = "string_nexusModsFileSearch";
 		public const string string_description_nexusModsFileSearch = "string_description_nexusModsFileSearch";
 		public const string string_search = "string_search";
