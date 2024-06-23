@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ME3TweaksCore.Helpers;
+﻿using ME3TweaksCore.Helpers;
+using ME3TweaksModManager.modmanager.localizations;
 
 namespace ME3TweaksModManager.modmanager.objects.mod.moddesc
 {
@@ -24,7 +20,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.moddesc
             if (data.Count == 0 || data.Count > 2)
             {
                 M3Log.Error($@"M3ASIVersion data in moddesc is not valid. At most an M3ASIVersion struct can contain 1 or 2 values: GroupID and optionally Version. This has {data.Count} entries. Data: {data}");
-                mod.LoadFailedReason = $"M3ASIVersion data in moddesc is not valid. At most an M3ASIVersion struct can contain 1 or 2 values: GroupID and optionally Version. This has {data.Count} entries. Data: {data}";
+                mod.LoadFailedReason = M3L.GetString(M3L.string_validation_m3ASIVersionWrongValueCount, data.Count, data);
                 return;
             }
 
@@ -32,14 +28,14 @@ namespace ME3TweaksModManager.modmanager.objects.mod.moddesc
             if (!data.TryGetValue(GROUP_KEY_NAME, out var groupIdStr))
             {
                 M3Log.Error(@$"M3ASIVersion data in moddesc is not valid. Key '{GROUP_KEY_NAME}' is missing. Data: {data}");
-                mod.LoadFailedReason = $"M3ASIVersion data in moddesc is not valid. Key '{GROUP_KEY_NAME}' is missing. Data: {data}";
+                mod.LoadFailedReason = M3L.GetString(M3L.string_interp_m3ASIVersionMissingKey, GROUP_KEY_NAME, data);
                 return;
             }
 
             if (!int.TryParse(groupIdStr, out var groupId))
             {
                 M3Log.Error(@$"M3ASIVersion data in moddesc is not valid. Key '{GROUP_KEY_NAME}' did not resolve to an integer. Data: {data}");
-                mod.LoadFailedReason = $"M3ASIVersion data in moddesc is not valid. Key '{GROUP_KEY_NAME}' did not resolve to an integer. Data: {data}";
+                mod.LoadFailedReason = M3L.GetString(M3L.string_interp_m3ASIVersionNotAnInteger, GROUP_KEY_NAME, data);
                 return;
             }
 
@@ -60,7 +56,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.moddesc
                     if (versionNum <= 0)
                     {
                         M3Log.Error($@"{VERSION_KEY_NAME} value cannot be less than or equal to 0 in M3ASIVersion structs. Invalid value: {versionStr}");
-                        mod.LoadFailedReason = $"{VERSION_KEY_NAME} value cannot be less than or equal to 0 in M3ASIVersion structs. Invalid value: {versionStr}";
+                        mod.LoadFailedReason = M3L.GetString(M3L.string_interp_m3ASIVersionMustBeGTOne, VERSION_KEY_NAME, versionStr);
                         return;
                     }
 
@@ -70,7 +66,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.moddesc
                 else
                 {
                     M3Log.Error($@"{VERSION_KEY_NAME} key value must resolve to an integer in M3ASIVersion structs. Invalid value: {versionStr}");
-                    mod.LoadFailedReason = $"{VERSION_KEY_NAME} key value must resolve to an integer in M3ASIVersion structs. Invalid value: {versionStr}";
+                    mod.LoadFailedReason = M3L.GetString(M3L.string_interp_m3ASIVersionValueMustBeInteger, VERSION_KEY_NAME, versionStr);
                     return;
                 }
             }

@@ -1386,6 +1386,11 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_installsTheFollowingASIMods = "string_installsTheFollowingASIMods";
 		public const string string_invalid = "string_invalid";
 		public const string string_interp_validation_altSpecifiesValueFolderDoesntExist = "string_interp_validation_altSpecifiesValueFolderDoesntExist";
+		public const string string_validation_m3ASIVersionWrongValueCount = "string_validation_m3ASIVersionWrongValueCount";
+		public const string string_interp_m3ASIVersionMissingKey = "string_interp_m3ASIVersionMissingKey";
+		public const string string_interp_m3ASIVersionNotAnInteger = "string_interp_m3ASIVersionNotAnInteger";
+		public const string string_interp_m3ASIVersionMustBeGTOne = "string_interp_m3ASIVersionMustBeGTOne";
+		public const string string_interp_m3ASIVersionValueMustBeInteger = "string_interp_m3ASIVersionValueMustBeInteger";
 		public const string string_interp_noBackupMessage = "string_interp_noBackupMessage";
 		public const string string_backupWarning = "string_backupWarning";
 		public const string string_tooltip_hello = "string_tooltip_hello";

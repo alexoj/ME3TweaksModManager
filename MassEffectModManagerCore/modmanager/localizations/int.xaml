@@ -1764,6 +1764,18 @@
     <system:String x:Key="string_interp_validation_altSpecifiesValueFolderDoesntExist">Alternate {0} specifies a '{1}' value that references folder in {2} that does not exist</system:String>
     <!-- 0={Name} 1={Name of folder} 2={Folder name} -->
 
+    <!-- M3 ASI Version -->
+    <system:String x:Key="string_validation_m3ASIVersionWrongValueCount">M3ASIVersion data in moddesc is not valid. At most an M3ASIVersion struct can contain 1 or 2 values: GroupID and optionally Version. This has {0} entries. Data: {1}</system:String>
+    <!-- 0={integer} 1={data} -->
+    <system:String x:Key="string_interp_m3ASIVersionMissingKey">M3ASIVersion data in moddesc is not valid. Key '{0}' is missing. Data: {1}</system:String>
+    <!-- 0={'groupid'} 1={int} -->
+    <system:String x:Key="string_interp_m3ASIVersionNotAnInteger">M3ASIVersion data in moddesc is not valid. Key '{0}' did not resolve to an integer. Data: {1}</system:String>
+    <!-- 0={'groupid'} 1={int} -->
+    <system:String x:Key="string_interp_m3ASIVersionMustBeGTOne">{0} value cannot be less than or equal to 0 in M3ASIVersion structs. Invalid value: {1}</system:String>
+    <!-- 0={'version'} 1={int} -->
+    <system:String x:Key="string_interp_m3ASIVersionValueMustBeInteger">{0} key value must resolve to an integer in M3ASIVersion structs. Invalid value: {1}</system:String>
+    <!-- 0={'version'} 1={int} -->
+
     <!-- Shared NO BACKUP -->
     <system:String x:Key="string_interp_noBackupMessage">There is no backup of {0} available. If you continue, you will be unable to take a game backup as the game will be modified. Are you sure you want to do this?</system:String>
     <!-- 0={Game (ME1/ME2...)} -->
