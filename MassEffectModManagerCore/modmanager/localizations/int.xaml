@@ -1143,6 +1143,14 @@
     <system:String x:Key="string_noTextureModsAreInstalled">No texture mods are installed</system:String>
     <system:String x:Key="string_textureModded_packagesAndTFCsHidden">Texture-only modified package files are not shown, as all package files will be texture-modified when a game has been texture modded. Texture modded files cannot be restored, you must restore your game from backup.</system:String>
     <system:String x:Key="string_loading">Loading</system:String>
+    <system:String x:Key="string_tooltip_dlcModsTab">Mods that are installed into DLC folders of the game</system:String>
+    <system:String x:Key="string_enableAll">Enable all</system:String>
+    <system:String x:Key="string_disableAll">Disable all</system:String>
+    <system:String xml:space="preserve" x:Key="string_tooltip_modifiedBasegameFilesTab">Files that ship from BioWare that have been modified will be listed here,&#10;such as from merge mods, TLK merge, config merge, etc</system:String>
+    <system:String x:Key="string_tooltip_modifiedSFARsTab">ME3 Official DLC is stored in SFAR files. Some modding tools will unpack these files, others will inject directly into them</system:String>
+    <system:String x:Key="string_tooltip_installedDLCTab">List of installed DLC</system:String>
+    <system:String x:Key="string_tooltip_texturesTab">List of all texture mods that were installed with texture modding tools</system:String>
+    <system:String x:Key="string_tooltip_otherTab">Extra information about this game installation</system:String>
 
     <!-- Log uploader-->
     <system:String x:Key="string_selectALogToView">Select a log to view on log viewing service</system:String>
