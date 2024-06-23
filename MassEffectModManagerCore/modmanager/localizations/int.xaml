@@ -650,6 +650,8 @@
     <system:String x:Key="string_ensureGameIsValidDiscord">Ensure your game is properly installed and has been run once. If you continue to have issues, please come to the ME3Tweaks Discord.</system:String>
     <system:String x:Key="string_trackingMergemodChanges">Tracking mergemod changes</system:String>
     <!-- M3 is inventorying files for changes, hence 'tracking' them -->
+    <system:String x:Key="string_tooltip_optionNotApplicable">Based on conditions set by the mod developer, this option is not applicable based on your game's current setup</system:String>
+    <system:String x:Key="string_tooltip_optionForceApplied">Based on conditions set by the mod developer, this option must be applied based on your game's current setup</system:String>
 
     <!-- Welcome panel -->
     <system:String x:Key="string_welcomeTo">Welcome to</system:String>
@@ -2603,7 +2605,7 @@
     <system:String x:Key="string_closeTheEditorForThisMod">Close the editor for this mod?</system:String>
     <system:String x:Key="string_haveYouSavedChanges">Have you saved changes?</system:String>
 
-<!-- Nexus File Search (Query) -->
+    <!-- Nexus File Search (Query) -->
     <system:String x:Key="string_nexusModsFileSearch">NexusMods File Search</system:String>
     <system:String x:Key="string_description_nexusModsFileSearch">You can search for files contained in mods on NexusMods for the Mass Effect trilogy games with NexusMods File Search. The database is regularly updated and maintained by ME3Tweaks.</system:String>
     <system:String x:Key="string_search">Search</system:String>

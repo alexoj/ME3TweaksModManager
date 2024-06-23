@@ -136,7 +136,7 @@
                         </MultiDataTrigger.Conditions>
                         <Setter
                             Property="ToolTip"
-                            Value="Based on conditions set by the mod developer, this option is not applicable based on your game's current setup"/>
+                            Value="{DynamicResource string_tooltip_optionNotApplicable}"/>
                         <Setter
                             Property="Cursor"
                             Value="No" />
@@ -150,7 +150,7 @@
                         </MultiDataTrigger.Conditions>
                         <Setter
                             Property="ToolTip"
-                            Value="Based on conditions set by the mod developer, this option must be applied based on your game's current setup"/>
+                            Value="{DynamicResource string_tooltip_optionForceApplied}"/>
                         <Setter
                             Property="Cursor"
                             Value="No" />
