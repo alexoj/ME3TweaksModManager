@@ -2164,5 +2164,10 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_selectLibraryType = "string_selectLibraryType";
 		public const string string_shared = "string_shared";
 		public const string string_local = "string_local";
+		public const string string_importFailed = "string_importFailed";
+		public const string string_scanning = "string_scanning";
+		public const string string_importQueued = "string_importQueued";
+		public const string string_importingMods = "string_importingMods";
+		public const string string_importComplete = "string_importComplete";
 	}
 }

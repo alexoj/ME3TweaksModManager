@@ -2862,4 +2862,12 @@
     <!-- 'Shared' library -->
     <system:String x:Key="string_local">Local</system:String>
     <!-- 'Local' library -->
+
+    <!-- Download Manager -->
+    <system:String x:Key="string_importFailed">Import failed</system:String>
+    <system:String x:Key="string_scanning">Scanning</system:String>
+    <system:String x:Key="string_importQueued">Import queued</system:String>
+    <system:String x:Key="string_importingMods">Importing mods</system:String>
+    <system:String x:Key="string_importComplete">Import complete</system:String>
+
 </ResourceDictionary>

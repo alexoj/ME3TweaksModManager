@@ -141,24 +141,24 @@ namespace ME3TweaksModManager.modmanager.nexusmodsintegration
             {
                 var matchingObj = Downloads.Values.FirstOrDefault(x => x.ImportFlow == mai);
                 if (matchingObj == null)
-                    return; 
+                    return;
 
                 switch (mai.CurrentState)
                 {
                     case EModArchiveImportState.FAILED:
-                        matchingObj.Status = "Import failed";
+                        matchingObj.Status = M3L.GetString(M3L.string_importFailed);
                         break;
                     case EModArchiveImportState.SCANNING:
-                        matchingObj.Status = "Scanning";
+                        matchingObj.Status = M3L.GetString(M3L.string_scanning);
                         break;
                     case EModArchiveImportState.SCANCOMPLETED:
-                        matchingObj.Status = "Import queued";
+                        matchingObj.Status = M3L.GetString(M3L.string_importQueued);
                         break;
                     case EModArchiveImportState.IMPORTING:
-                        matchingObj.Status = "Importing mods";
+                        matchingObj.Status = M3L.GetString(M3L.string_importingMods);
                         break;
                     case EModArchiveImportState.COMPLETE:
-                        matchingObj.Status = "Import complete";
+                        matchingObj.Status = M3L.GetString(M3L.string_importComplete);
                         break;
                 }
             }
