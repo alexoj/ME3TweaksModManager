@@ -2809,6 +2809,23 @@
     <system:String x:Key="string_tooltip_autoResume">Instructs game to automatically attempt to resume the last savegame</system:String>
     <system:String x:Key="string_noForceFeedback">No force feedback</system:String>
     <system:String x:Key="string_tooltip_disablesControllerVibration">Disables controller vibration</system:String>
+    <system:String x:Key="string_enableProcessMinidumps">Enable process minidumps</system:String>
+    <system:String xml:space="preserve" x:Key="string_tooltip_enableMinidumps">Causes crash dumps to be created when exceptions in the game occur.\nDo not turn on unless told to do so by a developer as this option will reduce performance</system:String>
+    <system:String x:Key="string_english">English</system:String>
+    <system:String x:Key="string_french">French</system:String>
+    <system:String x:Key="string_frenchTextEnglishVoiceover">French text, English voiceover</system:String>
+    <system:String x:Key="string_german">German</system:String>
+    <system:String x:Key="string_germanTextEnglishVoiceover">German text, English voiceover</system:String>
+    <system:String x:Key="string_italian">Italian</system:String>
+    <system:String x:Key="string_italianTextEnglishVoiceover">Italian text, English voiceover</system:String>
+    <system:String x:Key="string_spanishTextEnglishVoiceover">Spanish text, English voiceover</system:String>
+    <system:String x:Key="string_japaneseTextEnglishVoiceover">Japanese text, English voiceover</system:String>
+    <system:String x:Key="string_polish">Polish</system:String>
+    <system:String x:Key="string_polishTextEnglishVoiceover">Polish text, English voiceover</system:String>
+    <system:String x:Key="string_russian">Russian</system:String>
+    <system:String x:Key="string_russianTextEnglishVoiceover">Russian text, English voiceover</system:String>
+    <system:String x:Key="string_czechTextPartialEnglishVoiceover">Czech text (partial), English voiceover</system:String>
+    <system:String x:Key="string_hungarianTextPartialEnglishVoiceover">Hungarian text (partial), English voiceover</system:String>
 
     <!-- Bio2DA Selector Dialog -->
     <system:String x:Key="string_thereIsNoBackupAvailableToQuery2DAsFrom">There is no backup available to query 2DAs from.</system:String>
