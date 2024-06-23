@@ -46,8 +46,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
             if (obj is MDMultilist md)
             {
                 var result = M3L.ShowDialog(Window.GetWindow(this),
-                                    $"Delete multilist {md.MultilistId}? This will reindex all multilists. Ensure you check and update any references to your multilists.",
-                                    "Confirm deletion", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                                    M3L.GetString(M3L.string_dialog_deleteMultilistConfirm, md.MultilistId),
+                                    M3L.GetString(M3L.string_confirmDeletion), MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
                 if (result == MessageBoxResult.Yes)
                 {
                     Multilists.Remove(md);

@@ -1974,6 +1974,16 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_mde_description_alternatefiles_officialdlc = "string_mde_description_alternatefiles_officialdlc";
 		public const string string_mde_description_cmmverUpgradeWarning = "string_mde_description_cmmverUpgradeWarning";
 		public const string string_mde_interp_removeHeadmorphReferenceX = "string_mde_interp_removeHeadmorphReferenceX";
+		public const string string_mde_cloneAlternate = "string_mde_cloneAlternate";
+		public const string string_mde_description_asimods = "string_mde_description_asimods";
+		public const string string_mde_warning_asimods = "string_mde_warning_asimods";
+		public const string string_addASIMod = "string_addASIMod";
+		public const string string_tooltip_removeASIFromThisMod = "string_tooltip_removeASIFromThisMod";
+		public const string string_asiMod = "string_asiMod";
+		public const string string_groupID = "string_groupID";
+		public const string string_version = "string_version";
+		public const string string_useLatestVersion = "string_useLatestVersion";
+		public const string string_dialog_deleteMultilistConfirm = "string_dialog_deleteMultilistConfirm";
 		public const string string_nexusModsFileSearch = "string_nexusModsFileSearch";
 		public const string string_description_nexusModsFileSearch = "string_description_nexusModsFileSearch";
 		public const string string_search = "string_search";
