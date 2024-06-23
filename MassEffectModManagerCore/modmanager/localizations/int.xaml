@@ -2556,6 +2556,9 @@
     <system:String x:Key="string_useLatestVersion">Use latest version</system:String>
     <system:String x:Key="string_dialog_deleteMultilistConfirm">Delete multilist {0}? This will reindex all multilists. Ensure you check and update any references to your multilists.</system:String>
     <!-- 0={int} -->
+    <system:String x:Key="string_tooltip_deleteMultilist">Delete multilist</system:String>
+    <system:String x:Key="string_tooltip_deleteFileFromMultilist">Delete file from multilist</system:String>
+
 
     <!-- Nexus File Search (Query) -->
     <system:String x:Key="string_nexusModsFileSearch">NexusMods File Search</system:String>
