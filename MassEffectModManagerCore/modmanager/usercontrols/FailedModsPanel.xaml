@@ -1,6 +1,11 @@
 ﻿<usercontrols:MMBusyPanelBase
-    x:Class="ME3TweaksModManager.modmanager.usercontrols.FailedModsPanel" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-    mc:Ignorable="d" xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
+    x:Class="ME3TweaksModManager.modmanager.usercontrols.FailedModsPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    mc:Ignorable="d"
+    xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
     xmlns:usercontrols="clr-namespace:ME3TweaksModManager.modmanager.usercontrols"
     xmlns:converters="clr-namespace:ME3TweaksModManager.modmanager.converters"
     xmlns:mm="clr-namespace:ME3TweaksModManager"
@@ -28,7 +33,7 @@
             <Button
                 DockPanel.Dock="Right"
                 MinWidth="70"
-                Content="Reload mod"
+                Content="{DynamicResource string_reloadMod}"
                 Margin="5,0,0,0"
                 Command="{Binding ReloadCommand}"
                 Padding="7,4" />
@@ -38,14 +43,14 @@
                 Content="{DynamicResource string_Openmodfolder}"
                 Margin="5,0,0,0"
                 Command="{Binding OpenModFolderCommand}"
-                Padding="7,4"/>
+                Padding="7,4" />
             <Button
                 DockPanel.Dock="Right"
                 MinWidth="70"
                 Content="{DynamicResource string_openModdesciniFile}"
                 Margin="5,0,0,0"
                 Command="{Binding EditModdescCommand}"
-                Padding="7,4"/>
+                Padding="7,4" />
             <Button
                 DockPanel.Dock="Right"
                 MinWidth="70"
@@ -57,11 +62,10 @@
             <Button
                 DockPanel.Dock="Right"
                 MinWidth="70"
-                Content="Force update check"
+                Content="{DynamicResource string_forceUpdateCheck}"
                 Margin="5,0,0,0"
                 Command="{Binding RestoreSelectedModCommand}"
                 Padding="7,4" />
-
             <Button
                 HorizontalAlignment="Left"
                 MinWidth="70"

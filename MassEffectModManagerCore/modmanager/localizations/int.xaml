@@ -1048,10 +1048,11 @@
     <system:String x:Key="string_theFollowingModsFailedToLoad">The following mods failed to load from the mod library. Select a mod to see why.</system:String>
     <system:String x:Key="string_failedMods">Failed mods</system:String>
     <system:String x:Key="string_failureInformation">Failure information</system:String>
-    <system:String x:Key="string_debugReload">Debug reload</system:String>
     <!-- This is only seen in debug builds, but localize it anyways. -->
     <system:String  x:Key="string_deleteFromLibrary">Delete from library</system:String>
     <system:String  x:Key="string_visitWebsite">Visit website</system:String>
+    <system:String x:Key="string_reloadMod">Reload mod</system:String>
+    <system:String x:Key="string_forceUpdateCheck">Force update check</system:String>
 
     <!-- Installation Information -->
     <system:String x:Key="string_dialogRestoringFilesWhileAlotIsInstalledNotAllowed">Restoring files on a texture modded target is not allowed as it will introduce invalid texture pointers into the installation. Only full game restores are allowed while a game is texture modded.</system:String>
