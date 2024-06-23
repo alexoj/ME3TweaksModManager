@@ -517,7 +517,6 @@
     <system:String x:Key="string_importOrInstallTheseMemFilesQuestion">Import or install these .mem files?</system:String>
     <system:String x:Key="string_importOrInstall">Import or install</system:String>
     <system:String x:Key="string_import">Import</system:String>
-    <system:String x:Key="string_textureImport">TextureImport</system:String>
     <system:String x:Key="string_importingTextureModsToLibrary">Importing texture mods to library</system:String>
     <system:String x:Key="string_importedTextureMods">Imported texture mods</system:String>
     <system:String x:Key="string_interp_errorDecompilingM3MMessage">Error decompiling m3m file: {0}</system:String>

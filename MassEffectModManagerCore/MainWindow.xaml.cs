@@ -4305,7 +4305,7 @@ namespace ME3TweaksModManager
                                 return;
                             if (impInstallCancel == MessageBoxResult.Yes)
                             {
-                                var task = BackgroundTaskEngine.SubmitBackgroundJob(M3L.GetString(M3L.string_textureImport), M3L.GetString(M3L.string_importingTextureModsToLibrary), M3L.GetString(M3L.string_importedTextureMods));
+                                var task = BackgroundTaskEngine.SubmitBackgroundJob(@"TextureImport", M3L.GetString(M3L.string_importingTextureModsToLibrary), M3L.GetString(M3L.string_importedTextureMods));
                                 Task.Run(() =>
                                 {
                                     ModArchiveImport.ImportTextureFiles(memFiles, memGame);
