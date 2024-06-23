@@ -909,6 +909,14 @@
     <!-- 0={Filename} 1={Mod name} -->
     <system:String x:Key="string_interp_detectedTFCFromAnotherModUnknown">Detected a TFC file that appears to be from another DLC mod: {0}. Shipping a TFC from another mod will break various modding tools and may get your mod blacklisted from import if it breaks user installations. TFC files are often not included in patching permissions, your mod may be removed from hosting platforms by including it. Do not include other mods TFC files in your mod.</system:String>
     <!-- 0={Filename} -->
+    <system:String x:Key="string_interp_futureModdescRequirementTFCName">Future versions of moddesc (possibly 9.1 or higher) will require TFC names to include the entire DLC foldername, to ensure unique TFC names. Consider conforming to this now, so it doesn't become an issue later. Relevant TFC: {0}</system:String>
+    <!-- 0={tfcName} -->
+    <system:String x:Key="string_interp_cannotShipMultipleSameTFC">Mods targeting moddesc 9.0 and higher cannot ship multiple same-named TFCs: {0}. It is very easy to crash the game doing this and does not work well with tools. Place all textures the mod can use into a single TFC, and then break the packages up into alternates.</system:String>
+    <!-- 0={comma separated list of filenames} -->
+    <system:String x:Key="string_interp_modsShouldNotShipMultipleSameTFCMD8">Mods should not ship multiple same-named TFCs: {0}. It is very easy to crash the game doing this and does not work well with tools. Place all textures the mod can use into a single TFC, and then break the packages up into alternates.</system:String>
+    <!-- 0={comma separated list of filenames. This is different from the other string as this is shown on older moddesc versions} -->
+    <system:String x:Key="string_interp_foundTextureModdedPackageCannotShip">Found package that was part of a texture modded game install: {0}. Cannot ship this package.</system:String>
+    <!-- 0={File path} -->
 
     <!-- Misc checks -->
     <system:String x:Key="string_deployment_squadmateOutfitMerge">Squadmate Outfit Merge checks</system:String>
@@ -946,7 +954,7 @@
     <system:String x:Key="string_dialog_guidanceAvailable">The following general guidance is available for your mod.</system:String>
     <system:String x:Key="string_miscellaneousGuidance">Miscellaneous guidance</system:String>
 
-<!-- Language checks -->
+    <!-- Language checks -->
     <system:String x:Key="string_deployment_tlkIssueLangPackageNotFound">Localized TLK package {0} was not found. Users who play the game with their language/voiceover set to {1} ({2}) will have blank strings from this mod. See the Mod Manager documentation for more information.</system:String>
     <!-- 0={TLK package filename} 1={language.FileCode} 2={language.HumanDescription} -->
     <system:String x:Key="string_deployment_tlkIssueLangPackageWrongNumTLKExports">TLK package {0} only has 1 BioTalkFile export, it should have 2: one for male, one for female.</system:String>

@@ -816,6 +816,10 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_cannotInstallTFCToBasegameLE1 = "string_interp_cannotInstallTFCToBasegameLE1";
 		public const string string_interp_detectedTFCFromAnotherModTPMI = "string_interp_detectedTFCFromAnotherModTPMI";
 		public const string string_interp_detectedTFCFromAnotherModUnknown = "string_interp_detectedTFCFromAnotherModUnknown";
+		public const string string_interp_futureModdescRequirementTFCName = "string_interp_futureModdescRequirementTFCName";
+		public const string string_interp_cannotShipMultipleSameTFC = "string_interp_cannotShipMultipleSameTFC";
+		public const string string_interp_modsShouldNotShipMultipleSameTFCMD8 = "string_interp_modsShouldNotShipMultipleSameTFCMD8";
+		public const string string_interp_foundTextureModdedPackageCannotShip = "string_interp_foundTextureModdedPackageCannotShip";
 		public const string string_deployment_squadmateOutfitMerge = "string_deployment_squadmateOutfitMerge";
 		public const string string_deployment_sqmIssuesDialogMessage = "string_deployment_sqmIssuesDialogMessage";
 		public const string string_deployment_sqmIssuesDialogTitle = "string_deployment_sqmIssuesDialogTitle";

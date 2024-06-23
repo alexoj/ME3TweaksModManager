@@ -1,17 +1,9 @@
 ﻿using LegendaryExplorerCore.Helpers;
-using LegendaryExplorerCore.Packages;
 using LegendaryExplorerCore.Unreal;
 using LegendaryExplorerCore.Unreal.Classes;
 using ME3TweaksCore.Services;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.localizations;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ME3TweaksCore.Misc;
 using ME3TweaksCore.Services.ThirdPartyModIdentification;
 
@@ -78,7 +70,7 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                     {
                         // Cannot ship texture touched files.
                         M3Log.Error($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
-                        item.AddBlockingError($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
+                        item.AddBlockingError(M3L.GetString(M3L.string_interp_foundTextureModdedPackageCannotShip, relativePath));
                         continue; // No further checks on this file.
                     }
                     else if (package.Game.IsOTGame())
@@ -88,7 +80,7 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                         if (MEPackage.MEMPackageTag.SequenceEqual(fs.ReadToBuffer(MEPackage.MEMPackageTagLength)))
                         {
                             M3Log.Error($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
-                            item.AddBlockingError($@"Found package that was part of a texture modded game install: {relativePath}. Cannot ship this package.");
+                            item.AddBlockingError(M3L.GetString(M3L.string_interp_foundTextureModdedPackageCannotShip, relativePath));
                         }
 
                         continue; // No further checks on this file.
@@ -221,7 +213,7 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                 // Future warning for moddesc 9.1 (maybe 10), unsure. Include at least 
                 if (!tfcName.ContainsAny(dlcFolderDests, StringComparison.InvariantCultureIgnoreCase))
                 {
-                    item.AddInfoWarning($"Future versions of moddesc (possibly 9.1 or higher) will require TFC names to include the entire DLC foldername, to ensure unique TFC names. Consider conforming to this now, so it doesn't become an issue later. Relevant TFC: {tfcName}");
+                    item.AddInfoWarning(M3L.GetString(M3L.string_interp_futureModdescRequirementTFCName, tfcName));
                 }
 
                 Debug.WriteLine(tfc);
@@ -240,12 +232,12 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                 if (item.ModToValidateAgainst.ModDescTargetVersion >= 9.0)
                 {
                     item.AddBlockingError(
-                        $"Mods targetting moddesc 9.0 and higher cannot ship multiple same-named TFCs: {string.Join(',', duplicates)}. It is very easy to crash the game doing this and does not work well with tools. Place all textures the mod can use into a single TFC, and then break the packages up into alternates.");
+                        M3L.GetString(M3L.string_interp_cannotShipMultipleSameTFC, string.Join(',', duplicates)));
                 }
                 else
                 {
                     item.AddSignificantIssue(
-                        $"Mods should not ship multiple same-named TFCs: {string.Join(',', duplicates)}. It is very easy to crash the game doing this and does not work well with tools. Place all textures the mod can use into a single TFC, and then break the packages up into alternates.");
+                        M3L.GetString(M3L.string_interp_modsShouldNotShipMultipleSameTFCMD8, string.Join(',', duplicates)));
                 }
             }
 
