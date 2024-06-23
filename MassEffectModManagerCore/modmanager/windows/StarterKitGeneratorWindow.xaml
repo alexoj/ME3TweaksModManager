@@ -15,7 +15,6 @@
     xmlns:generic="clr-namespace:ME3TweaksModManager.modmanager.usercontrols.generic"
     xmlns:helpers="clr-namespace:ME3TweaksModManager.modmanager.helpers"
     xmlns:starterKit="clr-namespace:ME3TweaksCore.ME3Tweaks.StarterKit;assembly=ME3TweaksCore"
-    xmlns:thirdPartyModIdentification="clr-namespace:ME3TweaksCore.Services.ThirdPartyModIdentification;assembly=ME3TweaksCore"
     Background="{DynamicResource {x:Static adonisUi:Brushes.Layer2BackgroundBrush}}"
     WindowStartupLocation="CenterOwner"
     Title="{DynamicResource string_title_starterkit}"
@@ -572,7 +571,7 @@
                     </ListBox.ItemContainerStyle>
                     <ListBox.ItemTemplate>
                         <DataTemplate
-                            DataType=thirdPartyModIdentification:ThirdPartyModInfo>
+                            DataType="me3tweaks:ThirdPartyServices+ThirdPartyModInfo">
                             <TextBlock
                                 Text="{Binding StarterKitString}"
                                 FontSize="12"
