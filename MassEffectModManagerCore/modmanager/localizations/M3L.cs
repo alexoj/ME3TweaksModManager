@@ -2075,6 +2075,12 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_selectNexusModsDownloadDirectory = "string_selectNexusModsDownloadDirectory";
 		public const string string_lE1EnableCoalescedMerge = "string_lE1EnableCoalescedMerge";
 		public const string string_description_le1CoalescedMergeOption = "string_description_le1CoalescedMergeOption";
+		public const string string_standardOptionsForME3TweaksModManager = "string_standardOptionsForME3TweaksModManager";
+		public const string string_LE1Enable2DAMerge = "string_LE1Enable2DAMerge";
+		public const string string_description_LE1Enable2DAMerge = "string_description_LE1Enable2DAMerge";
+		public const string string_logAllFilesCopiedDuringRestore = "string_logAllFilesCopiedDuringRestore";
+		public const string string_description_logOptionLotsa = "string_description_logOptionLotsa";
+		public const string string_localLibraryWatermark = "string_localLibraryWatermark";
 		public const string string_noItemsSelected = "string_noItemsSelected";
 		public const string string_synchronizedSquadmateOutfits = "string_synchronizedSquadmateOutfits";
 		public const string string_synchronizingSquadmateOutfitFiles = "string_synchronizingSquadmateOutfitFiles";

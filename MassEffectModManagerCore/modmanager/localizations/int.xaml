@@ -2699,8 +2699,16 @@
     <system:String x:Key="string_selectNexusModsDownloadDirectory">Select NexusMods download directory</system:String>
     <system:String x:Key="string_lE1EnableCoalescedMerge">LE1: Enable Coalesced Merge</system:String>
     <system:String x:Key="string_description_le1CoalescedMergeOption">Turning this off will allow you to manually edit your Coalesced file, and will prevent .m3cd files from merging to the basegame Coalesced file. This will break some mods. Do not turn this off if you don't know what this means.</system:String>
+    <system:String x:Key="string_standardOptionsForME3TweaksModManager">Standard options for ME3Tweaks Mod Manager</system:String>
+    <system:String x:Key="string_LE1Enable2DAMerge">LE1: Enable 2DA Merge</system:String>
+    <system:String x:Key="string_description_LE1Enable2DAMerge">Turning this off will allow you to manually edit 2DA tables in LE1's basegame files, and will prevent .m3da files from merging to the basegame 2DA tables. This will break some mods. Do not turn this off if you don't know what this means.</system:String>
+    <system:String x:Key="string_logAllFilesCopiedDuringRestore">Log all files copied during restore</system:String>
+    <system:String x:Key="string_description_logOptionLotsa">This will generate a large amount of logs. Only turn this on if requested.</system:String>
+    <system:String x:Key="string_localLibraryWatermark">Default: Local instance library ('mods' folder)</system:String>
 
-    <!-- Check Box Combo Box Control -->
+
+
+<!-- Check Box Combo Box Control -->
     <system:String x:Key="string_noItemsSelected">No items selected</system:String>
 
     <!-- Squadmate Merge -->

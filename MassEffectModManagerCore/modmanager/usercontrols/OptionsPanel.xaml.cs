@@ -30,7 +30,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 new M3SettingGroup()
                 {
                     GroupName = M3L.GetString(M3L.string_mainOptions),
-                    GroupDescription = "Standard options for ME3Tweaks Mod Manager",
+                    GroupDescription = M3L.GetString(M3L.string_standardOptionsForME3TweaksModManager),
                     AllSettings = [
                         new M3DirectorySetting(settingsType, nameof(Settings.ModLibraryPath), M3L.string_modLibraryLocation, M3L.string_description_modsImportedAreStoredInLibrary, GetModLibraryWatermark, M3L.string_configure, ChangeLibraryDir),
                         new M3DirectorySetting(settingsType, nameof(Settings.ModDownloadCacheFolder), M3L.string_nexusModsDownloadFolder, M3L.string_description_nexusModsDownloadFolder, GetNexusDownloadLocationWatermark, M3L.string_configure, ChangeNexusModsDownloadCacheDir),
@@ -55,7 +55,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     AllSettings = [
                         new M3BooleanSetting(settingsType, nameof(Settings.SkipLELauncher), M3L.string_launcherAutobootSelectedGame, M3L.string_description_autobootLE),
                         new M3BooleanSetting(settingsType, nameof(Settings.EnableLE1CoalescedMerge), M3L.string_lE1EnableCoalescedMerge, M3L.string_description_le1CoalescedMergeOption),
-                        new M3BooleanSetting(settingsType, nameof(Settings.EnableLE12DAMerge), "LE1: Enable 2DA Merge", "Turning this off will allow you to manually edit 2DA tables in LE1's basegame files, and will prevent .m3da files from merging to the basegame 2DA tables. This will break some mods. Do not turn this off if you don't know what this means."),
+                        new M3BooleanSetting(settingsType, nameof(Settings.EnableLE12DAMerge), M3L.GetString(M3L.string_LE1Enable2DAMerge), M3L.GetString(M3L.string_description_LE1Enable2DAMerge)),
                     ]
                 },
 
@@ -67,7 +67,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         new M3BooleanSetting(settingsType, nameof(Settings.LogModStartup), M3L.string_LogModStartup, M3L.string_description_autobootLE),
                         new M3BooleanSetting(settingsType, nameof(Settings.LogModInstallation), M3L.string_LogModInstallation, M3L.string_tooltip_logModInstaller),
                         new M3BooleanSetting(settingsType, nameof(Settings.LogModUpdater), M3L.string_LogModUpdater, M3L.string_tooltip_logModUpdater),
-                        new M3BooleanSetting(settingsType, nameof(Settings.LogBackupAndRestore), "Log all files copied during restore", "This will generate a large amount of logs. Only turn this on if requested."),
+                        new M3BooleanSetting(settingsType, nameof(Settings.LogBackupAndRestore), M3L.GetString(M3L.string_logAllFilesCopiedDuringRestore), M3L.GetString(M3L.string_description_logOptionLotsa)),
                         new M3BooleanSetting(settingsType, nameof(Settings.LogModMakerCompiler), M3L.string_LogModMakerCompiler, M3L.string_tooltip_logModMakerCompiler),
 
                     ]
@@ -148,7 +148,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             }
             else
             {
-                return "Default: Local instance library ('mods' folder)";
+                return M3L.GetString(M3L.string_localLibraryWatermark);
             }
 
         }
