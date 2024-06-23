@@ -2613,6 +2613,11 @@
     <!-- 0={Name of property In.This.Form} -->
     <system:String x:Key="string_interp_updatingX">Updating {0}</system:String>
     <!-- 0={<A string>} -->
+    <system:String x:Key="string_interp_mergeModAssetsSingleFolder">Asset files for merge mods must all be contained in the same folder. Invalid asset name: {0}</system:String>
+    <!-- 0={Filename} -->
+
+    <!-- Merge Mods (V2) -->
+
 
     <!-- Options Panel -->
     <system:String x:Key="string_me3tweaksModManagerOptions">ME3Tweaks Mod Manager Settings</system:String>

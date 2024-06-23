@@ -94,7 +94,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         /// <summary>
         /// The comment on this field. Optional.
         /// </summary>
-        [JsonProperty("comment")]
+        [JsonProperty(@"comment")]
         public string Comment { get; set; }
     }
 

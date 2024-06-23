@@ -345,7 +345,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                                 var assetFilePath = Path.Combine(sourceDir, propertyUpdate.PropertyAsset);
                                 if (Directory.GetParent(assetFilePath).FullName != sourceDir)
                                 {
-                                    throw new Exception($"Asset files for merge mods must all be contained in the same folder. Invalid asset name: {propertyUpdate.PropertyAsset}");
+                                    throw new Exception(M3L.GetString(M3L.string_interp_mergeModAssetsSingleFolder, propertyUpdate.PropertyAsset));
                                 }
 
                                 M3Log.Information($@"M3MCompiler: ArrayProperty file being added into m3m: {assetFilePath}");
@@ -363,7 +363,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         var assetPath = Path.Combine(sourceDir, mc.AssetUpdate.AssetName);
                         if (Directory.GetParent(assetPath).FullName != sourceDir)
                         {
-                            throw new Exception($"Asset files for merge mods must all be contained in the same folder. Invalid asset name: {mc.AssetUpdate.AssetName}");
+                            throw new Exception(M3L.GetString(M3L.string_interp_mergeModAssetsSingleFolder, mc.AssetUpdate.AssetName));
                         }
                         if (!File.Exists(assetPath))
                         {
@@ -379,7 +379,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         var scriptDiskFile = Path.Combine(sourceDir, mc.ScriptUpdate.ScriptFileName);
                         if (Directory.GetParent(scriptDiskFile).FullName != sourceDir)
                         {
-                            throw new Exception($"Asset files for merge mods must all be contained in the same folder. Invalid asset name: {mc.ScriptUpdate.ScriptFileName}");
+                            throw new Exception(M3L.GetString(M3L.string_interp_mergeModAssetsSingleFolder, mc.ScriptUpdate.ScriptFileName));
                         }
 
                         if (!File.Exists(scriptDiskFile))
@@ -407,7 +407,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
                             if (Directory.GetParent(scriptDiskFile).FullName != sourceDir)
                             {
-                                throw new Exception($"Asset files for merge mods must all be contained in the same folder. Invalid asset name: {fileName}");
+                                throw new Exception(M3L.GetString(M3L.string_interp_mergeModAssetsSingleFolder, fileName));
                             }
 
                             if (!File.Exists(scriptDiskFile))
@@ -434,7 +434,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         var classDiskFile = Path.Combine(sourceDir, mc.ClassUpdate.AssetName);
                         if (Directory.GetParent(classDiskFile).FullName != sourceDir)
                         {
-                            throw new Exception($"Asset files for merge mods must all be contained in the same folder. Invalid asset name: {mc.ClassUpdate.AssetName}");
+                            throw new Exception(M3L.GetString(M3L.string_interp_mergeModAssetsSingleFolder, mc.ClassUpdate.AssetName));
                         }
                         if (!File.Exists(classDiskFile))
                         {

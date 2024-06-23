@@ -2008,6 +2008,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_errorCompilingPropertyXinYZ = "string_interp_errorCompilingPropertyXinYZ";
 		public const string string_interp_incompleteStaticArrayIndex = "string_interp_incompleteStaticArrayIndex";
 		public const string string_interp_updatingX = "string_interp_updatingX";
+		public const string string_interp_mergeModAssetsSingleFolder = "string_interp_mergeModAssetsSingleFolder";
 		public const string string_me3tweaksModManagerOptions = "string_me3tweaksModManagerOptions";
 		public const string string_mainOptions = "string_mainOptions";
 		public const string string_legendaryEditionOptions = "string_legendaryEditionOptions";
