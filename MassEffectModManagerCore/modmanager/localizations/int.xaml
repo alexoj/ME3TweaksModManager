@@ -2275,6 +2275,9 @@
     <system:String x:Key="string_tooltip_noSavedOptionsBQ">This mod has configurable options, but none have been saved. Install the group to record options for next time</system:String>
     <system:String x:Key="string_tooltip_reconfigurationBQ">This mod has changed since the configurable options were saved. When this group is installed again, you will have to choose options</system:String>
     <system:String x:Key="string_tooltip_timestampBQ">Timestamp of when configuration options were chosen</system:String>
+    <system:String x:Key="string_selectDeploymentDestination">Select deployment destination</system:String>
+    <system:String x:Key="string_tooltip_createSharableVersionOfThisInstallGroup">Create sharable version of this install group</system:String>
+    <system:String x:Key="string_shareGroup">Share group</system:String>
 
     <!-- Import Installed DLC Mod Panel -->
     <system:String x:Key="string_importAnInstalledDLCMod">Import an installed DLC mod</system:String>

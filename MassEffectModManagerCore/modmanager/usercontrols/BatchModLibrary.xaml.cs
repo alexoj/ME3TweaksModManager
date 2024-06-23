@@ -75,7 +75,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         {
             SaveFileDialog d = new SaveFileDialog
             {
-                Title = "Select deployment destination",
+                Title = M3L.GetString(M3L.string_selectDeploymentDestination),
                 Filter = $@"{M3L.GetString(M3L.string_7zipArchiveFile)}|*.7z",
                 FileName = $@"{SelectedBatchQueue.ModName}_installgroup.7z"
             };
