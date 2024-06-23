@@ -69,7 +69,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 if (b.Error != null)
                 {
                     M3Log.Exception(b.Error, @"Error restoring from backup:");
-                    M3L.ShowDialog(window, $"There was an error restoring from backup: {b.Error.Message}", M3L.GetString(M3L.string_errorRestoringGame), MessageBoxButton.OK, MessageBoxImage.Error);
+                    M3L.ShowDialog(window, M3L.GetString(M3L.string_interp_errorRestoringFromBackupX, b.Error.Message), M3L.GetString(M3L.string_errorRestoringGame), MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 OnClosing(DataEventArgs.Empty);
             };

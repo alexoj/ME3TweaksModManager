@@ -2202,5 +2202,6 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_invalidMagic_m3za = "string_invalidMagic_m3za";
 		public const string string_interp_tooNewM3ZAFile = "string_interp_tooNewM3ZAFile";
 		public const string string_interp_m3zaMissingTlkOptionKey = "string_interp_m3zaMissingTlkOptionKey";
+		public const string string_interp_errorRestoringFromBackupX = "string_interp_errorRestoringFromBackupX";
 	}
 }

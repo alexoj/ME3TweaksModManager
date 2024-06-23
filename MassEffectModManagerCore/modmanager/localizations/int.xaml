@@ -2929,4 +2929,8 @@
     <system:String x:Key="string_interp_m3zaMissingTlkOptionKey">Mod validation failed: CombinedTLKMergeData.m3za does not contain referenced TLK option key '{0}', which is referenced by AlternateDLC object {1}. Please contact the developer.</system:String>
     <!-- 0={Option key name} 1={Name} -->
 
+    <!-- Auto Restore Panel -->
+    <system:String x:Key="string_interp_errorRestoringFromBackupX">There was an error restoring from backup: {0}</system:String>
+    <!-- 0={Error Message} -->
+
 </ResourceDictionary>
