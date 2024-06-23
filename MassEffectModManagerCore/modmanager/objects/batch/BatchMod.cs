@@ -118,10 +118,10 @@ namespace ME3TweaksModManager.modmanager.objects.batch
             get
             {
                 // Standalone
-                if (Mod != null && Mod.InstallationJobs.Sum(x => x.GetAllAlternates().Count) == 0) return "This mod does not have configurable options. It always installs the same";
-                if (!HasChosenOptions) return "This mod has configurable options, but none have been saved. Install the group to record options for next time";
-                if (ChosenOptionsDesync) return "This mod has changed since the configurable options were saved. When this group is installed again, you will have to choose options";
-                return "Timestamp of when configuration options were chosen";
+                if (Mod != null && Mod.InstallationJobs.Sum(x => x.GetAllAlternates().Count) == 0) return M3L.GetString(M3L.string_tooltip_standaloneBQ);
+                if (!HasChosenOptions) return M3L.GetString(M3L.string_tooltip_noSavedOptionsBQ);
+                if (ChosenOptionsDesync) return M3L.GetString(M3L.string_tooltip_reconfigurationBQ);
+                return M3L.GetString(M3L.string_tooltip_timestampBQ);
             }
         }
 
@@ -140,7 +140,7 @@ namespace ME3TweaksModManager.modmanager.objects.batch
         /// <summary>
         /// Name to show when mod is not available. For serialization.
         /// </summary>
-        [JsonProperty("modname")]
+        [JsonProperty(@"modname")]
         public string ModName { get; set; }
 
 

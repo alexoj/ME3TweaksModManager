@@ -1748,6 +1748,10 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_xTextureMod = "string_interp_xTextureMod";
 		public const string string_interp_xASIMod = "string_interp_xASIMod";
 		public const string string_uiImportInstallGroupSuffix = "string_uiImportInstallGroupSuffix";
+		public const string string_tooltip_standaloneBQ = "string_tooltip_standaloneBQ";
+		public const string string_tooltip_noSavedOptionsBQ = "string_tooltip_noSavedOptionsBQ";
+		public const string string_tooltip_reconfigurationBQ = "string_tooltip_reconfigurationBQ";
+		public const string string_tooltip_timestampBQ = "string_tooltip_timestampBQ";
 		public const string string_importAnInstalledDLCMod = "string_importAnInstalledDLCMod";
 		public const string string_description_importFromGameToModManager = "string_description_importFromGameToModManager";
 		public const string string_modsInstalledByManagedSolutionCannotBeImported = "string_modsInstalledByManagedSolutionCannotBeImported";

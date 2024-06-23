@@ -504,7 +504,8 @@ namespace ME3TweaksModManager.modmanager.objects.batch
                     }
                 }
 
-                str += M3L.GetString(M3L.string_uiImportInstallGroupSuffix);
+                str += "\n" + // do not localize
+                       M3L.GetString(M3L.string_uiImportInstallGroupSuffix);
 
                 return str;
             }

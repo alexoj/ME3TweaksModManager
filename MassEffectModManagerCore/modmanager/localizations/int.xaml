@@ -2240,7 +2240,11 @@
     <!-- 0={t.ModName} -->
     <system:String xml:space="preserve" x:Key="string_interp_xASIMod"> - {0} (ASI mod)\n</system:String>
     <!-- 0={a.AssociatedMod.Name} -->
-    <system:String xml:space="preserve" x:Key="string_uiImportInstallGroupSuffix">\nImporting will add this install group to Batch Installer. This does not import any of the listed mods.</system:String>
+    <system:String xml:space="preserve" x:Key="string_uiImportInstallGroupSuffix">Importing will add this install group to Batch Installer. This does not import any of the listed mods.</system:String>
+    <system:String x:Key="string_tooltip_standaloneBQ">This mod does not have configurable options. It always installs the same</system:String>
+    <system:String x:Key="string_tooltip_noSavedOptionsBQ">This mod has configurable options, but none have been saved. Install the group to record options for next time</system:String>
+    <system:String x:Key="string_tooltip_reconfigurationBQ">This mod has changed since the configurable options were saved. When this group is installed again, you will have to choose options</system:String>
+    <system:String x:Key="string_tooltip_timestampBQ">Timestamp of when configuration options were chosen</system:String>
 
     <!-- Import Installed DLC Mod Panel -->
     <system:String x:Key="string_importAnInstalledDLCMod">Import an installed DLC mod</system:String>

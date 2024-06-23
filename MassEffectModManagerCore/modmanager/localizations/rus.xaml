@@ -206,7 +206,7 @@
 	<system:String x:Key="string_interp_xContentMod" xml:space="preserve">- {0} {1} (Контент-мод)\n</system:String>
 	<system:String x:Key="string_interp_xTextureMod" xml:space="preserve">- {0} (Текстурный мод)\n</system:String>
 	<system:String x:Key="string_interp_xASIMod" xml:space="preserve">- {0} (ASI-мод)\n</system:String>
-	<system:String x:Key="string_uiImportInstallGroupSuffix" xml:space="preserve">\nИмпортирование добавит данную группу установки в Batch Installer</system:String>
+    <system:String x:Key="string_uiImportInstallGroupSuffix" xml:space="preserve">Импортирование добавит данную группу установки в Batch Installer</system:String>
 	<system:String x:Key="string_batchModInstaller">Групповой Установщик Модов</system:String>
 	<system:String x:Key="string_description_batchModInstallerAllowsSerialInstall">Групповой Установщик Модов позволяет устанавливать группу модов подряд. позволяя быстро воссоздавать определенную конфигурацию игры.</system:String>
 	<system:String x:Key="string_createANewInstallGroup">Создать новую группу установки</system:String>
