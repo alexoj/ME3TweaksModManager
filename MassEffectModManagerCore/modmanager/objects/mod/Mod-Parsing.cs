@@ -251,7 +251,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
 
                 if (ASIModsToInstall.Any())
                 {
-                    sb.AppendLine("Installs the following ASI mods:");
+                    sb.AppendLine(M3L.GetString(M3L.string_installsTheFollowingASIMods));
                     foreach (var asi in ASIModsToInstall)
                     {
                         var realasi = ASIManager.GetASIModVersion(Game, asi.ASIGroupID, asi.Version);
@@ -263,7 +263,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                                 str += $@" v{asi.Version}";
                             }
 
-                            str += @" (" + "Invalid" + @")";
+                            str += @" (" + M3L.GetString(M3L.string_invalid) + @")";
                             sb.AppendLine(str);
                         }
                         else
@@ -1727,7 +1727,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                             if (!FilesystemInterposer.DirectoryExists(keyPath))
                             {
                                 M3Log.Error($@"Alternate {alt.FriendlyName} specifies a '{AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY}' value that references folder in {Mod.Game1EmbeddedTlkFolderName} that does not exist");
-                                LoadFailedReason = $"Alternate {alt.FriendlyName} specifies a '{AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY}' value that references folder in {Mod.Game1EmbeddedTlkFolderName} that does not exist";
+                                LoadFailedReason = M3L.GetString(M3L.string_interp_validation_altSpecifiesValueFolderDoesntExist, alt.FriendlyName, AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY, Mod.Game1EmbeddedTlkFolderName);
                                 return;
                             }
                         }

@@ -1383,6 +1383,9 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_mod_modReferencesHeadmorphFiles = "string_mod_modReferencesHeadmorphFiles";
 		public const string string_interp_validation_modparsing_unsupportedModdescVersion = "string_interp_validation_modparsing_unsupportedModdescVersion";
 		public const string string_mod_validation_basegameMergeModsWithoutModDir = "string_mod_validation_basegameMergeModsWithoutModDir";
+		public const string string_installsTheFollowingASIMods = "string_installsTheFollowingASIMods";
+		public const string string_invalid = "string_invalid";
+		public const string string_interp_validation_altSpecifiesValueFolderDoesntExist = "string_interp_validation_altSpecifiesValueFolderDoesntExist";
 		public const string string_interp_noBackupMessage = "string_interp_noBackupMessage";
 		public const string string_backupWarning = "string_backupWarning";
 		public const string string_tooltip_hello = "string_tooltip_hello";

@@ -1759,6 +1759,10 @@
     <!-- 0={Version number} 1={Version number} -->
     <system:String x:Key="string_mod_validation_basegameMergeModsWithoutModDir">[BASEGAME] 'mergemods' was specified, but 'moddir' was not - did you mean to set moddir to '.'? Merge mods will not work without settings a moddir value, use value '.' if you do not have other files to replace, or remove mergemods from this task header.</system:String>
     <!-- This is for user convenience -->
+    <system:String x:Key="string_installsTheFollowingASIMods">Installs the following ASI mods:</system:String>
+    <system:String x:Key="string_invalid">Invalid</system:String>
+    <system:String x:Key="string_interp_validation_altSpecifiesValueFolderDoesntExist">Alternate {0} specifies a '{1}' value that references folder in {2} that does not exist</system:String>
+    <!-- 0={Name} 1={Name of folder} 2={Folder name} -->
 
     <!-- Shared NO BACKUP -->
     <system:String x:Key="string_interp_noBackupMessage">There is no backup of {0} available. If you continue, you will be unable to take a game backup as the game will be modified. Are you sure you want to do this?</system:String>
