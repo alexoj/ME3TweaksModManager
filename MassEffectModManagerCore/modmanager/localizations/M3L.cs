@@ -2183,5 +2183,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_importQueued = "string_importQueued";
 		public const string string_importingMods = "string_importingMods";
 		public const string string_importComplete = "string_importComplete";
+		public const string string_dialog_mergeModFeatureLevel1 = "string_dialog_mergeModFeatureLevel1";
+		public const string string_useEnhancedFeaturesQuestion = "string_useEnhancedFeaturesQuestion";
 	}
 }

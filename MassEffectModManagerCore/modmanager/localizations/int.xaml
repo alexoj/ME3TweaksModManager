@@ -2890,4 +2890,8 @@
     <system:String x:Key="string_importingMods">Importing mods</system:String>
     <system:String x:Key="string_importComplete">Import complete</system:String>
 
+    <!-- Merge Mod Loader -->
+    <system:String x:Key="string_dialog_mergeModFeatureLevel1">Is the merge mod you are compiling going to be used in a mod that targets ModDesc 8.2 or lower?</system:String>
+    <system:String x:Key="string_useEnhancedFeaturesQuestion">Use enhanced features?</system:String>
+
 </ResourceDictionary>

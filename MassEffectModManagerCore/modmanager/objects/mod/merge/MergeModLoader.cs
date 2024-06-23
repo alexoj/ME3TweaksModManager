@@ -158,7 +158,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
 
         private static int? AskUserForVersion(Window window)
         {
-            var res = M3L.ShowDialog(window, "Is the merge mod you are compiling going to be used in a mod that targets ModDesc 8.2 or lower?", "Use enhanced features?", MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.No);
+            var res = M3L.ShowDialog(window, M3L.GetString(M3L.string_dialog_mergeModFeatureLevel1), M3L.GetString(M3L.string_useEnhancedFeaturesQuestion), MessageBoxButton.YesNoCancel, MessageBoxImage.Question, MessageBoxResult.No);
             if (res == MessageBoxResult.Cancel)
                 return null;
             return res == MessageBoxResult.No ? 2 : 1;
