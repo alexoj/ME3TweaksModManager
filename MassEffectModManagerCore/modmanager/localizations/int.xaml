@@ -2546,6 +2546,10 @@
     <system:String x:Key="string_mde_interp_removeHeadmorphReferenceX">Remove headmorph reference '{0}'?</system:String>
     <!-- 0={Headmorph option title} -->
     <system:String x:Key="string_mde_cloneAlternate">Clones this alternate, placing it directly beneath this one</system:String>
+    <system:String x:Key="string_mde_description_asimods">Mods that require additional native code to properly work can request that Mod Manager installs it by editing the settings on this page.</system:String>
+    <system:String x:Key="string_mde_warning_asimods">DO NOT MODIFY SETTINGS ON THIS PAGE IF YOUR MOD DOES NOT NEED ASI MODS. ASI MODS CAN EASILY MAKE THE GAME LESS STABLE. MODS THAT ADD THEM WITHOUT REASON MAY BE BLACKLISTED FROM IMPORT.</system:String>
+    <system:String x:Key="string_addASIMod">Add ASI mod</system:String>
+
 
     <!-- Nexus File Search (Query) -->
     <system:String x:Key="string_nexusModsFileSearch">NexusMods File Search</system:String>

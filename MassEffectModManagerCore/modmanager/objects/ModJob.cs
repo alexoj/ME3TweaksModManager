@@ -90,7 +90,10 @@ namespace ME3TweaksModManager.modmanager.objects
 
             // LE-ONLY (8.1+)
             TEXTUREMODS,
-            HEADMORPHS
+            HEADMORPHS,
+
+            // This is a task header but it does not translate to a ModJob.
+            ASIMODS
         }
 
         /// <summary>
