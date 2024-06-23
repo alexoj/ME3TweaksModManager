@@ -6,7 +6,6 @@ using LegendaryExplorerCore.Misc;
 using ME3TweaksCore.Helpers;
 using ME3TweaksCore.Helpers.MEM;
 using ME3TweaksCore.Services.Shared.BasegameFileIdentification;
-using ME3TweaksModManager.me3tweakscoreextended;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.windows;
 using ME3TweaksModManager.ui;
@@ -211,11 +210,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     SystemSleepManager.PreventSleep(@"TextureInstaller");
 
                     // Mod Manager 9: Inventory all basegame changes so we have a definitive source of files.
-                    SetNextStep("Inventorying game state before texture install");
+                    SetNextStep(M3L.GetString(M3L.string_inventoryingGameStateBeforeTextureInstall));
                     Target.PopulateModifiedBasegameFiles();
                     int numDone = 0;
                     var trackedFileToOriginalMD5Map = new CaseInsensitiveDictionary<string>(); // Map pre-texture modded -> pre-texture modded MD5
-                    foreach (var f in Target.ModifiedBasegameFiles.Where(x=>x.FilePath.RepresentsPackageFilePath()))
+                    foreach (var f in Target.ModifiedBasegameFiles.Where(x => x.FilePath.RepresentsPackageFilePath()))
                     {
                         var path = Path.Combine(Target.TargetPath, f.FilePath);
                         var hash = MUtilities.CalculateHash(path);
@@ -243,10 +242,10 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     }
 
                     // Mod Manager 9: Update basegame texture hashes.
-                    SetNextStep("Inventorying game state after texture install");
+                    SetNextStep(M3L.GetString(M3L.string_inventoryingGameStateAfterTextureInstall));
                     var basegameFileDbUpdates = new List<BasegameFileRecord>();
                     numDone = 0;
-                    foreach (var f in trackedFileToOriginalMD5Map.Where(x=> x.Key.RepresentsPackageFilePath()))
+                    foreach (var f in trackedFileToOriginalMD5Map.Where(x => x.Key.RepresentsPackageFilePath()))
                     {
                         var path = Path.Combine(Target.TargetPath, f.Key);
                         var existingInfo = BasegameFileIdentificationService.GetBasegameFileSource(Target, path, f.Value);

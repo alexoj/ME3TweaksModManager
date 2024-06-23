@@ -2706,9 +2706,7 @@
     <system:String x:Key="string_description_logOptionLotsa">This will generate a large amount of logs. Only turn this on if requested.</system:String>
     <system:String x:Key="string_localLibraryWatermark">Default: Local instance library ('mods' folder)</system:String>
 
-
-
-<!-- Check Box Combo Box Control -->
+    <!-- Check Box Combo Box Control -->
     <system:String x:Key="string_noItemsSelected">No items selected</system:String>
 
     <!-- Squadmate Merge -->
@@ -2766,8 +2764,10 @@
     <system:String x:Key="string_configuringMassEffectModder">Configuring MassEffectModder</system:String>
     <system:String x:Key="string_preparingForTextureInstall">Preparing for texture install</system:String>
     <system:String x:Key="string_dialog_cannotDownloadMEMCannotProceed">Could not download MassEffectModderNoGui - texture installation cannot proceed. See Mod Manager logs for more information.</system:String>
+    <system:String x:Key="string_inventoryingGameStateBeforeTextureInstall">Inventorying game state before texture install</system:String>
+    <system:String x:Key="string_inventoryingGameStateAfterTextureInstall">Inventorying game state after texture install</system:String>
 
-    <!-- Launch Option Selector Dialog -->
+<!-- Launch Option Selector Dialog -->
     <system:String x:Key="string_launchOptionSelector">Launch Option Selector</system:String>
     <system:String x:Key="string_selectLaunchOption">Select launch option</system:String>
     <system:String x:Key="string_createNewLaunchOption">Create new launch option</system:String>
