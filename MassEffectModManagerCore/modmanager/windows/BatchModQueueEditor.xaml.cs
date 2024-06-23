@@ -235,127 +235,127 @@ namespace ME3TweaksModManager.modmanager.windows
         }
 
         private void SortByMountPriority()
+        {
+            var shouldContinue = M3L.ShowDialog(this,
+                M3L.GetString(M3L.string_dialog_sortByMountPriority),
+                M3L.GetString(M3L.string_experimentalFeature), MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes;
+            if (!shouldContinue)
+                return;
+
+
+
+            var contentMods = _modsInGroup.OfType<BatchMod>().Where(x => x.Mod != null)
+                .OrderByDescending(x => x.Mod.EXP_GetModMountPriority()).ToList(); // Just order it here too. Its reversed ordered as the order reverses again when we insert it
+            _modsInGroup.RemoveRange(contentMods);
+            foreach (var m in contentMods)
             {
-                var shouldContinue = M3L.ShowDialog(this,
-                    "Sorting will re-order all content mods in your install group. This is an experimental feature and may not properly order your mods.",
-                    "Experimental feature", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No) == MessageBoxResult.Yes;
-                if (!shouldContinue)
-                    return;
-
-
-
-                var contentMods = _modsInGroup.OfType<BatchMod>().Where(x => x.Mod != null)
-                    .OrderByDescending(x => x.Mod.EXP_GetModMountPriority()).ToList(); // Just order it here too. Its reversed ordered as the order reverses again when we insert it
-                _modsInGroup.RemoveRange(contentMods);
-                foreach (var m in contentMods)
-                {
-                    _modsInGroup.Insert(0, m);
-                }
-
-                // Trigger this again
-                OnRestoreGameBeforeInstallChanged();
+                _modsInGroup.Insert(0, m);
             }
 
-            public void CheckForIssues()
+            // Trigger this again
+            OnRestoreGameBeforeInstallChanged();
+        }
+
+        public void CheckForIssues()
+        {
+            List<string> possibleIssues = new List<string>();
+            var installedDLC = new CaseInsensitiveDictionary<MetaCMM>();
+            var mods = _modsInGroup.OfType<BatchMod>()
+                .Where(x => x.Mod != null && x.Mod.ParsedModVersion != null).Select(x => x.Mod).ToList();
+
+            // In-order pass for requirements
+            foreach (var mod in mods)
             {
-                List<string> possibleIssues = new List<string>();
-                var installedDLC = new CaseInsensitiveDictionary<MetaCMM>();
-                var mods = _modsInGroup.OfType<BatchMod>()
-                    .Where(x => x.Mod != null && x.Mod.ParsedModVersion != null).Select(x => x.Mod).ToList();
-
-                // In-order pass for requirements
-                foreach (var mod in mods)
+                var dlc = mod.GetAllPossibleCustomDLCFolders();
+                foreach (var d in dlc)
                 {
-                    var dlc = mod.GetAllPossibleCustomDLCFolders();
-                    foreach (var d in dlc)
-                    {
-                        var versionedDLC = new MetaCMM() { Version = mod.ParsedModVersion.ToString() };
-                        installedDLC[d] = versionedDLC;
-                    }
-
-                    foreach (var req in mod.RequiredDLC)
-                    {
-                        if (!req.IsRequirementMet(null, installedDLC, checkOptionKeys: false))
-                        {
-                            var tpmi = TPMIService.GetThirdPartyModInfo(req.DLCFolderName.Key, mod.Game);
-                            possibleIssues.Add($"{mod.ModName} requires mod {tpmi?.modname ?? req.DLCFolderName.Key}{(req.MinVersion != null ? " with minimum version " + req.MinVersion : null)} to be installed beforehand, but in this install group it is not");
-                        }
-                    }
+                    var versionedDLC = new MetaCMM() { Version = mod.ParsedModVersion.ToString() };
+                    installedDLC[d] = versionedDLC;
                 }
 
-                // Check incompatible DLCs in second pass once we know the list of all DLC folders.
-                foreach (var mod in mods)
+                foreach (var req in mod.RequiredDLC)
                 {
-                    foreach (var inc in mod.IncompatibleDLC)
+                    if (!req.IsRequirementMet(null, installedDLC, checkOptionKeys: false))
                     {
-                        if (installedDLC.ContainsKey(inc))
-                        {
-                            var tpmi = TPMIService.GetThirdPartyModInfo(inc, mod.Game);
-                            possibleIssues.Add($"{mod.ModName} is not compatible with mod {tpmi?.modname ?? inc}");
-                        }
-                    }
-                }
-
-                if (possibleIssues.Any())
-                {
-                    ListDialog ld = new ListDialog(possibleIssues, "Possible issues found",
-                        "Mod Manager found potential issues with your install group. This is a best effort guess; it may not be accurate, and it will only catch simple issues.",
-                        this);
-                    ld.ShowDialog();
-                }
-                else
-                {
-                    M3L.ShowDialog(this, "Mod Manager did not find issues with your install group. This is a best effort guess; it may not be accurate, and it will only catch simple issues.", "No issues detected", MessageBoxButton.OK, MessageBoxImage.Information);
-                }
-            }
-
-            private void ShowMEMSelector()
-            {
-                OpenFileDialog ofd = new OpenFileDialog()
-                {
-                    Filter = M3L.GetString(M3L.string_massEffectModderFiles) + @" (*.mem)|*.mem", // Todo: Localize this properly
-                    Title = M3L.GetString(M3L.string_selectMemFile),
-                    Multiselect = true,
-                };
-
-                var result = ofd.ShowDialog();
-                if (result == true)
-                {
-                    foreach (var f in ofd.FileNames)
-                    {
-                        var memFileGame = ModFileFormats.GetGameMEMFileIsFor(f);
-                        if (memFileGame != SelectedGame)
-                        {
-                            // TODO: UPDATE LOCALIZATION TO INCLUDE FILENAME
-                            M3L.ShowDialog(this,
-                                M3L.GetString(M3L.string_interp_dialog_memForDifferentGame, SelectedGame, memFileGame),
-                                M3L.GetString(M3L.string_wrongGame), MessageBoxButton.OK, MessageBoxImage.Error);
-                            continue;
-                        }
-
-                        // User selected file
-                        MEMMod m = new MEMMod()
-                        {
-                            FilePath = f
-                        };
-
-                        m.ParseMEMData();
-
-                        VisibleFilteredMEMMods
-                            .Add(m); //Todo: Check no duplicates in left list (or existing already on right?)
+                        var tpmi = TPMIService.GetThirdPartyModInfo(req.DLCFolderName.Key, mod.Game);
+                        possibleIssues.Add($"{mod.ModName} requires mod {tpmi?.modname ?? req.DLCFolderName.Key}{(req.MinVersion != null ? " with minimum version " + req.MinVersion : null)} to be installed beforehand, but in this install group it is not");
                     }
                 }
             }
 
-            private bool CanAddMEMMod()
+            // Check incompatible DLCs in second pass once we know the list of all DLC folders.
+            foreach (var mod in mods)
             {
-                return true;
+                foreach (var inc in mod.IncompatibleDLC)
+                {
+                    if (installedDLC.ContainsKey(inc))
+                    {
+                        var tpmi = TPMIService.GetThirdPartyModInfo(inc, mod.Game);
+                        possibleIssues.Add(M3L.GetString(M3L.string_interp_bqissue_modNotCompatible, mod.ModName, tpmi?.modname ?? inc));
+                    }
+                }
             }
 
-            private bool CanAutosort()
+            if (possibleIssues.Any())
             {
-                return _modsInGroup.Count > 1;
+                ListDialog ld = new ListDialog(possibleIssues, M3L.GetString(M3L.string_possibleIssuesFound),
+                    M3L.GetString(M3L.string_bqe_issuesFound),
+                    this);
+                ld.ShowDialog();
             }
+            else
+            {
+                M3L.ShowDialog(this, M3L.GetString(M3L.string_bqe_noIssues), M3L.GetString(M3L.string_noIssuesDetected), MessageBoxButton.OK, MessageBoxImage.Information);
+            }
+        }
+
+        private void ShowMEMSelector()
+        {
+            OpenFileDialog ofd = new OpenFileDialog()
+            {
+                Filter = M3L.GetString(M3L.string_massEffectModderFiles) + @" (*.mem)|*.mem", // Todo: Localize this properly
+                Title = M3L.GetString(M3L.string_selectMemFile),
+                Multiselect = true,
+            };
+
+            var result = ofd.ShowDialog();
+            if (result == true)
+            {
+                foreach (var f in ofd.FileNames)
+                {
+                    var memFileGame = ModFileFormats.GetGameMEMFileIsFor(f);
+                    if (memFileGame != SelectedGame)
+                    {
+                        // TODO: UPDATE LOCALIZATION TO INCLUDE FILENAME
+                        M3L.ShowDialog(this,
+                            M3L.GetString(M3L.string_interp_dialog_memForDifferentGame, SelectedGame, memFileGame),
+                            M3L.GetString(M3L.string_wrongGame), MessageBoxButton.OK, MessageBoxImage.Error);
+                        continue;
+                    }
+
+                    // User selected file
+                    MEMMod m = new MEMMod()
+                    {
+                        FilePath = f
+                    };
+
+                    m.ParseMEMData();
+
+                    VisibleFilteredMEMMods
+                        .Add(m); //Todo: Check no duplicates in left list (or existing already on right?)
+                }
+            }
+        }
+
+        private bool CanAddMEMMod()
+        {
+            return true;
+        }
+
+        private bool CanAutosort()
+        {
+            return _modsInGroup.Count > 1;
+        }
 
         class ModDependencies
         {
@@ -619,13 +619,13 @@ namespace ME3TweaksModManager.modmanager.windows
         {
             if (string.IsNullOrWhiteSpace(GroupName))
             {
-                M3L.ShowDialog(this, "Group name cannot be empty.", "Validation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                M3L.ShowDialog(this, M3L.GetString(M3L.string_groupNameCannotBeEmpty), M3L.GetString(M3L.string_validationFailed), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(GroupDescription))
             {
-                M3L.ShowDialog(this, "Group description cannot be empty.", "Validation failed", MessageBoxButton.OK, MessageBoxImage.Error);
+                M3L.ShowDialog(this, M3L.GetString(M3L.string_groupDescriptionCannotBeEmpty), M3L.GetString(M3L.string_validationFailed), MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 
@@ -678,8 +678,8 @@ namespace ME3TweaksModManager.modmanager.windows
             if (destExists && Path.GetFileName(queueSavePath) != InitialFileName) // If InitialFileName is null this will indicate new group saving over existing rather than a rename
             {
                 var continueRes = M3L.ShowDialog(this,
-                                    $"An existing install group with the name '{queue.ModName}' already exists. Saving will overwrite that group.\n\nContinue to save this group?",
-                                    "File already exists", MessageBoxButton.YesNo, MessageBoxImage.Warning);
+                                    M3L.GetString(M3L.string_interp_existingInstallGroupFile, queue.ModName),
+                                    M3L.GetString(M3L.string_fileAlreadyExists), MessageBoxButton.YesNo, MessageBoxImage.Warning);
                 if (continueRes != MessageBoxResult.Yes)
                     return false;
             }
@@ -894,7 +894,7 @@ namespace ME3TweaksModManager.modmanager.windows
     /// </summary>
     public class BatchGameRestore : IBatchQueueMod
     {
-        public string UIDescription => "Restores the game to vanilla using a game backup. You'll be prompted to confirm the restore before it happens.";
+        public string UIDescription => M3L.GetString(M3L.string_description_restoreGameBeforeBatchInstall);
 
         protected bool Equals(BatchGameRestore other)
         {

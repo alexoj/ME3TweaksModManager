@@ -2061,8 +2061,30 @@
     <!-- 0={SelectedGame} 1={memFileGame} -->
     <system:String x:Key="string_wrongGame">Wrong game</system:String>
     <system:String x:Key="string_selectATextureMod">Select a texture mod</system:String>
+    <system:String x:Key="string_checkForIssues">Check for issues</system:String>
+    <system:String x:Key="string_required">Required</system:String>
+    <system:String x:Key="string_sortByMountPriority">Sort by mount priority</system:String>
+    <system:String xml:space="preserve" x:Key="string_tooltip_restoreBeforeInstall">Before installing this batch group, the user will be prompted to reset their game to vanilla.&#10;This helps ensure a consistent result</system:String>
+    <system:String x:Key="string_restoreGameBeforeInstall">Restore game before install</system:String>
+    <system:String x:Key="string_tooltip_closeSearchPanel">Close search panel</system:String>
+    <system:String x:Key="string_typeToSearchCTRLF">Type to search (CTRL + F)</system:String>
+    <system:String x:Key="string_tooltip_lowestMountPriority">Lowest mount priority of this mod (if applicable)</system:String>
+    <system:String x:Key="string_dialog_sortByMountPriority">Sorting will re-order all content mods in your install group. This is an experimental feature and may not properly order your mods.</system:String>
+    <system:String x:Key="string_experimentalFeature">Experimental feature</system:String>
+    <system:String x:Key="string_interp_bqissue_modNotCompatible">{0} is not compatible with mod {1}</system:String>
+    <!-- 0={mod.ModName} 1={tpmi?.modname ?? inc} -->
+    <system:String x:Key="string_possibleIssuesFound">Possible issues found</system:String>
+    <system:String x:Key="string_bqe_issuesFound">Mod Manager found potential issues with your install group. This is a best effort guess; it may not be accurate, and it will only catch simple issues.</system:String>
+    <system:String x:Key="string_bqe_noIssues">Mod Manager did not find issues with your install group. This is a best effort guess; it may not be accurate, and it will only catch simple issues.</system:String>
+    <system:String x:Key="string_noIssuesDetected">No issues detected</system:String>
+    <system:String x:Key="string_groupNameCannotBeEmpty">Group name cannot be empty.</system:String>
+    <system:String x:Key="string_groupDescriptionCannotBeEmpty">Group description cannot be empty.</system:String>
+    <system:String xml:space="preserve" x:Key="string_interp_existingInstallGroupFile">An existing install group with the name '{0}' already exists. Saving will overwrite that group.\n\nContinue to save this group?</system:String>
+    <!-- 0={queue.ModName} -->
+    <system:String x:Key="string_fileAlreadyExists">File already exists</system:String>
+    <system:String x:Key="string_description_restoreGameBeforeBatchInstall">Restores the game to vanilla using a game backup. You'll be prompted to confirm the restore before it happens.</system:String>
 
-    <!-- Backup File Fetcher (Devs only) -->
+<!-- Backup File Fetcher (Devs only) -->
     <system:String x:Key="string_selectDestinationLocation">Select destination location</system:String>
     <system:String x:Key="string_packageFile">Package file</system:String>
     <system:String x:Key="string_interp_fileFetchedAndWrittenToX">File fetched and written to {0}.</system:String>
