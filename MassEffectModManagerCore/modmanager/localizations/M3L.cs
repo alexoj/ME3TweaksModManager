@@ -1212,6 +1212,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_validation_altdlc_condManualWithConditionalDLC = "string_interp_validation_altdlc_condManualWithConditionalDLC";
 		public const string string_interp_validation_altdlc_flattentNotTrueOrFalse = "string_interp_validation_altdlc_flattentNotTrueOrFalse";
 		public const string string_interp_validation_altdlc_dlcrequirementsHasOfficialLEDLC = "string_interp_validation_altdlc_dlcrequirementsHasOfficialLEDLC";
+		public const string string_interp_validation_altdlc_tlkMergeSuboption = "string_interp_validation_altdlc_tlkMergeSuboption";
 		public const string string_validation_altfile_oneAltDlcMissingFriendlyNameCmm6 = "string_validation_altfile_oneAltDlcMissingFriendlyNameCmm6";
 		public const string string_validation_altfile_unknownCondition = "string_validation_altfile_unknownCondition";
 		public const string string_validation_altfile_unknownOperation = "string_validation_altfile_unknownOperation";

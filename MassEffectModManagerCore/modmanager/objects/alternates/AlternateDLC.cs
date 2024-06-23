@@ -365,7 +365,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
                 else
                 {
                     M3Log.Error($@"Alternate DLC ({FriendlyName}) uses operation {AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY}, which requires setting descriptor '{AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY}' to a value that maps to a foldername in the {ModJob.JobHeader.GAME1_EMBEDDED_TLK} job folder.");
-                    LoadFailedReason = $"Alternate DLC ({FriendlyName}) uses operation {AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY}, which requires setting descriptor '{AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY}' to a value that maps to a foldername in the {ModJob.JobHeader.GAME1_EMBEDDED_TLK} job folder.";
+                    LoadFailedReason = M3L.GetString(M3L.string_interp_validation_altdlc_tlkMergeSuboption, FriendlyName, AltDLCOperation.OP_ENABLE_TLKMERGE_OPTIONKEY, AlternateKeys.ALTDLC_LE1TLK_OPTIONKEY, ModJob.JobHeader.GAME1_EMBEDDED_TLK);
                     return;
                 }
             }
