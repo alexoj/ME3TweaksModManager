@@ -2633,7 +2633,10 @@
     <!-- 0={Filename} -->
 
     <!-- Merge Mods (V2) -->
-
+    <system:String x:Key="string_interp_classUpdateCannotNestMoreThanOne">Validation failed on {0} {1}: class cannot be nested more than one package deep.</system:String>
+    <!-- 0={'ClassUpdate1'} 1={Instanced full path of export} -->
+    <system:String x:Key="string_interp_classUpdateCannotUpdateVanillaClass">Validation failed on {0} {1}: ClassUpdate cannot be used to modify any vanilla classes</system:String>
+    <!-- 0={'ClassUpdate1'} 1={Instanced full path of export} -->
 
     <!-- Options Panel -->
     <system:String x:Key="string_me3tweaksModManagerOptions">ME3Tweaks Mod Manager Settings</system:String>

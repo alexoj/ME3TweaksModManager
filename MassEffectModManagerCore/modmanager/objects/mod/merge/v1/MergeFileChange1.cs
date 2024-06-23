@@ -88,7 +88,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             }
         }
 
-        [Deprecated("Use LE1 config merge feature instead", DeprecationType.Deprecate, 1)]
+        [Deprecated(@"Use LE1 config merge feature instead", DeprecationType.Deprecate, 1)]
         private void DisableConfigFlag(IMEPackage package, ExportEntry export, Mod installingMod, Action<int> addMergeWeightCompleted)
         {
             if (ObjectBinary.From(export) is UProperty ob)
@@ -423,7 +423,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                 throw new Exception(M3L.GetString(M3L.string_interp_mergefile_errorCompilingFunction, Parent.ExportInstancedFullPath, string.Join(Environment.NewLine, log.AllErrors)));
             }
 
-            outClass = package.FindExport(Parent.ExportInstancedFullPath, "Class");
+            outClass = package.FindExport(Parent.ExportInstancedFullPath, @"Class");
             addMergeWeightCompleted?.Invoke(MergeFileChange1.WEIGHT_CLASSUPDATE);
             return true;
         }
@@ -463,7 +463,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             // Cannot nest classes more than one package deep.
             if (Parent.ExportInstancedFullPath.Count(x => x == '.') > 1)
             {
-                throw new Exception($"Validation failed on {nameof(ClassUpdate1)} {Parent.ExportInstancedFullPath}: class cannot be nested more than one package deep.");
+                throw new Exception(M3L.GetString(M3L.string_interp_classUpdateCannotNestMoreThanOne, nameof(ClassUpdate1), Parent.ExportInstancedFullPath));
             }
 
             // Ensure not a vanilla class
@@ -471,7 +471,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
             if (VanillaClasses.IsVanillaClass(className, OwningMM.Game))
             {
-                throw new Exception($"Validation failed on {nameof(ClassUpdate1)} {Parent.ExportInstancedFullPath}: ClassUpdate cannot be used to modify any vanilla classes");
+                throw new Exception(M3L.GetString(M3L.string_interp_classUpdateCannotUpdateVanillaClass, nameof(ClassUpdate1), Parent.ExportInstancedFullPath));
             }
         }
     }
@@ -657,7 +657,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
         public string[] ScriptFileNames { get; set; }
 
 
-        [Deprecated("This is only used in M3Mv1. Do not use in any v2 or newer code!", DeprecationType.Deprecate, 2)]
+        [Deprecated(@"This is only used in M3Mv1. Do not use in any v2 or newer code!", DeprecationType.Deprecate, 2)]
         [JsonProperty(@"scripts")]
         public string[] Scripts { get; set; }
 
