@@ -278,7 +278,9 @@ namespace ME3TweaksModManager.modmanager.windows
                     if (!req.IsRequirementMet(null, installedDLC, checkOptionKeys: false))
                     {
                         var tpmi = TPMIService.GetThirdPartyModInfo(req.DLCFolderName.Key, mod.Game);
-                        possibleIssues.Add($"{mod.ModName} requires mod {tpmi?.modname ?? req.DLCFolderName.Key}{(req.MinVersion != null ? " with minimum version " + req.MinVersion : null)} to be installed beforehand, but in this install group it is not");
+                        // Coded this way for localization purposes
+                        var minimumVersionStr = M3L.GetString(M3L.string_withMinimumVersion);
+                        possibleIssues.Add(M3L.GetString(M3L.string_interp_bqissue_minimumVersionNotFound, mod.ModName, tpmi?.modname ?? req.DLCFolderName.Key, req.MinVersion != null ? @" " + minimumVersionStr + @" " + req.MinVersion : null));
                     }
                 }
             }

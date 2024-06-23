@@ -1935,7 +1935,6 @@
     <system:String x:Key="string_squadmateOutfitMergeKasumi">Squadmate outfit merge: Kasumi</system:String>
     <system:String x:Key="string_squadmateOutfitMergeZaeed">Squadmate outfit merge: Zaeed</system:String>
 
-
     <!-- List Dialog -->
     <system:String xml:space="preserve" x:Key="string_dialogCouldNotSetDataToClipboard">Could not set data to clipboard:\n</system:String>
     <system:String x:Key="string_errorCopyingDataToClipboard">Error copying data to clipboard</system:String>
@@ -2094,8 +2093,11 @@
     <!-- 0={queue.ModName} -->
     <system:String x:Key="string_fileAlreadyExists">File already exists</system:String>
     <system:String x:Key="string_description_restoreGameBeforeBatchInstall">Restores the game to vanilla using a game backup. You'll be prompted to confirm the restore before it happens.</system:String>
+    <system:String x:Key="string_interp_bqissue_minimumVersionNotFound">{0} requires mod {1}{2} to be installed beforehand, but in this install group it is not</system:String>
+    <system:String x:Key="string_withMinimumVersion">with minimum version</system:String>
+    <!-- Can be appended mid string -->
 
-<!-- Backup File Fetcher (Devs only) -->
+    <!-- Backup File Fetcher (Devs only) -->
     <system:String x:Key="string_selectDestinationLocation">Select destination location</system:String>
     <system:String x:Key="string_packageFile">Package file</system:String>
     <system:String x:Key="string_interp_fileFetchedAndWrittenToX">File fetched and written to {0}.</system:String>

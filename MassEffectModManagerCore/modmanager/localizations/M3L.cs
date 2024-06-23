@@ -1518,6 +1518,16 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_blank2DAs = "string_blank2DAs";
 		public const string string_select2DAsToAdd = "string_select2DAsToAdd";
 		public const string string_errorGeneratingMod = "string_errorGeneratingMod";
+		public const string string_squadmateOutfitMergeMiranda = "string_squadmateOutfitMergeMiranda";
+		public const string string_squadmateOutfitMergeJacob = "string_squadmateOutfitMergeJacob";
+		public const string string_squadmateOutfitMergeMordin = "string_squadmateOutfitMergeMordin";
+		public const string string_squadmateOutfitMergeJack = "string_squadmateOutfitMergeJack";
+		public const string string_squadmateOutfitMergeGrunt = "string_squadmateOutfitMergeGrunt";
+		public const string string_squadmateOutfitMergeSamaraMorinth = "string_squadmateOutfitMergeSamaraMorinth";
+		public const string string_squadmateOutfitMergeThane = "string_squadmateOutfitMergeThane";
+		public const string string_squadmateOutfitMergeLegion = "string_squadmateOutfitMergeLegion";
+		public const string string_squadmateOutfitMergeKasumi = "string_squadmateOutfitMergeKasumi";
+		public const string string_squadmateOutfitMergeZaeed = "string_squadmateOutfitMergeZaeed";
 		public const string string_dialogCouldNotSetDataToClipboard = "string_dialogCouldNotSetDataToClipboard";
 		public const string string_errorCopyingDataToClipboard = "string_errorCopyingDataToClipboard";
 		public const string string_copyItemsToClipboard = "string_copyItemsToClipboard";
@@ -1632,6 +1642,8 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_existingInstallGroupFile = "string_interp_existingInstallGroupFile";
 		public const string string_fileAlreadyExists = "string_fileAlreadyExists";
 		public const string string_description_restoreGameBeforeBatchInstall = "string_description_restoreGameBeforeBatchInstall";
+		public const string string_interp_bqissue_minimumVersionNotFound = "string_interp_bqissue_minimumVersionNotFound";
+		public const string string_withMinimumVersion = "string_withMinimumVersion";
 		public const string string_selectDestinationLocation = "string_selectDestinationLocation";
 		public const string string_packageFile = "string_packageFile";
 		public const string string_interp_fileFetchedAndWrittenToX = "string_interp_fileFetchedAndWrittenToX";
