@@ -2922,4 +2922,11 @@
     <system:String x:Key="string_dialog_mergeModFeatureLevel1">Is the merge mod you are compiling going to be used in a mod that targets ModDesc 8.2 or lower?</system:String>
     <system:String x:Key="string_useEnhancedFeaturesQuestion">Use enhanced features?</system:String>
 
+    <!-- M3ZA -->
+    <system:String x:Key="string_invalidMagic_m3za">CompressedTLKMergeFile has invalid magic number!</system:String>
+    <system:String x:Key="string_interp_tooNewM3ZAFile">This build of Mod Manager cannot read versions of M3ZA files higher than {0}, the version being opened is {1}</system:String>
+    <!-- 0={int} 1={int} -->
+    <system:String x:Key="string_interp_m3zaMissingTlkOptionKey">Mod validation failed: CombinedTLKMergeData.m3za does not contain referenced TLK option key '{0}', which is referenced by AlternateDLC object {1}. Please contact the developer.</system:String>
+    <!-- 0={Option key name} 1={Name} -->
+
 </ResourceDictionary>

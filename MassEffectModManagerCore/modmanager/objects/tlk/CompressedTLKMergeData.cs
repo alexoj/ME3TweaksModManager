@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using LegendaryExplorerCore.Compression;
 using LegendaryExplorerCore.Helpers;
+using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects.alternates;
 using ME3TweaksModManager.modmanager.objects.mod;
 
@@ -168,7 +169,7 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
 
             if (streamData.ReadStringASCII(4) != COMPRESSED_MAGIC)
             {
-                throw new Exception("CompressedTLKMergeFile has invalid magic number!");
+                throw new Exception(M3L.GetString(M3L.string_invalidMagic_m3za));
             }
 
             c.Version = streamData.ReadByte();
@@ -176,7 +177,7 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
             if (c.Version > HIGHEST_SUPPORTED_COMPRESSED_VERSION)
             {
                 // We do not support this version
-                throw new Exception($"This build of Mod Manager cannot read versions of M3ZA files higher than {HIGHEST_SUPPORTED_COMPRESSED_VERSION}, the version being opened is {c.Version}");
+                throw new Exception(M3L.GetString(M3L.string_interp_tooNewM3ZAFile, HIGHEST_SUPPORTED_COMPRESSED_VERSION, c.Version));
             }
 
             // The header is compressed - we must decompress the header to read it
@@ -433,7 +434,7 @@ namespace ME3TweaksModManager.modmanager.objects.tlk
             {
                 if (!OptionKeys.Contains(alt.LE1TLKOptionKey))
                 {
-                    throw new Exception($"Mod validation failed: CombinedTLKMergeData.m3za does not contain referenced TLK option key '{alt.LE1TLKOptionKey}', which is referenced by AlternateDLC object {alt.FriendlyName}. Please contact the developer.");
+                    throw new Exception(M3L.GetString(M3L.string_interp_m3zaMissingTlkOptionKey, alt.LE1TLKOptionKey, alt.FriendlyName));
                 }
             }
         }

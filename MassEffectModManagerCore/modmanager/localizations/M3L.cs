@@ -2199,5 +2199,8 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_importComplete = "string_importComplete";
 		public const string string_dialog_mergeModFeatureLevel1 = "string_dialog_mergeModFeatureLevel1";
 		public const string string_useEnhancedFeaturesQuestion = "string_useEnhancedFeaturesQuestion";
+		public const string string_invalidMagic_m3za = "string_invalidMagic_m3za";
+		public const string string_interp_tooNewM3ZAFile = "string_interp_tooNewM3ZAFile";
+		public const string string_interp_m3zaMissingTlkOptionKey = "string_interp_m3zaMissingTlkOptionKey";
 	}
 }
