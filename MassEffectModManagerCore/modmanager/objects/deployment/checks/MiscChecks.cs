@@ -433,7 +433,7 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                 var tpmi = TPMIService.GetThirdPartyModInfo(dlc, item.ModToValidateAgainst.Game);
                 if (tpmi != null && !tpmi.modname.CaseInsensitiveEquals(item.ModToValidateAgainst.ModName))
                 {
-                    item.AddInfoWarning($"Mod with foldername '{dlc}' already exists in the Third Party Identification Service as '{tpmi.modname}'. Is this yours? If not, your mod will likely be blacklisted - mods cannot use the same folder name as others in the same game.");
+                    item.AddInfoWarning(M3L.GetString(M3L.string_interp_modWithDifferentNameInTPMI, dlc, tpmi.modname));
                 }
             }
             #endregion
@@ -448,10 +448,10 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
             {
                 if (item.HasOnlyInfoMessages())
                 {
-                    item.ItemText = "Guidance available";
-                    item.ToolTip = "Mod Manager has some general guidance available for your mod";
-                    item.DialogMessage = "The following general guidance is available for your mod.";
-                    item.DialogTitle = "Miscellaneous guidance";
+                    item.ItemText = M3L.GetString(M3L.string_guidanceAvailable);
+                    item.ToolTip = M3L.GetString(M3L.string_tooltip_guidanceAvailable);
+                    item.DialogMessage = M3L.GetString(M3L.string_dialog_guidanceAvailable);
+                    item.DialogTitle = M3L.GetString(M3L.string_miscellaneousGuidance);
                 }
                 else
                 {

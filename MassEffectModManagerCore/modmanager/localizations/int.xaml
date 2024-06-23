@@ -939,8 +939,14 @@
     <!-- 0 = GAME1_EMBEDDED_TLK, 1 = filepath - both of these values are hardcoded and will never change unless something gets refactored, which it hopefully never will -->
     <system:String x:Key="string_interp_exceptionValidatingOutfitManifestMergeManifest">Exception validating outfit manifest {0}: {1}</system:String>
     <!-- 0={File path} 1={Exception message} -->
+    <system:String x:Key="string_interp_modWithDifferentNameInTPMI">Mod with foldername '{0}' already exists in the Third Party Identification Service as '{1}'. Is this yours? If not, your mod will likely be blacklisted - mods cannot use the same folder name as others in the same game.</system:String>
+    <!-- 0={dlc} 1={Mod name} -->
+    <system:String x:Key="string_guidanceAvailable">Guidance available</system:String>
+    <system:String x:Key="string_tooltip_guidanceAvailable">Mod Manager has some general guidance available for your mod</system:String>
+    <system:String x:Key="string_dialog_guidanceAvailable">The following general guidance is available for your mod.</system:String>
+    <system:String x:Key="string_miscellaneousGuidance">Miscellaneous guidance</system:String>
 
-    <!-- Language checks -->
+<!-- Language checks -->
     <system:String x:Key="string_deployment_tlkIssueLangPackageNotFound">Localized TLK package {0} was not found. Users who play the game with their language/voiceover set to {1} ({2}) will have blank strings from this mod. See the Mod Manager documentation for more information.</system:String>
     <!-- 0={TLK package filename} 1={language.FileCode} 2={language.HumanDescription} -->
     <system:String x:Key="string_deployment_tlkIssueLangPackageWrongNumTLKExports">TLK package {0} only has 1 BioTalkFile export, it should have 2: one for male, one for female.</system:String>

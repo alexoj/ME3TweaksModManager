@@ -834,6 +834,11 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_deployment_nexusUpdaterServiceInfo = "string_deployment_nexusUpdaterServiceInfo";
 		public const string string_interp_compressedTlkDataInfo = "string_interp_compressedTlkDataInfo";
 		public const string string_interp_exceptionValidatingOutfitManifestMergeManifest = "string_interp_exceptionValidatingOutfitManifestMergeManifest";
+		public const string string_interp_modWithDifferentNameInTPMI = "string_interp_modWithDifferentNameInTPMI";
+		public const string string_guidanceAvailable = "string_guidanceAvailable";
+		public const string string_tooltip_guidanceAvailable = "string_tooltip_guidanceAvailable";
+		public const string string_dialog_guidanceAvailable = "string_dialog_guidanceAvailable";
+		public const string string_miscellaneousGuidance = "string_miscellaneousGuidance";
 		public const string string_deployment_tlkIssueLangPackageNotFound = "string_deployment_tlkIssueLangPackageNotFound";
 		public const string string_deployment_tlkIssueLangPackageWrongNumTLKExports = "string_deployment_tlkIssueLangPackageWrongNumTLKExports";
 		public const string string_deployment_tlkIssueLangPackageMismatchedMaleFemaleCount = "string_deployment_tlkIssueLangPackageMismatchedMaleFemaleCount";
