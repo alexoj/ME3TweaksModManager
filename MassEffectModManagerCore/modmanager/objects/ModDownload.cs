@@ -377,11 +377,11 @@ namespace ME3TweaksModManager.modmanager.objects
                     M3Log.Information($@"Download attempt {i + 1}: {downloadUri}");
                     if (i > 0)
                     {
-                        Status = $"Starting download (attempt #{i+1})";
+                        Status = M3L.GetString(M3L.string_interp_startingDownloadAttemptX, i + 1);
                     }
                     else
                     {
-                        Status = "Starting download";
+                        Status = M3L.GetString(M3L.string_startingDownload);
                     }
 
                     DownloadState = EModDownloadState.DOWNLOADING;
@@ -480,7 +480,7 @@ namespace ME3TweaksModManager.modmanager.objects
                 ProgressIndeterminate = false;
                 ProgressValue = 1;
                 ProgressMaximum = 1;
-                Status = "Download complete";
+                Status = M3L.GetString(M3L.string_downloadComplete);
                 DownloadState = EModDownloadState.DOWNLOADCOMPLETE;
                 InternalOnModDownloaded(new DataEventArgs(DownloadedStream));
             });

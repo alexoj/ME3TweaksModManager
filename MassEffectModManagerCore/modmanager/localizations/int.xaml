@@ -2564,6 +2564,10 @@
     <!-- 0={Error message} -->
     <system:String xml:space="preserve" x:Key="string_interp_dialog_modNotForThisModManager">This mod is for '{0}', which is not supported by ME3Tweaks Mod Manager. It is likely that you were expecting a different mod manager to be used, but due to the design of how tools use the nxm:// protocol, the wrong application may open.\n\nOpen the mod manager you wish to use to handle this mod download, and it should register itself as the download manager for nxm:// links. Once it is opened, try your download again.</system:String>
     <!-- 0={domain, like 'masseffect'} -->
+    <system:String x:Key="string_interp_startingDownloadAttemptX">Starting download (attempt #{0})</system:String>
+    <!-- 0={i+1} -->
+    <system:String x:Key="string_startingDownload">Starting download</system:String>
+    <system:String x:Key="string_downloadComplete">Download complete</system:String>
 
     <!-- Mod Downloader -->
     <system:String x:Key="string_modDownloader">Mod Downloader</system:String>
