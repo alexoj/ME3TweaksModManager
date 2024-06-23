@@ -2478,7 +2478,7 @@
     <system:String x:Key="string_interp_couldNotSaveModdescini">Could not save moddesc.ini: {0}</system:String>
     <!-- 0={Exception message} -->
     <system:String x:Key="string_modLoadedSuccessfully">Mod loaded successfully</system:String>
-    <system:String x:Key="string_moddesciniEdsitor">moddesc.ini Editor</system:String>
+    <system:String x:Key="string_moddesciniEditor">moddesc.ini Editor</system:String>
     <system:String x:Key="string_openModdesciniDocumentation">Open moddesc.ini documentation</system:String>
     <system:String x:Key="string_serialize">Serialize</system:String>
     <system:String x:Key="string_metadata">Metadata</system:String>
@@ -2557,7 +2557,7 @@
     <system:String x:Key="string_mde_interp_removeTextureModReferenceX">Remove texture mod reference '{0}'?</system:String>
     <!-- 0={Title of texture mod object} -->
     <system:String x:Key="string_confirmRemoval">Confirm removal</system:String>
-    <system:String x:Key="string_mde_description_headmorphs">ME3Tweaks Mod Manager can install headmorph files through a command line version of Trilogy Save Editor by KarlitosVII. These are not installed with with a mod's main installation step, as they depend on the user choosing a save file.</system:String>
+    <system:String x:Key="string_mde_description_headmorphs">ME3Tweaks Mod Manager can install headmorph files through a command line version of Trilogy Save Editor by KarlitosVII. These are not installed with a mod's main installation step, as they depend on the user choosing a save file.</system:String>
     <system:String x:Key="string_addHeadmorphReferencesTaskHeader">Add headmorph references task header</system:String>
     <system:String x:Key="string_removeHeadmorphReferencesTaskHeader">Remove headmorph references task header</system:String>
     <system:String x:Key="string_autopopulate">Autopopulate</system:String>
@@ -2584,8 +2584,12 @@
     <!-- 0={int} -->
     <system:String x:Key="string_tooltip_deleteMultilist">Delete multilist</system:String>
     <system:String x:Key="string_tooltip_deleteFileFromMultilist">Delete file from multilist</system:String>
+    <system:String x:Key="string_tooltip_mde_serialize">Converts data in this editor to a moddesc.ini file</system:String>
+    <system:String x:Key="string_tooltip_mde_saveToMod">Saves the moddesc.ini text to your mod. A backup copy of the existing one is created in case you need to revert</system:String>
+    <system:String x:Key="string_closeTheEditorForThisMod">Close the editor for this mod?</system:String>
+    <system:String x:Key="string_haveYouSavedChanges">Have you saved changes?</system:String>
 
-    <!-- Nexus File Search (Query) -->
+<!-- Nexus File Search (Query) -->
     <system:String x:Key="string_nexusModsFileSearch">NexusMods File Search</system:String>
     <system:String x:Key="string_description_nexusModsFileSearch">You can search for files contained in mods on NexusMods for the Mass Effect trilogy games with NexusMods File Search. The database is regularly updated and maintained by ME3Tweaks.</system:String>
     <system:String x:Key="string_search">Search</system:String>

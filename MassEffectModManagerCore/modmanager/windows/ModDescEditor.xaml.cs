@@ -1,22 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.IO;
+﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
-using Dark.Net;
 using IniParser.Model;
 using LegendaryExplorerCore.Helpers;
 using ME3TweaksCoreWPF.UI;
 using ME3TweaksModManager.extensions;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.exceptions;
-using ME3TweaksModManager.modmanager.loaders;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.me3tweaks.services;
 using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.usercontrols.moddescinieditor;
-using ME3TweaksModManager.ui;
 using Microsoft.AppCenter.Crashes;
 
 namespace ME3TweaksModManager.modmanager.windows
@@ -121,7 +114,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
         private void Close_Click(object sender, RoutedEventArgs e)
         {
-            var shouldClose = M3L.ShowDialog(this, "Close the editor for this mod?", "Have you saved changes?", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes) == MessageBoxResult.Yes;
+            var shouldClose = M3L.ShowDialog(this, M3L.GetString(M3L.string_closeTheEditorForThisMod), M3L.GetString(M3L.string_haveYouSavedChanges), MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes) == MessageBoxResult.Yes;
             if (shouldClose)
                 Close();
         }

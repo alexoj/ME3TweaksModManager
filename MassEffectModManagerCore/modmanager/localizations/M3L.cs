@@ -1911,7 +1911,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_savedModdsecini = "string_interp_savedModdsecini";
 		public const string string_interp_couldNotSaveModdescini = "string_interp_couldNotSaveModdescini";
 		public const string string_modLoadedSuccessfully = "string_modLoadedSuccessfully";
-		public const string string_moddesciniEdsitor = "string_moddesciniEdsitor";
+		public const string string_moddesciniEditor = "string_moddesciniEditor";
 		public const string string_openModdesciniDocumentation = "string_openModdesciniDocumentation";
 		public const string string_serialize = "string_serialize";
 		public const string string_metadata = "string_metadata";
@@ -2009,6 +2009,10 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_dialog_deleteMultilistConfirm = "string_dialog_deleteMultilistConfirm";
 		public const string string_tooltip_deleteMultilist = "string_tooltip_deleteMultilist";
 		public const string string_tooltip_deleteFileFromMultilist = "string_tooltip_deleteFileFromMultilist";
+		public const string string_tooltip_mde_serialize = "string_tooltip_mde_serialize";
+		public const string string_tooltip_mde_saveToMod = "string_tooltip_mde_saveToMod";
+		public const string string_closeTheEditorForThisMod = "string_closeTheEditorForThisMod";
+		public const string string_haveYouSavedChanges = "string_haveYouSavedChanges";
 		public const string string_nexusModsFileSearch = "string_nexusModsFileSearch";
 		public const string string_description_nexusModsFileSearch = "string_description_nexusModsFileSearch";
 		public const string string_search = "string_search";
