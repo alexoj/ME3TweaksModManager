@@ -700,7 +700,7 @@
                         </MenuItem.Icon>
                     </MenuItem>
                     <MenuItem
-                        ToolTip="{DynamicResource string_tooltip_installHeadmorph}"
+                        ToolTip="{DynamicResource string_tooltip_installHeadmorphMenu}"
                         Header="{DynamicResource string_installHeadmorph}"
                         Command="{Binding InstallHeadmorphCommand}"
                         ui:SharedUIBindings.GenerationLE="True">
