@@ -58,6 +58,12 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         /// Releases memory for loaded assets that were loaded on-disk from m3ms. Does nothing for memory m3ms
         /// </summary>
         public void ReleaseAssets();
+
+        /// <summary>
+        /// Gets the list of target exports of this merge mod
+        /// </summary>
+        /// <returns></returns>
+        CaseInsensitiveDictionary<List<string>> GetMergeModTargetExports();
     }
 
     public interface IMergeModCommentable

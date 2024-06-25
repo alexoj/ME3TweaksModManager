@@ -16,6 +16,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
     /// <summary>
     /// Merge Mod V1. Merges properties, objects
     /// </summary>
+
     public class MergeMod1 : IMergeMod, IMergeModCommentable
     {
         /// <summary>
@@ -297,6 +298,26 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                     asset.Value.AssetBinary = null;
                 }
             }
+        }
+
+        public CaseInsensitiveDictionary<List<string>> GetMergeModTargetExports()
+        {
+            var res = new CaseInsensitiveDictionary<List<string>>();
+            foreach (var mf in FilesToMergeInto)
+            {
+                if (!res.TryGetValue(mf.FileName, out var targetList))
+                {
+                    res[mf.FileName] = new List<string>();
+                    targetList = res[mf.FileName];
+                }
+
+                foreach (var t in mf.MergeChanges)
+                {
+                    targetList.Add(t.ExportInstancedFullPath);
+                }
+            }
+
+            return res;
         }
 
         /// <summary>
