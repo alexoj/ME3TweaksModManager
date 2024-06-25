@@ -2254,12 +2254,13 @@ namespace ME3TweaksModManager
             });
         }
 
-        private void ShowRunAndDone(Func<Action<string>, object> action, string startStr, string endStr, Action finishAction = null)
+        private void ShowRunAndDone(Func<Action<string>, object> action, string startStr, string endStr, Action finishAction = null, Action<Exception> errorOccurred = null)
         {
             var runAndDone = new RunAndDonePanel(action, startStr, endStr);
             runAndDone.Close += (a, b) =>
             {
                 ReleaseBusyControl();
+                errorOccurred?.Invoke(runAndDone.Result.Error); // Might just be null
                 finishAction?.Invoke();
             };
             ShowBusyControl(runAndDone);
@@ -4803,7 +4804,11 @@ namespace ME3TweaksModManager
             ShowRunAndDone((updateUIString) => Bio2DAMerge.RunBio2DAMerge(target),
                 M3L.GetString(M3L.string_merging2DATables),
                 M3L.GetString(M3L.string_merged2DATables),
-                null);
+                null,
+                x =>
+                {
+                    M3L.ShowDialog(this, $"An error occurred merging 2DA tables: {x.Message}", M3L.GetString(M3L.string_error), MessageBoxButton.OK, MessageBoxImage.Error);
+                });
         }
 
         private void RunAutoTOCOnGame(object obj)
