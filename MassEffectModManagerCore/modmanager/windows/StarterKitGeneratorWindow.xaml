@@ -261,21 +261,21 @@
                 Grid.Row="2"
                 Grid.Column="2"
                 Watermark="Faster Legs"
-                Text="{Binding ModName, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                Text="{Binding ModName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250, ValidatesOnDataErrors=True}"
                 TextChanged="FieldText_Changed" />
             <xctk:WatermarkTextBox
                 Name="ModDeveloper_TextBox"
                 Grid.Row="3"
                 Grid.Column="2"
                 Watermark="GatorZ"
-                Text="{Binding ModDeveloper, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                Text="{Binding ModDeveloper, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250, ValidatesOnDataErrors=True}"
                 TextChanged="FieldText_Changed" />
             <xctk:WatermarkTextBox
                 Name="ModSite_TextBox"
                 Grid.Row="4"
                 Grid.Column="2"
                 Watermark="https://nexusmods.com/masseffect2/..."
-                Text="{Binding ModURL, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                Text="{Binding ModURL, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250, ValidatesOnDataErrors=True}"
                 TextChanged="FieldText_Changed" />
             <DockPanel
                 Grid.Row="5"
@@ -289,7 +289,7 @@
                 <xctk:WatermarkTextBox
                     Name="ModSuffix_TextBox"
                     Watermark="OneGreatMod"
-                    Text="{Binding ModDLCFolderName, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                    Text="{Binding ModDLCFolderName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250, ValidatesOnDataErrors=True}"
                     VerticalContentAlignment="Center"
                     Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
                     Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}"
@@ -300,21 +300,21 @@
                 Grid.Row="6"
                 Grid.Column="2"
                 Watermark="Faster Legs DLC Module"
-                Text="{Binding ModInternalName, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                Text="{Binding ModInternalName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250, ValidatesOnDataErrors=True}"
                 TextChanged="FieldText_Changed" />
             <xctk:WatermarkTextBox
                 Name="ModInternalTLK_TextBox"
                 Grid.Row="7"
                 Grid.Column="2"
                 Watermark="1342879"
-                Text="{Binding ModInternalTLKID, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                Text="{Binding ModInternalTLKID, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250, ValidatesOnDataErrors=True}"
                 TextChanged="FieldText_Changed" />
             <xctk:WatermarkTextBox
                 Name="ModModuleNumber_TextBox"
                 Grid.Row="8"
                 Grid.Column="2"
                 Watermark="150"
-                Text="{Binding ModDLCModuleNumber, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                Text="{Binding ModDLCModuleNumber, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250, ValidatesOnDataErrors=True}"
                 Visibility="{Binding Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='Game2'}"
                 TextChanged="FieldText_Changed" />
             <xctk:WatermarkTextBox
@@ -322,7 +322,7 @@
                 Grid.Row="9"
                 Grid.Column="2"
                 Watermark="3900"
-                Text="{Binding ModMountPriority, Mode=TwoWay, ValidatesOnDataErrors=True}"
+                Text="{Binding ModMountPriority, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=250, ValidatesOnDataErrors=True}"
                 TextChanged="FieldText_Changed" />
             <generic:CheckBoxComboBox
                 x:Name="MountSelector"
@@ -336,7 +336,7 @@
                 Grid.Column="1"
                 Grid.ColumnSpan="2"
                 TextWrapping="Wrap"
-                Text="{Binding ModDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}"
+                Text="{Binding ModDescription, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged, Delay=200, ValidatesOnDataErrors=True}"
                 TextChanged="FieldText_Changed">
                 <xctk:WatermarkTextBox.Watermark>
                     <TextBlock

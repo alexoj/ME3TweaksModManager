@@ -277,15 +277,24 @@ namespace ME3TweaksModManager.modmanager.windows
             Validator.AddRule(nameof(ModName), () =>
             {
                 if (string.IsNullOrWhiteSpace(ModName)) return RuleResult.Invalid(M3L.GetString(M3L.string_modNameCannotBeEmpty));
+                var mn = ModName.Trim();
                 var r = new Regex("[A-Z,a-z,0-9,\\-,',., ,|,\",]+"); //do not localize
-                if (!r.IsMatch(ModName))
+                if (!r.IsMatch(mn))
                 {
                     return RuleResult.Invalid(M3L.GetString(M3L.string_modNameCanOnlyContain));
                 }
-                var sanitized = MUtilities.SanitizePath(ModName, true);
+                if (mn.StartsWith('/'))
+                {
+                    return RuleResult.Invalid("Mod name cannot start with /");
+                }
+                var sanitized = MUtilities.SanitizePath(mn, true);
                 if (sanitized.Length == 0)
                 {
                     return RuleResult.Invalid(M3L.GetString(M3L.string_modNameWillNotResolveToAUsableFilesystemPath));
+                }
+                if (sanitized.Length > 50)
+                {
+                    return RuleResult.Invalid("Mod name cannot be longer than 50 characters or it will not reliably fit on user filesystems");
                 }
                 if (sanitized.Contains(@".."))
                 {
@@ -320,16 +329,22 @@ namespace ME3TweaksModManager.modmanager.windows
                 //Debug.WriteLine("MDFN " + ModDLCFolderName);
                 if (string.IsNullOrWhiteSpace(ModDLCFolderName))
                     return RuleResult.Invalid(M3L.GetString(M3L.string_dLCFolderNameCannotBeEmpty));
+                var dfn = ModDLCFolderName.Trim();
                 Regex reg = new Regex("^[A-Za-z0-9_]+$"); //do not localize
-                if (!reg.IsMatch(ModDLCFolderName))
+                if (!reg.IsMatch(dfn))
                 {
                     return RuleResult.Invalid(M3L.GetString(M3L.string_dLCFolderNameCanOnlyConsistOf));
                 }
 
                 // 02/02/2022 - Discovered that LE3 rejects DLC foldernames containing case sensitive 'MP'
-                if (Game == MEGame.LE3 && ModDLCFolderName.Contains(@"MP"))
+                if (Game == MEGame.LE3 && dfn.Contains(@"MP"))
                 {
                     return RuleResult.Invalid(M3L.GetString(M3L.string_le3dlcFolderNamesMP));
+                }
+
+                if (dfn.Length > 25)
+                {
+                    return RuleResult.Invalid("Mod foldername cannot be longer than 25 characters or it will not reliably fit on user filesystems");
                 }
 
                 return RuleResult.Valid();
@@ -420,7 +435,7 @@ namespace ME3TweaksModManager.modmanager.windows
                 if (result == MessageBoxResult.No) return;
             }
 
-            var outputDirectory = Path.Combine(M3LoadedMods.GetModDirectoryForGame(Game), MUtilities.SanitizePath(ModName));
+            var outputDirectory = Path.Combine(M3LoadedMods.GetModDirectoryForGame(Game), MUtilities.SanitizePath(ModName.Trim()));
             if (Directory.Exists(outputDirectory))
             {
                 var result = M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_dialogWillDeleteExistingMod, outputDirectory), M3L.GetString(M3L.string_modAlreadyExists), MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
