@@ -126,7 +126,7 @@ namespace ME3TweaksModManager.modmanager.objects.batch
         }
 
         /// <summary>
-        /// Indiciates this is the first mod being installed
+        /// Indicates this is the first mod being installed
         /// </summary>
         [JsonIgnore]
         public bool IsFirstBatchMod { get; set; }
@@ -189,6 +189,8 @@ namespace ME3TweaksModManager.modmanager.objects.batch
                 {
                     DownloadLink = sourceLink;
                 }
+
+                ModName = Mod.ModName;
             }
         }
 
