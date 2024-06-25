@@ -31,10 +31,6 @@
     </Window.Resources>
     <Window.InputBindings>
         <KeyBinding
-            Key="F"
-            Modifiers="Control"
-            Command="{Binding SearchModsCommand}" />
-        <KeyBinding
             Key="Escape"
             Command="{Binding EscapePressedCommand}" />
     </Window.InputBindings>
@@ -123,8 +119,9 @@
                                 </Style>
                             </Button.Style>
                             <Image
+                                RenderOptions.BitmapScalingMode="HighQuality"
                                 Width="24"
-                                Source="{Binding Path=., Converter={StaticResource GameToImageIconConverter}, ConverterParameter=24}" />
+                                Source="{Binding Path=., Converter={StaticResource GameToImageIconConverter}, ConverterParameter=32}" />
                         </Button>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
@@ -148,11 +145,17 @@
                     Margin="0"
                     Padding="0">
                     <DockPanel>
+                        <xctk:WatermarkTextBox
+                            DockPanel.Dock="Bottom"
+                            Watermark="{DynamicResource string_typeToFilter}"
+                            Name="Avail_ModSearchBox"
+                            Margin="-8,0,-8,-8"
+                            Text="{Binding ModSearchTerm, UpdateSourceTrigger=PropertyChanged, Delay=150}" />
                         <ListBox
                             Name="ListBox_ContentMods"
-                            Margin="-8,-8,-8,-8"
+                            Margin="-8,-8,-8,0"
                             SelectionMode="Extended"
-                            ItemsSource="{Binding VisibleFilteredMods}"
+                            ItemsSource="{Binding AvailableModsView}"
                             SelectedItem="{Binding SelectedAvailableMod}"
                             Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
                             BorderThickness="1"
@@ -189,60 +192,77 @@
                 </TabItem>
                 <TabItem
                     Header="{DynamicResource string_aSIMods}">
-                    <ListBox
+                    <DockPanel>
+                        <xctk:WatermarkTextBox
+                            DockPanel.Dock="Bottom"
+                            Watermark="{DynamicResource string_typeToFilter}"
+                            Name="Avail_ASISearchBox"
+                            Margin="-8,0,-8,-8"
+                            Text="{Binding ASISearchTerm, UpdateSourceTrigger=PropertyChanged, Delay=150}" />
+                        <ListBox
                         BorderThickness="1"
-                        Margin="-8"
+                        Margin="-8,-8,-8,0"
                         IsTextSearchEnabled="True"
                         TextSearch.TextPath="Name"
                         Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
-                        ItemsSource="{Binding VisibleFilteredASIMods}"
+                        ItemsSource="{Binding AvailableASIModsView}"
                         HorizontalContentAlignment="Stretch"
                         SelectedItem="{Binding SelectedAvailableASIMod}">
-                        <ListBox.ItemContainerStyle>
-                            <Style
+                            <ListBox.ItemContainerStyle>
+                                <Style
                                 TargetType="ListBoxItem"
                                 BasedOn="{StaticResource StretchNoPaddingStyle}">
-                                <EventSetter
+                                    <EventSetter
                                     Event="MouseDoubleClick"
                                     Handler="LeftSideMod_MouseDown" />
-                            </Style>
-                        </ListBox.ItemContainerStyle>
-                    </ListBox>
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+                        </ListBox>
+                    </DockPanel>
                 </TabItem>
                 <TabItem
-                    Header="{DynamicResource string_textureMods}">
+                    Header="{DynamicResource string_textureMods}"
+                    Visibility="{Binding SelectedGame, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='LEGame'}">
                     <DockPanel>
-                        <Button
-                            HorizontalAlignment="Right"
-                            Margin="5,8,-8,-8"
-                            Height="24"
+                        <DockPanel
                             DockPanel.Dock="Bottom"
-                            Command="{Binding AddCustomMEMModCommand}">
-                            <Button.Content>
-                                <StackPanel
+                            Margin="-8,0,-8,-8">
+                            <Button
+                                ToolTip="Add .mem files from filesystem"
+                               HorizontalAlignment="Right"
+                                Height="24"
+                                DockPanel.Dock="Right"
+                                Command="{Binding AddCustomMEMModCommand}">
+                                <Button.Content>
+                                    <StackPanel
                                     Orientation="Horizontal">
-                                    <fa5:ImageAwesome
+                                        <fa5:ImageAwesome
                                         Icon="Solid_Plus"
                                         Width="12"
                                         Height="12"
                                         VerticalAlignment="Center"
                                         Margin="0,0,5,0"
                                         Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
-                                    <TextBlock
+                                        <TextBlock
                                         Text="{DynamicResource string_locateCustomFile}"
                                         VerticalAlignment="Center" />
-                                </StackPanel>
-                            </Button.Content>
-                        </Button>
+                                    </StackPanel>
+                                </Button.Content>
+                            </Button>
+                            <xctk:WatermarkTextBox
+                            Watermark="{DynamicResource string_typeToFilter}"
+                            Name="Avail_TextureSearchBox"
+                            Text="{Binding TextureSearchTerm, UpdateSourceTrigger=PropertyChanged, Delay=150}" />
+                        </DockPanel>
                         <ListBox
                             Name="ListBox_AvailableTextures"
                             BorderThickness="1"
-                            Margin="-8"
+                            Margin="-8,-8,-8,0"
                             SelectionMode="Extended"
                             IsTextSearchEnabled="True"
                             TextSearch.TextPath="Name"
                             Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
-                            ItemsSource="{Binding VisibleFilteredMEMMods}"
+                            ItemsSource="{Binding AvailableMEMModsView}"
                             HorizontalContentAlignment="Stretch"
                             SelectedItem="{Binding SelectedAvailableMEMMod}">
                             <ListBox.ItemContainerStyle>
@@ -462,7 +482,7 @@
                                 <xctk:WatermarkTextBox
                                     Watermark="{DynamicResource string_typeToSearchCTRLF}"
                                     Name="ModSearchBox"
-                                    Text="{Binding ModSearchText, UpdateSourceTrigger=PropertyChanged}" />
+                                    Text="{Binding GroupModSearchTerm, UpdateSourceTrigger=PropertyChanged, Delay=150}" />
                             </DockPanel>
                         </ui:Clipper>
                         <ListBox
