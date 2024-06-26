@@ -764,7 +764,7 @@ namespace ME3TweaksModManager
             DeleteModFromLibraryCommand = new GenericCommand(DeleteModFromLibraryWrapper, CanDeleteModFromLibrary);
             ImportArchiveCommand = new GenericCommand(OpenArchiveSelectionDialog, CanOpenArchiveSelectionDialog);
             SubmitTelemetryForModCommand = new GenericCommand(SubmitTelemetryForMod, CanSubmitTelemetryForMod);
-            SelectedModCheckForUpdatesCommand = new GenericCommand(CheckSelectedModForUpdate, SelectedModIsME3TweaksUpdatable);
+            SelectedModCheckForUpdatesCommand = new GenericCommand(CheckSelectedModForUpdate, SelectedModIsUpdatable);
             RestoreModFromME3TweaksCommand = new GenericCommand(RestoreSelectedMod, SelectedModIsME3TweaksUpdatable);
             GrantWriteAccessCommand = new GenericCommand(() => CheckTargetPermissions(true, true), HasAtLeastOneTarget);
             AutoTOCCommand = new RelayCommand(RunAutoTOCOnGame, CanAutoTOC);
@@ -1869,6 +1869,7 @@ namespace ME3TweaksModManager
         }
 
         private bool SelectedModIsME3TweaksUpdatable() => SelectedMod?.IsME3TweaksUpdatable ?? false;
+        private bool SelectedModIsUpdatable() => SelectedMod?.IsUpdatable ?? false;
 
 
         private void SubmitTelemetryForMod()
