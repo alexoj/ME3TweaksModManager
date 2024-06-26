@@ -556,6 +556,7 @@ namespace ME3TweaksModManager.modmanager.importer
                 ModifiedModdescFiles.AddRange(modsToExtract.OfType<Mod>().Select(x => x.ModDescPath));
                 CurrentState = EModArchiveImportState.COMPLETE;
             };
+
             CurrentState = EModArchiveImportState.IMPORTING;
             nbw.RunWorkerAsync(modsToExtract);
         }
@@ -563,6 +564,8 @@ namespace ME3TweaksModManager.modmanager.importer
 
         private void ExtractModsBackgroundThread(object sender, DoWorkEventArgs e)
         {
+            ActionText = "Preparing to import mods";
+
             var mods = (List<IImportableMod>)e.Argument;
             var extractedMods = new List<IImportableMod>();
 

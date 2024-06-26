@@ -23,8 +23,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         /// </summary>
         public ModArchiveImport MAI { get; init; }
         public string CancelButtonText { get; set; } = M3L.GetString(M3L.string_cancel);
-
-        public bool TaskRunning { get; private set; }
         public string NoModSelectedText { get; set; } = M3L.GetString(M3L.string_selectAModOnTheLeftToViewItsDescription);
         public bool OTALOTTextureFilesImported { get; set; }
 
@@ -227,7 +225,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                                && CompressedMods_ListBox.SelectedItem is Mod cm
                                && cm.ExeExtractionTransform == null
                                && cm.ValidMod
-                               && !TaskRunning /*&& !CompressPackages*/
+                               && MAI.CurrentState == EModArchiveImportState.SCANCOMPLETED
                                && mainwindow != null // Might happen if app is closing or panel closed?
                                && mainwindow.InstallationTargets.Any(x => x.Game == cm.Game);
         }

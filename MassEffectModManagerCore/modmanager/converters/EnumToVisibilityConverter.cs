@@ -1,15 +1,15 @@
 ﻿using System.Globalization;
+using System.Reflection.Metadata;
 using System.Windows;
 using System.Windows.Data;
 using LegendaryExplorerCore.Helpers;
 
 namespace ME3TweaksModManager.modmanager.converters
 {
-    internal class EnumToVisibilityConverter : IValueConverter
+    internal class EnumToEnabledConverter : IValueConverter
     {
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public static bool StaticConvert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-
             if (value is Enum e && parameter is string valueStr)
             {
                 var splitparms = valueStr.Split('_');
@@ -60,14 +60,33 @@ namespace ME3TweaksModManager.modmanager.converters
                     }
 
                     // One of the above conditions did not register as true.
-                    return Visibility.Collapsed;
+                    return false;
                 }
 
                 // We are OK
-                return Visibility.Visible;
+                return true;
             }
 
-            return Visibility.Collapsed;
+            return false;
+        }
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return StaticConvert(value, targetType, parameter, culture);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    internal class EnumToVisibilityConverter : IValueConverter
+    {
+
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return EnumToEnabledConverter.StaticConvert(value, targetType, parameter, culture) ? Visibility.Visible : Visibility.Collapsed;
+           
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

@@ -127,7 +127,7 @@
                     Margin="0,0,0,1"
                     ItemsSource="{Binding MAI.CompressedMods}"
                     SelectedItem="{Binding SelectedMod}"
-                    IsEnabled="{Binding TaskRunning, Converter={StaticResource BoolEnabledConverter}, ConverterParameter='Not'}">
+                    IsEnabled="{Binding MAI.CurrentState, Converter={StaticResource EnumToEnabledConverter}, ConverterParameter='SCANCOMPLETED'}">
                     <ListBox.Resources>
                         <DataTemplate DataType="{x:Type mod:Mod}">
                             <StackPanel
