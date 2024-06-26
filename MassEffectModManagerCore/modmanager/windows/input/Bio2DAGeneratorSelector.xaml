@@ -12,7 +12,8 @@
             TargetType="Window"
             BasedOn="{StaticResource {x:Type Window}}" />
     </Window.Style>
-    <DockPanel>
+    <DockPanel
+        Margin="4">
         <TextBlock
             DockPanel.Dock="Top"
             Text="{DynamicResource string_bio2DASelector}"
@@ -57,6 +58,7 @@
                         <DataTemplate
                             DataType="{x:Type starterKit:Bio2DAOption}">
                             <CheckBox
+                                ToolTip="{Binding TemplateTable.EntryPath}"
                                 FontWeight="Bold"
                                 IsChecked="{Binding IsSelected}">
                                 <TextBlock
