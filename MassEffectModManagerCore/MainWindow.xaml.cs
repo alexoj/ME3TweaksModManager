@@ -4807,7 +4807,8 @@ namespace ME3TweaksModManager
                 null,
                 x =>
                 {
-                    M3L.ShowDialog(this, $"An error occurred merging 2DA tables: {x.Message}", M3L.GetString(M3L.string_error), MessageBoxButton.OK, MessageBoxImage.Error);
+                    if (x != null)
+                        M3L.ShowDialog(this, $"An error occurred merging 2DA tables: {x.Message}", M3L.GetString(M3L.string_error), MessageBoxButton.OK, MessageBoxImage.Error);
                 });
         }
 
