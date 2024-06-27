@@ -526,7 +526,6 @@
     <system:String x:Key="string_merged2DATables">Merged 2DA tables</system:String>
     <system:String x:Key="string_allMemFilesMustBeForTheSameGame">All .mem files must be for the same game.</system:String>
     <system:String x:Key="string_error">Error</system:String>
-
     <system:String x:Key="string_tooltip_moddescEditor">Mod Manager's editor for moddesc.ini files</system:String>
     <system:String x:Key="string_listOptionKeys">List DLC Alternate OptionKeys</system:String>
     <system:String xml:space="preserve" x:Key="string_tooltip_listOptionKeys">List the OptionKeys for each alternate this mod can install (for DLC mods only).&#10;This can be used in other mods to change installation behavior when those options are chosen in this mod when this mod is installed beforehand</system:String>
@@ -562,6 +561,8 @@
     <system:String x:Key="string_tooltip_generationLE">Click to toggle Legendary Edition features on/off in Mod Manager</system:String>
     <system:String x:Key="string_typeToSearch">Type to search</system:String>
     <system:String x:Key="string_tooltip_endorseThisModOnNexusMods">Endorse this mod on NexusMods</system:String>
+    <system:String x:Key="string_interp_errorMerging2DAX">An error occurred merging 2DA tables: {0}</system:String>
+    <!-- 0={Error Message} -->
 
     <!-- LEX Launcher -->
     <system:String x:Key="string_interp_lexNightlyFailedToDownload">Legendary Explorer Nightly failed to download: {0}</system:String>
@@ -995,6 +996,8 @@
     <system:String x:Key="string_tooltip_guidanceAvailable">Mod Manager has some general guidance available for your mod</system:String>
     <system:String x:Key="string_dialog_guidanceAvailable">The following general guidance is available for your mod.</system:String>
     <system:String x:Key="string_miscellaneousGuidance">Miscellaneous guidance</system:String>
+    <system:String x:Key="string_interp_modsDontMixAutoloadAndM3DA">Mods should not combine usage of Autoload.ini 2DA entries and usage of LE1 2DA Merge (.m3da), as it will cause issues. Autoload: {0}</system:String>
+    <!-- 0={File path} -->
 
     <!-- Language checks -->
     <system:String x:Key="string_deployment_tlkIssueLangPackageNotFound">Localized TLK package {0} was not found. Users who play the game with their language/voiceover set to {1} ({2}) will have blank strings from this mod. See the Mod Manager documentation for more information.</system:String>
@@ -1298,6 +1301,7 @@
     <system:String x:Key="string_interp_importingX">Importing {0}</system:String>
     <!-- 0={Filename} -->
     <system:String x:Key="string_importInstallGroup">Import install group</system:String>
+    <system:String x:Key="string_preparingToImportMods">Preparing to import mods</system:String>
 
     <!-- Mod updater -->
     <system:String x:Key="string_modupdatesavailable">Mod updates available</system:String>
@@ -2132,6 +2136,7 @@
     <system:String x:Key="string_interp_bqissue_minimumVersionNotFound">{0} requires mod {1}{2} to be installed beforehand, but in this install group it is not</system:String>
     <system:String x:Key="string_withMinimumVersion">with minimum version</system:String>
     <!-- Can be appended mid string -->
+    <system:String x:Key="string_tooltip_addMemFilesFromFilesystem">Add .mem files from filesystem</system:String>
 
     <!-- Backup File Fetcher (Devs only) -->
     <system:String x:Key="string_selectDestinationLocation">Select destination location</system:String>

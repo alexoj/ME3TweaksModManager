@@ -4809,7 +4809,7 @@ namespace ME3TweaksModManager
                 x =>
                 {
                     if (x != null)
-                        M3L.ShowDialog(this, $"An error occurred merging 2DA tables: {x.Message}", M3L.GetString(M3L.string_error), MessageBoxButton.OK, MessageBoxImage.Error);
+                        M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_errorMerging2DAX, x.Message), M3L.GetString(M3L.string_error), MessageBoxButton.OK, MessageBoxImage.Error);
                 });
         }
 

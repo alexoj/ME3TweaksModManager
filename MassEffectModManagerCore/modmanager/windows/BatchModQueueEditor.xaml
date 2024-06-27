@@ -200,21 +200,21 @@
                             Margin="-8,0,-8,-8"
                             Text="{Binding ASISearchTerm, UpdateSourceTrigger=PropertyChanged, Delay=150}" />
                         <ListBox
-                        BorderThickness="1"
-                        Margin="-8,-8,-8,0"
-                        IsTextSearchEnabled="True"
-                        TextSearch.TextPath="Name"
-                        Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
-                        ItemsSource="{Binding AvailableASIModsView}"
-                        HorizontalContentAlignment="Stretch"
-                        SelectedItem="{Binding SelectedAvailableASIMod}">
+                            BorderThickness="1"
+                            Margin="-8,-8,-8,0"
+                            IsTextSearchEnabled="True"
+                            TextSearch.TextPath="Name"
+                            Background="{DynamicResource {x:Static adonisUi:Brushes.Layer0BackgroundBrush}}"
+                            ItemsSource="{Binding AvailableASIModsView}"
+                            HorizontalContentAlignment="Stretch"
+                            SelectedItem="{Binding SelectedAvailableASIMod}">
                             <ListBox.ItemContainerStyle>
                                 <Style
-                                TargetType="ListBoxItem"
-                                BasedOn="{StaticResource StretchNoPaddingStyle}">
+                                    TargetType="ListBoxItem"
+                                    BasedOn="{StaticResource StretchNoPaddingStyle}">
                                     <EventSetter
-                                    Event="MouseDoubleClick"
-                                    Handler="LeftSideMod_MouseDown" />
+                                        Event="MouseDoubleClick"
+                                        Handler="LeftSideMod_MouseDown" />
                                 </Style>
                             </ListBox.ItemContainerStyle>
                         </ListBox>
@@ -228,31 +228,31 @@
                             DockPanel.Dock="Bottom"
                             Margin="-8,0,-8,-8">
                             <Button
-                                ToolTip="Add .mem files from filesystem"
-                               HorizontalAlignment="Right"
+                                ToolTip="{DynamicResource string_tooltip_addMemFilesFromFilesystem}"
+                                HorizontalAlignment="Right"
                                 Height="24"
                                 DockPanel.Dock="Right"
                                 Command="{Binding AddCustomMEMModCommand}">
                                 <Button.Content>
                                     <StackPanel
-                                    Orientation="Horizontal">
+                                        Orientation="Horizontal">
                                         <fa5:ImageAwesome
-                                        Icon="Solid_Plus"
-                                        Width="12"
-                                        Height="12"
-                                        VerticalAlignment="Center"
-                                        Margin="0,0,5,0"
-                                        Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
+                                            Icon="Solid_Plus"
+                                            Width="12"
+                                            Height="12"
+                                            VerticalAlignment="Center"
+                                            Margin="0,0,5,0"
+                                            Foreground="{DynamicResource {x:Static adonisUi:Brushes.ForegroundBrush}}" />
                                         <TextBlock
-                                        Text="{DynamicResource string_locateCustomFile}"
-                                        VerticalAlignment="Center" />
+                                            Text="{DynamicResource string_locateCustomFile}"
+                                            VerticalAlignment="Center" />
                                     </StackPanel>
                                 </Button.Content>
                             </Button>
                             <xctk:WatermarkTextBox
-                            Watermark="{DynamicResource string_typeToFilter}"
-                            Name="Avail_TextureSearchBox"
-                            Text="{Binding TextureSearchTerm, UpdateSourceTrigger=PropertyChanged, Delay=150}" />
+                                Watermark="{DynamicResource string_typeToFilter}"
+                                Name="Avail_TextureSearchBox"
+                                Text="{Binding TextureSearchTerm, UpdateSourceTrigger=PropertyChanged, Delay=150}" />
                         </DockPanel>
                         <ListBox
                             Name="ListBox_AvailableTextures"

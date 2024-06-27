@@ -360,11 +360,11 @@ namespace ME3TweaksModManager.modmanager.importer
                 Application.Current.Dispatcher.Invoke(delegate
                 {
 #endif
-                CompressedMods.Add(m);
-                OnCompressedModAdded?.Invoke();
-                CompressedMods.Sort(x => x.ModName);
+                    CompressedMods.Add(m);
+                    OnCompressedModAdded?.Invoke();
+                    CompressedMods.Sort(x => x.ModName);
 #if !AZURE
-            });
+                });
 #endif
             }
 
@@ -581,7 +581,7 @@ namespace ME3TweaksModManager.modmanager.importer
 
         private void ExtractModsBackgroundThread(object sender, DoWorkEventArgs e)
         {
-            ActionText = "Preparing to import mods";
+            ActionText = M3L.GetString(M3L.string_preparingToImportMods);
 
             var mods = (List<IImportableMod>)e.Argument;
             var extractedMods = new List<IImportableMod>();

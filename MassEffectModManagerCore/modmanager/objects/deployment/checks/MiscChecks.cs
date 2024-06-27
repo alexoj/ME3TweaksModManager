@@ -1,4 +1,5 @@
-﻿using LegendaryExplorerCore.Helpers;
+﻿using LegendaryExplorerCore.GameFilesystem;
+using LegendaryExplorerCore.Helpers;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksCore.ME3Tweaks.M3Merge;
 using ME3TweaksCore.Services.ThirdPartyModIdentification;
@@ -321,6 +322,26 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
             {
                 item.AddInfoWarning(M3L.GetString(M3L.string_interp_infoModNameTooLong, item.ModToValidateAgainst.ModName, item.ModToValidateAgainst.ModName.Length));
             }
+
+
+            #region Check 2DA is not in autoload and M3DA (LE1)
+
+            if (item.ModToValidateAgainst.Game == MEGame.LE1)
+            {
+                // Get autoloads
+                var autoloads = item.ModToValidateAgainst.GetAllRelativeReferences().Where(x => Path.GetFileName(x).CaseInsensitiveEquals(@"autoload.ini"));
+                var m3das = item.ModToValidateAgainst.GetAllRelativeReferences().Where(x => Path.GetExtension(x).CaseInsensitiveEquals(@".m3da")).ToList();
+                foreach (var autoloadPath in autoloads)
+                {
+                    var dlcRoot = Directory.GetParent(Path.Combine(item.ModToValidateAgainst.ModPath, autoloadPath)).FullName;
+                    AutoloadIni autoload = new AutoloadIni(Path.Combine(dlcRoot, @"autoload.ini")); // Full path
+                    if (autoload.Bio2DAs.Any() && m3das.Any())
+                    {
+                        item.AddSignificantIssue(M3L.GetString(M3L.string_interp_modsDontMixAutoloadAndM3DA, autoloadPath));
+                    }
+                }
+            }
+            #endregion
 
             #region Check for full-file mergemod targets
             // Check if our mod contains any basegame only files that are hot merge mod targets.
