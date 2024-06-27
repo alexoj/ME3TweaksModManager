@@ -384,6 +384,12 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         /// The reason the mod failed to load
         /// </summary>
         public string LoadFailedReason { get; set; }
+#if AZURE && DEBUG
+        public void OnLoadFailedReasonChanged()
+        {
+            Debug.WriteLine(@"Breakpoint me");
+        }
+#endif
 
         /// <summary>
         /// If this mod makes use of the new bink encoder - this flag is used to help flag that bink is not installed when troubleshooting

@@ -40,7 +40,7 @@ namespace ME3TweaksModManager.modmanager.importer
             Action<BatchLibraryInstallQueue> addBiq = null,
             Action<string> currentOperationTextCallback = null,
             string forcedMD5 = null,
-            int forcedSize = -1,
+            long forcedSize = -1,
             Stream archiveStream = null)
         {
             string relayVersionResponse = @"-1";
@@ -75,10 +75,10 @@ namespace ME3TweaksModManager.modmanager.importer
                 return ioException.Message;
             }
 #if DEBUG
-            foreach (var v in archiveFile.ArchiveFileData)
-            {
-                Debug.WriteLine($@"{v.FileName} | Index {v.Index} | Size {v.Size} | Method {v.Method} | IsDirectory {v.IsDirectory} | Last Modified {v.LastWriteTime}");
-            }
+            //foreach (var v in archiveFile.ArchiveFileData)
+            //{
+            //    Debug.WriteLine($@"{v.FileName} | Index {v.Index} | Size {v.Size} | Method {v.Method} | IsDirectory {v.IsDirectory} | Last Modified {v.LastWriteTime}");
+            //}
 #endif
             var moddesciniEntries = new List<ArchiveFileInfo>();
             var sfarEntries = new List<ArchiveFileInfo>(); //ME3 DLC

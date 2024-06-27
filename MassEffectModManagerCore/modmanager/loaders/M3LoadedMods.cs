@@ -34,11 +34,13 @@ namespace ME3TweaksModManager.modmanager.loaders
         /// <returns></returns>
         public static string GetCurrentModLibraryDirectory()
         {
+#if !AZURE // Azure can only use local library path.
             if (IsSharedLibrary())
             {
                 return Settings.ModLibraryPath;
             }
             else
+#endif
             {
                 return Path.Combine(M3Utilities.GetMMExecutableDirectory(), @"mods");
             }
@@ -121,7 +123,7 @@ namespace ME3TweaksModManager.modmanager.loaders
             return Path.Combine(GetCurrentModLibraryDirectory(), @"Textures", game.ToString());
         }
 
-        #endregion
+#endregion
 
         /// <summary>
         /// If the mod list hasn't actually booted once

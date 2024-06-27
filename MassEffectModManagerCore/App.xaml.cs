@@ -633,7 +633,13 @@ namespace ME3TweaksModManager
         /// <summary>
         /// The executable location for this application
         /// </summary>
-        public static string ExecutableLocation { get; private set; }
+        public static string ExecutableLocation { 
+            get;
+#if !AZURE
+            private 
+#endif
+            set;
+        }
 
         public static List<NexusDomainHandler> NexusDomainHandlers { get; } = new();
 

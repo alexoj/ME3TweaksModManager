@@ -85,6 +85,19 @@ namespace ME3TweaksModManager.modmanager.importer
         public long ProgressMaximum { get; private set; }
         public bool ProgressIndeterminate { get; private set; }
 
+
+        #region Testing and precomputed
+        /// <summary>
+        /// For forcing size of test archive
+        /// </summary>
+        public long? ForcedSize { get; set; }
+        /// <summary>
+        /// For forcing md5 of test archive or precomputed archive md5
+        /// </summary>
+        public string ForcedMD5 { get; set; }
+        #endregion
+
+
         private void OnProgressValueChanged()
         {
             ProgressChanged?.Invoke(this, new M3ProgressEventArgs(ProgressValue, ProgressMaximum, ProgressIndeterminate));
@@ -343,23 +356,27 @@ namespace ME3TweaksModManager.modmanager.importer
             M3Log.Information($@"Scanning archive for mods: {archive}");
             void AddCompressedModCallback(Mod m)
             {
+#if !AZURE
                 Application.Current.Dispatcher.Invoke(delegate
                 {
-                    CompressedMods.Add(m);
-                    OnCompressedModAdded?.Invoke();
-                    CompressedMods.Sort(x => x.ModName);
-                });
+#endif
+                CompressedMods.Add(m);
+                OnCompressedModAdded?.Invoke();
+                CompressedMods.Sort(x => x.ModName);
+#if !AZURE
+            });
+#endif
             }
 
-            var archiveSize = ArchiveStream?.Length ?? new FileInfo(archive).Length;
+            var archiveSize = ForcedSize ?? ArchiveStream?.Length ?? new FileInfo(archive).Length;
 
             // ModManager 8: Blacklisting files by size/hash
-            string calculatedMD5 = null; // If we calc it here don't calc it later
+            string calculatedMD5 = ForcedMD5; // If we calc it here don't calc it later
 
             var blacklistings = BlacklistingService.GetBlacklistings(archiveSize);
-            if (Enumerable.Any(blacklistings))
+            if (blacklistings.Any())
             {
-                calculatedMD5 = ArchiveStream != null ? MUtilities.CalculateHash(ArchiveStream) : MUtilities.CalculateHash(archive);
+                calculatedMD5 ??= ArchiveStream != null ? MUtilities.CalculateHash(ArchiveStream) : MUtilities.CalculateHash(archive);
                 if (blacklistings.Any(x => x.MD5 == calculatedMD5))
                 {
                     // This archive is blacklisted
