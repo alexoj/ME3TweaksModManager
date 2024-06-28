@@ -46,7 +46,11 @@
             Text="{DynamicResource string_moveModsToRightSideToAdd}"
             TextAlignment="Center"
             DockPanel.Dock="Top"
-            Margin="0,0,0,10" />
+             />
+        <Separator DockPanel.Dock="Top" 
+                   Margin="10,4,10,10"
+                   Opacity=".5"
+                   Foreground="{DynamicResource {x:Static adonisUi:Brushes.SlightlyDimmedForegroundBrush}}"/>
         <Grid
             DockPanel.Dock="Left">
             <Grid.RowDefinitions>

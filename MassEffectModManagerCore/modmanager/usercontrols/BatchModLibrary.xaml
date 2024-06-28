@@ -27,6 +27,10 @@
             Text="{DynamicResource string_description_batchModInstallerAllowsSerialInstall}"
             TextWrapping="Wrap"
             TextAlignment="Center" />
+        <Separator DockPanel.Dock="Top" 
+                   Margin="10,4,10,4"
+                   Opacity=".5"
+                   Foreground="{DynamicResource {x:Static adonisUi:Brushes.SlightlyDimmedForegroundBrush}}"/>
         <DockPanel
             DockPanel.Dock="Bottom"
             Margin="0,4,0,0">
