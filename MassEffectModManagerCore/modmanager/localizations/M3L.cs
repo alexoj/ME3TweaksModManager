@@ -1443,6 +1443,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_interp_validation_altSpecifiesValueFolderDoesntExist = "string_interp_validation_altSpecifiesValueFolderDoesntExist";
 		public const string string_validation_mergeModVersionUnsupported = "string_validation_mergeModVersionUnsupported";
 		public const string string_interp_validation_mergeModCompilerTooNew = "string_interp_validation_mergeModCompilerTooNew";
+		public const string string_interp_errorReadingMergeMod = "string_interp_errorReadingMergeMod";
 		public const string string_validation_m3ASIVersionWrongValueCount = "string_validation_m3ASIVersionWrongValueCount";
 		public const string string_interp_m3ASIVersionMissingKey = "string_interp_m3ASIVersionMissingKey";
 		public const string string_interp_m3ASIVersionNotAnInteger = "string_interp_m3ASIVersionNotAnInteger";

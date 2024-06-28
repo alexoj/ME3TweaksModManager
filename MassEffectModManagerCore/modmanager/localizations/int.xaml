@@ -1831,6 +1831,8 @@
     <system:String x:Key="string_validation_mergeModVersionUnsupported">Mergemod failed to load: Unsupported version</system:String>
     <system:String x:Key="string_interp_validation_mergeModCompilerTooNew">Mergemod {0} was built with compiler that requires a minimum cmmver of {1}. Recompile the mergemod or update the cmmver</system:String>
     <!-- 0={File path} 1={floating point cmmver} -->
+    <system:String x:Key="string_interp_errorReadingMergeMod">An error occurred reading referenced mergemod '{0}': {1}. See the logs for more information.</system:String>
+    <!-- 0={fullPath} 1={error message} -->
 
     <!-- M3 ASI Version -->
     <system:String x:Key="string_validation_m3ASIVersionWrongValueCount">M3ASIVersion data in moddesc is not valid. At most an M3ASIVersion struct can contain 1 or 2 values: GroupID and optionally Version. This has {0} entries. Data: {1}</system:String>

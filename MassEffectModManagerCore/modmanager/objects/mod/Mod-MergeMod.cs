@@ -50,7 +50,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
             {
                 M3Log.Error($@"Exception loading merge mod {fullPath}: {e.Message}");
                 M3Log.Error(e.StackTrace);
-                LoadFailedReason = $@"An error occurred reading referenced merge mod '{fullPath}': {e.Message}. See the logs for more information.";
+                LoadFailedReason = M3L.GetString(M3L.string_interp_errorReadingMergeMod, fullPath, e.Message);
                 return null;
             }
             finally
