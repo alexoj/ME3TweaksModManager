@@ -1,5 +1,9 @@
 ﻿<usercontrols:MMBusyPanelBase
-    x:Class="ME3TweaksModManager.modmanager.usercontrols.ModUpdateInformationPanel" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    x:Class="ME3TweaksModManager.modmanager.usercontrols.ModUpdateInformationPanel"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
     xmlns:usercontrols="clr-namespace:ME3TweaksModManager.modmanager.usercontrols"
     xmlns:converters="clr-namespace:ME3TweaksModManager.modmanager.converters"
@@ -22,15 +26,16 @@
             Text="{DynamicResource string_modupdatesavailable}"
             FontWeight="Bold"
             TextAlignment="Center"
-            FontSize="20"/>
+            FontSize="20" />
         <TextBlock
             DockPanel.Dock="Top"
             Text="{DynamicResource string_modManagerDetectedModUpdates}"
-            TextAlignment="Center"/>
-        <Separator DockPanel.Dock="Top" 
-                   Margin="10,4,10,10"
-                   Opacity=".5"
-                   Foreground="{DynamicResource {x:Static adonisUi:Brushes.SlightlyDimmedForegroundBrush}}"/>
+            TextAlignment="Center" />
+        <Separator
+            DockPanel.Dock="Top"
+            Margin="10,4,10,10"
+            Opacity=".5"
+            Foreground="{DynamicResource {x:Static adonisUi:Brushes.SlightlyDimmedForegroundBrush}}" />
         <DockPanel
             Dock="Bottom">
             <Button
@@ -297,13 +302,13 @@
                             Grid.Row="2"
                             Grid.Column="0"
                             Text="{Binding LocalizedLocalVersionString}"
-                            Visibility="{Binding IsRestoreMode, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='Inverse'}"/>
+                            Visibility="{Binding IsRestoreMode, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='Inverse'}" />
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="0"
-                            Text="In restore mode"
+                            Text="{DynamicResource string_inRestoreMode}"
                             FontStyle="Italic"
-                            Visibility="{Binding IsRestoreMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            Visibility="{Binding IsRestoreMode, Converter={StaticResource BoolToVisibilityConverter}}" />
                         <TextBlock
                             Grid.Row="3"
                             Grid.Column="0"

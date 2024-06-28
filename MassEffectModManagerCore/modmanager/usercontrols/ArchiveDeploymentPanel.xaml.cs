@@ -610,7 +610,8 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 {
                     DeploymentListDialog ld = new DeploymentListDialog(dcli, Window.GetWindow(hl));
                     ld.ShowDialog();
-                } else if (dcli.Hyperlink != null)
+                }
+                else if (dcli.Hyperlink != null)
                 {
                     M3Utilities.OpenWebpage(dcli.Hyperlink);
                 }
@@ -631,7 +632,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             AddModToDeployment(initialMod);
             initialMod = null;
 #if PRERELEASE
-            M3L.ShowDialog(window, "This is a prerelease build of Mod Manager. If you are deploying a mod for distribution, ENSURE YOU VALIDATE IT WORKS ON THE VERSION OF MOD MANAGER THAT THE USERBASE IS ON.", "Prerelease build", MessageBoxButton.OK, MessageBoxImage.Warning);
+            M3L.ShowDialog(window, M3L.GetString(M3L.string_dialog_thisIsPrereleaseBuildDeployement), M3L.GetString(M3L.string_prereleaseBuild), MessageBoxButton.OK, MessageBoxImage.Warning);
 #endif
         }
 

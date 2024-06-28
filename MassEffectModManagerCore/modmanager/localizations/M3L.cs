@@ -727,6 +727,8 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_validationFailed = "string_validationFailed";
 		public const string string_interp_modURLOK = "string_interp_modURLOK";
 		public const string string_interp_nexusModsPageX = "string_interp_nexusModsPageX";
+		public const string string_dialog_thisIsPrereleaseBuildDeployement = "string_dialog_thisIsPrereleaseBuildDeployement";
+		public const string string_prereleaseBuild = "string_prereleaseBuild";
 		public const string string_validationOK = "string_validationOK";
 		public const string string_languageCheckInProgress = "string_languageCheckInProgress";
 		public const string string_interp_customDLCMissingLocalizedTLK = "string_interp_customDLCMissingLocalizedTLK";
@@ -1438,6 +1440,8 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_installsTheFollowingASIMods = "string_installsTheFollowingASIMods";
 		public const string string_invalid = "string_invalid";
 		public const string string_interp_validation_altSpecifiesValueFolderDoesntExist = "string_interp_validation_altSpecifiesValueFolderDoesntExist";
+		public const string string_validation_mergeModVersionUnsupported = "string_validation_mergeModVersionUnsupported";
+		public const string string_interp_validation_mergeModCompilerTooNew = "string_interp_validation_mergeModCompilerTooNew";
 		public const string string_validation_m3ASIVersionWrongValueCount = "string_validation_m3ASIVersionWrongValueCount";
 		public const string string_interp_m3ASIVersionMissingKey = "string_interp_m3ASIVersionMissingKey";
 		public const string string_interp_m3ASIVersionNotAnInteger = "string_interp_m3ASIVersionNotAnInteger";
@@ -1567,6 +1571,9 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_squadmateOutfitMergeLegion = "string_squadmateOutfitMergeLegion";
 		public const string string_squadmateOutfitMergeKasumi = "string_squadmateOutfitMergeKasumi";
 		public const string string_squadmateOutfitMergeZaeed = "string_squadmateOutfitMergeZaeed";
+		public const string string_modNameCannotStartWithSlash = "string_modNameCannotStartWithSlash";
+		public const string string_sk_modNameTooLong = "string_sk_modNameTooLong";
+		public const string string_sk_modFoldernameTooLong = "string_sk_modFoldernameTooLong";
 		public const string string_dialogCouldNotSetDataToClipboard = "string_dialogCouldNotSetDataToClipboard";
 		public const string string_errorCopyingDataToClipboard = "string_errorCopyingDataToClipboard";
 		public const string string_copyItemsToClipboard = "string_copyItemsToClipboard";

@@ -285,7 +285,7 @@ namespace ME3TweaksModManager.modmanager.windows
                 }
                 if (mn.StartsWith('/'))
                 {
-                    return RuleResult.Invalid("Mod name cannot start with /");
+                    return RuleResult.Invalid(M3L.GetString(M3L.string_modNameCannotStartWithSlash));
                 }
                 var sanitized = MUtilities.SanitizePath(mn, true);
                 if (sanitized.Length == 0)
@@ -294,7 +294,7 @@ namespace ME3TweaksModManager.modmanager.windows
                 }
                 if (sanitized.Length > 50)
                 {
-                    return RuleResult.Invalid("Mod name cannot be longer than 50 characters or it will not reliably fit on user filesystems");
+                    return RuleResult.Invalid(M3L.GetString(M3L.string_sk_modNameTooLong));
                 }
                 if (sanitized.Contains(@".."))
                 {
@@ -344,7 +344,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
                 if (dfn.Length > 25)
                 {
-                    return RuleResult.Invalid("Mod foldername cannot be longer than 25 characters or it will not reliably fit on user filesystems");
+                    return RuleResult.Invalid(M3L.GetString(M3L.string_sk_modFoldernameTooLong));
                 }
 
                 return RuleResult.Valid();
@@ -653,7 +653,7 @@ namespace ME3TweaksModManager.modmanager.windows
 
             return null;
         }
-        
+
         private void MountPriority_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
         {
             if (int.TryParse(ModMountPriority_TextBox.Text, out var val) && val > MinMountForGame && val < MaxMountForGame)

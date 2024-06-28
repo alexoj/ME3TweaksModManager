@@ -755,7 +755,8 @@
     <!-- 0 = Mod URL-->
     <system:String x:Key="string_interp_nexusModsPageX">NexusMods page: {0}</system:String>
     <!-- 0={Name of NexusMods page title} -->
-
+    <system:String x:Key="string_dialog_thisIsPrereleaseBuildDeployement">This is a prerelease build of Mod Manager. If you are deploying a mod for distribution, ENSURE YOU VALIDATE IT WORKS ON THE VERSION OF MOD MANAGER THAT THE USERBASE IS ON.</system:String>
+    <system:String x:Key="string_prereleaseBuild">Prerelease build</system:String>
     <system:String x:Key="string_validationOK">Validation OK</system:String>
     <system:String x:Key="string_languageCheckInProgress">Language check in progress</system:String>
     <system:String x:Key="string_interp_customDLCMissingLocalizedTLK">{0} is missing a localized TLK for language {1}. This DLC will not load if the user's game language is set to this. Some versions of the game cannot have their language changed, so this will effectively lock the user out from using this mod.</system:String>
@@ -1984,6 +1985,9 @@
     <system:String x:Key="string_squadmateOutfitMergeLegion">Squadmate outfit merge: Legion</system:String>
     <system:String x:Key="string_squadmateOutfitMergeKasumi">Squadmate outfit merge: Kasumi</system:String>
     <system:String x:Key="string_squadmateOutfitMergeZaeed">Squadmate outfit merge: Zaeed</system:String>
+    <system:String x:Key="string_modNameCannotStartWithSlash">Mod name cannot start with /</system:String>
+    <system:String x:Key="string_sk_modNameTooLong">Mod name cannot be longer than 50 characters, or it will not reliably fit on user filesystems</system:String>
+    <system:String x:Key="string_sk_modFoldernameTooLong">Mod foldername cannot be longer than 25 characters, or it will not reliably fit on user filesystems</system:String>
 
     <!-- List Dialog -->
     <system:String xml:space="preserve" x:Key="string_dialogCouldNotSetDataToClipboard">Could not set data to clipboard:\n</system:String>
@@ -2082,6 +2086,8 @@
     <!-- 0={Mod name} 1={Integer} -->
     <system:String x:Key="string_interp_calculatingUpdateDeltaXY">Calculating update delta for {0} {1}%</system:String>
     <!-- 0={Mod name} 1={Integer} -->
+    <system:String x:Key="string_inRestoreMode">In restore mode</system:String>
+    <!-- Shown when a mod that failed to load is forced into checking for updates. This is called 'restore mode' and will always return an update if possible -->
 
     <!-- Mixin Class-->
     <system:String x:Key="string_interp_appliesToX">Applies to file {0}</system:String>
@@ -3083,5 +3089,4 @@
     <!-- Auto Restore Panel -->
     <system:String x:Key="string_interp_errorRestoringFromBackupX">There was an error restoring from backup: {0}</system:String>
     <!-- 0={Error Message} -->
-
 </ResourceDictionary>
