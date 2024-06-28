@@ -37,13 +37,13 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 if (mm == null)
                 {
                     M3Log.Error($@"Error loading {fullPath}: Loader returned null. The version is likely unsupported by this version of mod manager");
-                    throw new Exception("Merge mod failed to load: Unsupported version");
+                    throw new Exception(M3L.GetString(M3L.string_validation_mergeModVersionUnsupported));
                 }
 
                 if (ModDescTargetVersion < MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion))
                 {
                     M3Log.Error($@"Error loading {fullPath}: Merge mod was built against a newer version of cmmver than this mod. The mergemod must be updated or the cmmver upgraded to at least {MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion)}");
-                    throw new Exception($"Merge mod {fullPath} was built with compiler that requires a minimum cmmver of {MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion)}. Recompile the merge mod or update the cmmver");
+                    throw new Exception(M3L.GetString(M3L.string_interp_validation_mergeModCompilerTooNew, fullPath, MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion)));
                 }
             }
             catch (Exception e)

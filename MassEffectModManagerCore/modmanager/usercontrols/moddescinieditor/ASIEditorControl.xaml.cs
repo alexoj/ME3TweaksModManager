@@ -108,7 +108,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
 
                 if (v.ManifestMod == null)
                 {
-                    M3Log.Error($@"Unable to find version {baseObj.Version?.ToString() ?? @"(Latest)"} in ASI group {baseObj.ASIGroupID} {group.Versions.First().Name}");
+                    M3Log.Error($@"Unable to find version {baseObj.Version?.ToString() ?? @"(Latest)"} in ASI group {baseObj.ASIGroupID} {group.Versions.First().Name}"); // do not localize
                     return null; // Specific version was not found!!
                 }
 

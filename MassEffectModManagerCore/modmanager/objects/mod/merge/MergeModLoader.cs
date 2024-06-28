@@ -19,7 +19,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
             }
 
             var version = mergeFileStream.ReadByte();
-            
+
             switch (version)
             {
                 case 1:
@@ -85,7 +85,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
             else
             {
                 M3Log.Error($@"Error decompiling {file}: loader returned null. The version is likely unsupported by this version of mod manager");
-                M3L.ShowDialog(MainWindow.Instance, "Unsupported mergemod version - it may be too new for this version of Mod Manager.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                M3L.ShowDialog(MainWindow.Instance, M3L.GetString(M3L.string_dialog_unsupportedMergemodVersionMayBeTooNew), M3L.GetString(M3L.string_error), MessageBoxButton.OK, MessageBoxImage.Error);
             }
 
         }

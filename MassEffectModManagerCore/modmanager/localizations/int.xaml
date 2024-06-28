@@ -669,7 +669,7 @@
     <!-- 0={ModBeingInstalled.ModName} 1={list of dlc names. It starts with a newline, so do not put space between : and bracket symbol} -->
     <system:String xml:space="preserve" x:Key="string_warningTexturesAreInstalled">Textures are installed and this mod installs or modifies package files. You can continue to install this mod, but new files will not have the updated textures that were previously installed. You will also no longer be able to install textures to this game target.\n\nTexture mods should be installed after all package file mods are installed.\n\nContinue installation?</system:String>
     <system:String x:Key="string_warningTextureModsAreInstalled">Warning: Texture mods are installed</system:String>
-    <system:String x:Key="string_interp_errorApplyingMergeModXY">An error occurred applying merge mod {0}: {1}.</system:String>
+    <system:String x:Key="string_interp_errorApplyingMergeModXY">An error occurred applying mergemod {0}: {1}.</system:String>
     <!-- 0={mergeMod.MergeModFilename} 1={ex.Message} -->
     <system:String x:Key="string_updatingTLKFiles">Updating TLK files</system:String>
     <system:String x:Key="string_applyingMergemods">Applying mergemods</system:String>
@@ -753,6 +753,9 @@
     <system:String x:Key="string_validationFailed">Validation failed</system:String>
     <system:String x:Key="string_interp_modURLOK">Mod URL OK: {0}</system:String>
     <!-- 0 = Mod URL-->
+    <system:String x:Key="string_interp_nexusModsPageX">NexusMods page: {0}</system:String>
+    <!-- 0={Name of NexusMods page title} -->
+
     <system:String x:Key="string_validationOK">Validation OK</system:String>
     <system:String x:Key="string_languageCheckInProgress">Language check in progress</system:String>
     <system:String x:Key="string_interp_customDLCMissingLocalizedTLK">{0} is missing a localized TLK for language {1}. This DLC will not load if the user's game language is set to this. Some versions of the game cannot have their language changed, so this will effectively lock the user out from using this mod.</system:String>
@@ -998,6 +1001,10 @@
     <system:String x:Key="string_miscellaneousGuidance">Miscellaneous guidance</system:String>
     <system:String x:Key="string_interp_modsDontMixAutoloadAndM3DA">Mods should not combine usage of Autoload.ini 2DA entries and usage of LE1 2DA Merge (.m3da), as it will cause issues. Autoload: {0}</system:String>
     <!-- 0={File path} -->
+    <system:String x:Key="string_interp_mergeModFeatureLevelIncompatible">MergeMod {0} was compiled at feature level V{1}, which requires a minimum cmmver of {2}. You must recompile the mergemod file.</system:String>
+    <!-- 0={filepath} 1={integer} 2={floating point number (cmmver)} -->
+    <system:String x:Key="string_interp_mergeModFailedToLoadUnknownFeatureLevel">MergeMod {0} failed to load. It may not compatible with cmmver {1}</system:String>
+    <!-- 0={filepath} 1={floating point number (cmmver)} -->
 
     <!-- Language checks -->
     <system:String x:Key="string_deployment_tlkIssueLangPackageNotFound">Localized TLK package {0} was not found. Users who play the game with their language/voiceover set to {1} ({2}) will have blank strings from this mod. See the Mod Manager documentation for more information.</system:String>
@@ -1190,7 +1197,7 @@
     <system:String x:Key="string_tooltip_dlcModsTab">Mods that are installed into DLC folders of the game</system:String>
     <system:String x:Key="string_enableAll">Enable all</system:String>
     <system:String x:Key="string_disableAll">Disable all</system:String>
-    <system:String xml:space="preserve" x:Key="string_tooltip_modifiedBasegameFilesTab">Files that ship from BioWare that have been modified will be listed here,&#10;such as from merge mods, TLK merge, config merge, etc</system:String>
+    <system:String xml:space="preserve" x:Key="string_tooltip_modifiedBasegameFilesTab">Files that ship from BioWare that have been modified will be listed here,&#10;such as from mergemods, TLK merge, config merge, etc</system:String>
     <system:String x:Key="string_tooltip_modifiedSFARsTab">ME3 Official DLC is stored in SFAR files. Some modding tools will unpack these files, others will inject directly into them</system:String>
     <system:String x:Key="string_tooltip_installedDLCTab">List of installed DLC</system:String>
     <system:String x:Key="string_tooltip_texturesTab">List of all texture mods that were installed with texture modding tools</system:String>
@@ -1779,13 +1786,13 @@
     <system:String x:Key="string_interp_validation_modparsing_bannerImageAssetNotFound">Mod has banner image name of {0}, but this file does not exist under the M3Images directory.</system:String>
     <!-- 0={Filename} -->
     <system:String x:Key="string_interp_validation_modparsing_bannerUsedButNotDeployedWithM3">Mod has banner image that is in an archive, but the storage type is not listed as 'Copy'. Mod Manager will not load mods from an archive that use images that were not deployed using Mod Manager.</system:String>
-    <system:String x:Key="string_interp_validation_modparsing_mergeModGameIdMismatch">Merge mod {0} lists applicable game as {1}, but the mod loading this merge mod is for {2}. The mod and merge mod target games must match.</system:String>
+    <system:String x:Key="string_interp_validation_modparsing_mergeModGameIdMismatch">Mergemod {0} lists applicable game as {1}, but the mod loading this mergemod is for {2}. The mod and mergemod target games must match.</system:String>
     <!-- 0={Filename} 1={Game ID} 2={Game ID} -->
     <system:String x:Key="string_interp_validation_modparsing_leGamesRequireCmm7">{0} is designed for {1}. ModDesc versions (cmmver descriptor under ModManager section) under 7.0 cannot target Legendary Edition games.</system:String>
     <!-- 0={ModName} 1={GameName} -->
-    <system:String x:Key="string_interp_validation_modparsing_securityIssueMergeModDotDot">{0} has a merge mod listed under header {1} which contains a '..' in the name. '..' is not allowed in names.</system:String>
+    <system:String x:Key="string_interp_validation_modparsing_securityIssueMergeModDotDot">{0} has a mergemod listed under header {1} which contains a '..' in the name. '..' is not allowed in names.</system:String>
     <!-- 0={ModName} 1={Job Header (BASEGAME, RETALIATION, etc)} -->
-    <system:String x:Key="string_interp_validation_modparsing_mergeModNotFound">{0} has a merge mod listed under header {1} which does not exist in the {2} folder: {3}.</system:String>
+    <system:String x:Key="string_interp_validation_modparsing_mergeModNotFound">{0} has a mergemod listed under header {1} which does not exist in the {2} folder: {3}.</system:String>
     <!-- 0={ModName} 1={Header (BASEGAME, REBELLION, etc)} 2={Merge foldername} 3={filename} -->
     <system:String x:Key="string_validation_modparsing_customdlcDotDotFound">CUSTOMDLC header destdirs contains a value that contains a directory separator character, which is not allowed.</system:String>
     <system:String x:Key="string_interp_validation_modparsing_modInstallsBlacklistedDestFile">{0}'s job {1} file target {2} installs a file that cannot be installed by Mod Manager as it has been specifically blacklisted. Installing this file poses a security risk or is known to likely harm a user's installation.</system:String>
@@ -1812,12 +1819,15 @@
     <system:String x:Key="string_mod_modReferencesHeadmorphFiles">This mod can install the following headmorph files:</system:String>
     <system:String x:Key="string_interp_validation_modparsing_unsupportedModdescVersion">The cmmver specified by this mod ({0}) is higher than the version supported by this build of ME3Tweaks Mod Manager ({1}). You may need to update Mod Manager for this mod to load.</system:String>
     <!-- 0={Version number} 1={Version number} -->
-    <system:String x:Key="string_mod_validation_basegameMergeModsWithoutModDir">[BASEGAME] 'mergemods' was specified, but 'moddir' was not - did you mean to set moddir to '.'? Merge mods will not work without settings a moddir value, use value '.' if you do not have other files to replace, or remove mergemods from this task header.</system:String>
+    <system:String x:Key="string_mod_validation_basegameMergeModsWithoutModDir">[BASEGAME] 'mergemods' was specified, but 'moddir' was not - did you mean to set moddir to '.'? Mergemods will not work without settings a moddir value, use value '.' if you do not have other files to replace, or remove mergemods from this task header.</system:String>
     <!-- This is for user convenience -->
     <system:String x:Key="string_installsTheFollowingASIMods">Installs the following ASI mods:</system:String>
     <system:String x:Key="string_invalid">Invalid</system:String>
     <system:String x:Key="string_interp_validation_altSpecifiesValueFolderDoesntExist">Alternate {0} specifies a '{1}' value that references folder in {2} that does not exist</system:String>
     <!-- 0={Name} 1={Name of folder} 2={Folder name} -->
+    <system:String x:Key="string_validation_mergeModVersionUnsupported">Mergemod failed to load: Unsupported version</system:String>
+    <system:String x:Key="string_interp_validation_mergeModCompilerTooNew">Mergemod {0} was built with compiler that requires a minimum cmmver of {1}. Recompile the mergemod or update the cmmver</system:String>
+    <!-- 0={File path} 1={floating point cmmver} -->
 
     <!-- M3 ASI Version -->
     <system:String x:Key="string_validation_m3ASIVersionWrongValueCount">M3ASIVersion data in moddesc is not valid. At most an M3ASIVersion struct can contain 1 or 2 values: GroupID and optionally Version. This has {0} entries. Data: {1}</system:String>
@@ -2698,15 +2708,15 @@
     <!-- Message that comes up telling user what's happening. Plot Manager is something M3 keeps up to date (as mods override and/or add plot flags) and is used to track plot events -->
 
     <!-- Merge Mods (V1) -->
-    <system:String x:Key="string_mergeModFileDoesNotHaveCorrectMagicHeader">Merge mod file does not have correct magic header</system:String>
-    <system:String x:Key="string_interp_unsupportedMergeModVersionVersionX">Unsupported Merge Mod Version: {0}</system:String>
+    <system:String x:Key="string_mergeModFileDoesNotHaveCorrectMagicHeader">Mergemod file does not have correct magic header</system:String>
+    <system:String x:Key="string_interp_unsupportedMergeModVersionVersionX">Unsupported mergemod version: {0}</system:String>
     <!-- 0={version} -->
-    <system:String xml:space="preserve" x:Key="string_interp_invalidMergeModManifestReason">Invalid merge mod manifest:\n{0}</system:String>
+    <system:String xml:space="preserve" x:Key="string_interp_invalidMergeModManifestReason">Invalid mergemod manifest:\n{0}</system:String>
     <!-- 0={reason merge manifest was invalid (schema text)} -->
     <system:String x:Key="string_filenameCannotBeNullInAMergeManifestFile">'filename' cannot be null in a merge manifest file!</system:String>
     <system:String x:Key="string_interp_targetingNonStartupFile">Cannot merge into non-startup file at this time: {0}</system:String>
     <!-- 0={FileName} -->
-    <system:String x:Key="string_error_mergefile_badMagic">Merge Mod V1 asset not prefixed by asset magic - this file is not properly built!</system:String>
+    <system:String x:Key="string_error_mergefile_badMagic">Mergemod V1 asset not prefixed by asset magic - this file is not properly built!</system:String>
     <!-- this is error message that can occur when parsing in an m3m file. It's a sanity check -->
     <system:String x:Key="string_interp_error_mergefile_assetNotFoundX">Asset file does not exist in folder: {0}</system:String>
     <!-- 0={Filename}. This string shows up if file is not found locally when compiling json file -->
@@ -2735,7 +2745,7 @@
     <!-- 0={FileName} -->
     <system:String x:Key="string_interp_mergefile_errorCompilingClassAfterEdit">Error compiling class {0} after adding or replacing {1}: {2}</system:String>
     <!-- 0={targetExport InstancedFullPath} 1={Script Filename} 2={list of errors} -->
-    <system:String x:Key="string_interp_mergefile_serialSizeMismatch">Merge mod was not the correct length; we read to position {0}, but the merge mod is {1} bytes long</system:String>
+    <system:String x:Key="string_interp_mergefile_serialSizeMismatch">Mergemod was not the correct length; we read to position {0}, but the mergemod is {1} bytes long</system:String>
     <!-- 0={number} 1={number}-->
     <system:String x:Key="string_interp_propertyNotFoundX">Property not found: {0}</system:String>
     <!-- 0={Property string In.This.Form} -->
@@ -2745,7 +2755,7 @@
     <!-- 0={Name of property In.This.Form} -->
     <system:String x:Key="string_interp_updatingX">Updating {0}</system:String>
     <!-- 0={<A string>} -->
-    <system:String x:Key="string_interp_mergeModAssetsSingleFolder">Asset files for merge mods must all be contained in the same folder. Invalid asset name: {0}</system:String>
+    <system:String x:Key="string_interp_mergeModAssetsSingleFolder">Asset files for mergemods must all be contained in the same folder. Invalid asset name: {0}</system:String>
     <!-- 0={Filename} -->
 
     <!-- Merge Mods (V2) -->
@@ -3059,8 +3069,9 @@
     <system:String x:Key="string_importComplete">Import complete</system:String>
 
     <!-- Merge Mod Loader -->
-    <system:String x:Key="string_dialog_mergeModFeatureLevel1">Is the merge mod you are compiling going to be used in a mod that targets ModDesc 8.2 or lower?</system:String>
+    <system:String x:Key="string_dialog_mergeModFeatureLevel1">Is the mergemod you are compiling going to be used in a mod that targets ModDesc 8.2 or lower?</system:String>
     <system:String x:Key="string_useEnhancedFeaturesQuestion">Use enhanced features?</system:String>
+    <system:String x:Key="string_dialog_unsupportedMergemodVersionMayBeTooNew">Unsupported mergemod version - it may be too new for this version of Mod Manager.</system:String>
 
     <!-- M3ZA -->
     <system:String x:Key="string_invalidMagic_m3za">CompressedTLKMergeFile has invalid magic number!</system:String>

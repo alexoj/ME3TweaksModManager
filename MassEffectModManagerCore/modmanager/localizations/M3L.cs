@@ -726,6 +726,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_emptyOrInvalidModUrl = "string_emptyOrInvalidModUrl";
 		public const string string_validationFailed = "string_validationFailed";
 		public const string string_interp_modURLOK = "string_interp_modURLOK";
+		public const string string_interp_nexusModsPageX = "string_interp_nexusModsPageX";
 		public const string string_validationOK = "string_validationOK";
 		public const string string_languageCheckInProgress = "string_languageCheckInProgress";
 		public const string string_interp_customDLCMissingLocalizedTLK = "string_interp_customDLCMissingLocalizedTLK";
@@ -882,6 +883,8 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_dialog_guidanceAvailable = "string_dialog_guidanceAvailable";
 		public const string string_miscellaneousGuidance = "string_miscellaneousGuidance";
 		public const string string_interp_modsDontMixAutoloadAndM3DA = "string_interp_modsDontMixAutoloadAndM3DA";
+		public const string string_interp_mergeModFeatureLevelIncompatible = "string_interp_mergeModFeatureLevelIncompatible";
+		public const string string_interp_mergeModFailedToLoadUnknownFeatureLevel = "string_interp_mergeModFailedToLoadUnknownFeatureLevel";
 		public const string string_deployment_tlkIssueLangPackageNotFound = "string_deployment_tlkIssueLangPackageNotFound";
 		public const string string_deployment_tlkIssueLangPackageWrongNumTLKExports = "string_deployment_tlkIssueLangPackageWrongNumTLKExports";
 		public const string string_deployment_tlkIssueLangPackageMismatchedMaleFemaleCount = "string_deployment_tlkIssueLangPackageMismatchedMaleFemaleCount";
@@ -2327,6 +2330,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_importComplete = "string_importComplete";
 		public const string string_dialog_mergeModFeatureLevel1 = "string_dialog_mergeModFeatureLevel1";
 		public const string string_useEnhancedFeaturesQuestion = "string_useEnhancedFeaturesQuestion";
+		public const string string_dialog_unsupportedMergemodVersionMayBeTooNew = "string_dialog_unsupportedMergemodVersionMayBeTooNew";
 		public const string string_invalidMagic_m3za = "string_invalidMagic_m3za";
 		public const string string_interp_tooNewM3ZAFile = "string_interp_tooNewM3ZAFile";
 		public const string string_interp_m3zaMissingTlkOptionKey = "string_interp_m3zaMissingTlkOptionKey";

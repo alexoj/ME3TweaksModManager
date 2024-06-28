@@ -471,13 +471,13 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                     {
                         if (item.ModToValidateAgainst.ModDescTargetVersion < MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion))
                         {
-                            item.AddBlockingError($"MergeMod {mergeMod} was compiled at feature level V{mm.MergeModVersion}, which requires a minimum cmmver of {MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion)}. You must recompile the mergemod file.");
+                            item.AddBlockingError(M3L.GetString(M3L.string_interp_mergeModFeatureLevelIncompatible, mergeMod, mm.MergeModVersion, MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion)));
                         }
                     }
                 }
                 else
                 {
-                    item.AddBlockingError($"MergeMod {mergeMod} failed to load. It may not compatible with cmmver {item.ModToValidateAgainst.ModDescTargetVersion}");
+                    item.AddBlockingError(M3L.GetString(M3L.string_interp_mergeModFailedToLoadUnknownFeatureLevel, mergeMod, item.ModToValidateAgainst.ModDescTargetVersion));
                 }
             }
             #endregion

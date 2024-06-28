@@ -86,7 +86,7 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
                                         .Result;
                                     if (modInfo != null)
                                     {
-                                        item.ItemText = $"NexusMods page: {modInfo.Name}";
+                                        item.ItemText = M3L.GetString(M3L.string_interp_nexusModsPageX, modInfo.Name);
                                         item.ToolTip = M3L.GetString(M3L.string_validationOK);
                                         item.Hyperlink = item.ModToValidateAgainst.ModWebsite;
                                         return;
