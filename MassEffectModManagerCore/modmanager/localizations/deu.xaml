@@ -669,7 +669,7 @@
 	<system:String x:Key="string_tooltip_dlcModsTab">Mods, die in DLC-Ordnern des Spiels installiert sind</system:String>
 	<system:String x:Key="string_enableAll">Alle aktivieren</system:String>
 	<system:String x:Key="string_disableAll">Alle deaktivieren</system:String>
-	<system:String x:Key="string_tooltip_modifiedBasegameFilesTab" xml:space="preserve">Hier werden geänderte Dateien von BioWare aufgelistet,&#10z. B. durch MergeMods, TLK-Merge, Config-Merge usw.</system:String>
+	<system:String x:Key="string_tooltip_modifiedBasegameFilesTab" xml:space="preserve">Hier werden geänderte Dateien von BioWare aufgelistet,&#10;z. B. durch MergeMods, TLK-Merge, Config-Merge usw.</system:String>
 	<system:String x:Key="string_tooltip_modifiedSFARsTab">Offizielle ME3 DLC sind als SFAR-Dateien gespeichert. Einige Modding-Tools entpacken diese Dateien, andere injizieren Änderungen direkt in sie.</system:String>
 	<system:String x:Key="string_tooltip_installedDLCTab">Liste der installierten DLC</system:String>
 	<system:String x:Key="string_tooltip_texturesTab">Liste aller Texturmods, die mit Texturmodding-Tools installiert wurden</system:String>
