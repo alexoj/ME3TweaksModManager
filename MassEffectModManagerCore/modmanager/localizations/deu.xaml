@@ -488,7 +488,6 @@
 	<system:String x:Key="string_forceUpdateCheck">Update-Prüfung erzwingen</system:String>
 	<system:String x:Key="string_autobootSave">Spielstand Auto-Starten</system:String>
 	<system:String x:Key="string_interp_invalidTargetMissingFile">Ungültiges Ziel: {0} wurde nicht im Spiel-Installationsordner gefunden.</system:String>
-	<system:String x:Key="string_invalidTargetProtectedByCmmvanilla">Ungültiges Ziel: Dies ist mittels cmm_vanilla-Datei als geschütztes Backup markiert</system:String>
 	<system:String x:Key="string_dialog_cannotRemoveActiveTarget" xml:space="preserve">Das aktive Ziel kann nicht gelöscht werden..\nÄndere das aktive Ziel mit der Liste im Hauptfenster um dieses Ziel entfernen zu können</system:String>
 	<system:String x:Key="string_tooltip_removeTargetFromM3">Löscht dieses Ziel aus der Mod Manager-Liste von Zielen zum Modden</system:String>
 	<system:String x:Key="string_unpacked">Ungepackt</system:String>
