@@ -319,7 +319,7 @@
                                     <Storyboard>
                                         <DoubleAnimation Storyboard.TargetName="Arrow"
                                                          Storyboard.TargetProperty="(FrameworkElement.RenderTransform).(RotateTransform.Angle)"
-                                                         To="-90"
+                                                         To="-180"
                                                          Duration="0:0:0.2"/>
                                     </Storyboard>
                                 </BeginStoryboard>
