@@ -119,10 +119,10 @@ namespace ME3TweaksModManager.modmanager.loaders
                     {
                         if (Version.TryParse(matchingUpdateInfoForMod.versionstr, out var serverVer))
                         {
-                            if (ProperVersion.IsGreaterThan(serverVer, mm.ParsedModVersion))
+                            if (ProperVersion.IsGreaterThan(serverVer, mm.ParsedModVersion) || restoreMode)
                             {
                                 // We need to make a clone in the event a mod uses duplicate code, such as Project Variety
-                                M3OnlineContent.NexusModUpdateInfo clonedInfo = new M3OnlineContent.NexusModUpdateInfo(matchingUpdateInfoForMod) { mod = mm };
+                                M3OnlineContent.NexusModUpdateInfo clonedInfo = new M3OnlineContent.NexusModUpdateInfo(matchingUpdateInfoForMod) { mod = mm, IsRestoreMode = restoreMode };
                                 updates.Add(clonedInfo);
                                 clonedInfo.SetLocalizedInfo();
                                 M3Log.Information($@"NexusMods mod out of date: {mm.ModName} {mm.ParsedModVersion}, server version: {serverVer}");

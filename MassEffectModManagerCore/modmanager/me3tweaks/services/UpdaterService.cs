@@ -614,6 +614,11 @@ namespace ME3TweaksModManager.modmanager.me3tweaks.services
             public DateTime UpdatedTime { get; internal set; }
             public ModDownload DownloadFlow { get; set; }
 
+            /// <summary>
+            /// If this update was generated in restore mode, which forcibly says an update is available
+            /// </summary>
+            public bool IsRestoreMode { get; set; }
+
             private void OnDownloadFlowChanged()
             {
                 if (DownloadFlow == null)
