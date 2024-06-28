@@ -19,6 +19,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
             }
 
             var version = mergeFileStream.ReadByte();
+            
             switch (version)
             {
                 case 1:
@@ -77,7 +78,15 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         {
             using var fs = File.OpenRead(file);
             var mm = LoadMergeMod(fs, file, true, validate: false); // Decompile does not depend on version number
-            mm.ExtractToFolder(Directory.GetParent(file).FullName);
+            if (mm != null)
+            {
+                mm.ExtractToFolder(Directory.GetParent(file).FullName);
+            }
+            else
+            {
+                M3Log.Error($@"Error decompiling {file}: loader returned null. The version is likely unsupported by this version of mod manager");
+                M3L.ShowDialog(MainWindow.Instance, "Unsupported mergemod version - it may be too new for this version of Mod Manager.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
 
         }
 
@@ -162,6 +171,16 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
             if (res == MessageBoxResult.Cancel)
                 return null;
             return res == MessageBoxResult.No ? 2 : 1;
+        }
+
+        public static double GetMinimumCmmVerRequirement(int mmMergeModVersion)
+        {
+            if (mmMergeModVersion == 1)
+                return 7.0;
+            if (mmMergeModVersion == 2)
+                return 9.0;
+
+            return 100;
         }
     }
 }

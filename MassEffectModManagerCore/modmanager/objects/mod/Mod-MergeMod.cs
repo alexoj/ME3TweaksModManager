@@ -34,6 +34,17 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                 // if modpath = "" there is no starting /
                 int extraLen = ModPath.Length > 0 ? 2 : 1;
                 mm = MergeModLoader.LoadMergeMod(sourceStream, fullPath.Substring(ModPath.Length + extraLen + Mod.MergeModFolderName.Length), IsInArchive);
+                if (mm == null)
+                {
+                    M3Log.Error($@"Error loading {fullPath}: Loader returned null. The version is likely unsupported by this version of mod manager");
+                    throw new Exception("Merge mod failed to load: Unsupported version");
+                }
+
+                if (ModDescTargetVersion < MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion))
+                {
+                    M3Log.Error($@"Error loading {fullPath}: Merge mod was built against a newer version of cmmver than this mod. The mergemod must be updated or the cmmver upgraded to at least {MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion)}");
+                    throw new Exception($"Merge mod {fullPath} was built with compiler that requires a minimum cmmver of {MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion)}. Recompile the merge mod or update the cmmver");
+                }
             }
             catch (Exception e)
             {

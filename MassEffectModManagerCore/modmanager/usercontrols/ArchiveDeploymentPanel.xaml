@@ -40,6 +40,28 @@
                 </StackPanel>
             </Button.Content>
         </Button>
+        <DockPanel
+            DockPanel.Dock="Bottom"
+            Margin="0,4,0,0">
+            <TextBlock
+                Text="{Binding OperationText}"
+                VerticalAlignment="Center"
+                DockPanel.Dock="Left" />
+            <Button
+                DockPanel.Dock="Right"
+                Content="{Binding DeployButtonText}"
+                Command="{Binding DeployCommand}"
+                HorizontalAlignment="Right"
+                Padding="7,5" />
+            <Button
+                DockPanel.Dock="Right"
+                Content="{DynamicResource string_close}"
+                Command="{Binding CloseCommand}"
+                HorizontalAlignment="Right"
+                Padding="5"
+                Margin="4,0" />
+
+        </DockPanel>
         <CheckBox
             DockPanel.Dock="Bottom"
             Content="{DynamicResource string_multiThreadedCompression}"
@@ -54,27 +76,7 @@
             IsIndeterminate="{Binding ProgressIndeterminate}"
             Maximum="{Binding ProgressMax}"
             Value="{Binding ProgressValue}" />
-        <DockPanel
-            DockPanel.Dock="Bottom"
-            Margin="0,4">
-            <Button
-                DockPanel.Dock="Right"
-                Content="{Binding DeployButtonText}"
-                Command="{Binding DeployCommand}"
-                HorizontalAlignment="Right"
-                Padding="7,5" />
-            <Button
-                DockPanel.Dock="Right"
-                Content="{DynamicResource string_close}"
-                Command="{Binding CloseCommand}"
-                HorizontalAlignment="Right"
-                Padding="5"
-                Margin="4,0" />
-            <TextBlock
-                Text="{Binding OperationText}"
-                VerticalAlignment="Center"
-                DockPanel.Dock="Left" />
-        </DockPanel>
+        
         <ScrollViewer>
             <DockPanel>
                 <Expander
@@ -163,29 +165,37 @@
                                             Orientation="Horizontal"
                                             Margin="2"
                                             ToolTip="{Binding ToolTip}">
-                                                <fa5:ImageAwesome
-                                                Icon="{Binding Icon}"
-                                                Foreground="{Binding Foreground}"
-                                                Spin="{Binding Spinning}"
-                                                SpinDuration="1.2"
-                                                Width="16" />
+                                                <Grid>
+                                                    <fa5:ImageAwesome
+                                                        Icon="{Binding BackgroundIcon}"
+                                                        Foreground="{Binding Background}"
+                                                        Width="8" 
+                                                        Height="10"
+                                                        Visibility="{Binding CheckDone, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                                    <fa5:ImageAwesome
+                                                        Icon="{Binding Icon}"
+                                                        Foreground="{Binding Foreground}"
+                                                        Spin="{Binding Spinning}"
+                                                        SpinDuration="1.2"
+                                                        Width="16" />
+                                                </Grid>
                                                 <TextBlock
                                                 FontSize="12"
                                                 Text="{Binding ItemText}"
                                                 Margin="5,0"
                                                 VerticalAlignment="Center"
-                                                Visibility="{Binding HasMessage, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='Inverse'}" />
+                                                Visibility="{Binding ShowHyperlink, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='Inverse'}" />
                                                 <TextBlock
                                                 Margin="5,0"
                                                 VerticalAlignment="Center"
-                                                Visibility="{Binding HasMessage, Converter={StaticResource BoolToVisibilityConverter}}">
-                        <Hyperlink
+                                                Visibility="{Binding ShowHyperlink, Converter={StaticResource BoolToVisibilityConverter}}">
+                                                    <Hyperlink
                                                     NavigateUri="http://www.google.com"
                                                     RequestNavigate="Hyperlink_RequestNavigate">
-                          <TextBlock
+                                                    <TextBlock
                                                         Text="{Binding ItemText}" />
-                        </Hyperlink>
-                      </TextBlock>
+                                                    </Hyperlink>
+                                                </TextBlock>
                                                 <!--<Button Grid.Row="0" Grid.Column="1" Content="Restore" HorizontalAlignment="Right" Padding ="3,0" Command="{Binding RestoreCommand}"/>-->
                                             </StackPanel>
                                         </DataTemplate>

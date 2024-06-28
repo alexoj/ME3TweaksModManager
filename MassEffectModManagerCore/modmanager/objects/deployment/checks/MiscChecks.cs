@@ -459,6 +459,29 @@ namespace ME3TweaksModManager.modmanager.objects.deployment.checks
             }
             #endregion
 
+            #region Check merge mod version with moddesc version
+
+            foreach (var mergeMod in item.ModToValidateAgainst.GetAllMergeMods())
+            {
+                using var ms = File.OpenRead(Path.Combine(item.ModToValidateAgainst.ModPath, mergeMod));
+                var mm = MergeModLoader.LoadMergeMod(ms, mergeMod, false);
+                if (mm != null)
+                {
+                    if (mm.MergeModVersion > 1) // 1 is supposed on all
+                    {
+                        if (item.ModToValidateAgainst.ModDescTargetVersion < MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion))
+                        {
+                            item.AddBlockingError($"MergeMod {mergeMod} was compiled at feature level V{mm.MergeModVersion}, which requires a minimum cmmver of {MergeModLoader.GetMinimumCmmVerRequirement(mm.MergeModVersion)}. You must recompile the mergemod file.");
+                        }
+                    }
+                }
+                else
+                {
+                    item.AddBlockingError($"MergeMod {mergeMod} failed to load. It may not compatible with cmmver {item.ModToValidateAgainst.ModDescTargetVersion}");
+                }
+            }
+            #endregion
+
             // End of check
             if (!item.HasAnyMessages())
             {

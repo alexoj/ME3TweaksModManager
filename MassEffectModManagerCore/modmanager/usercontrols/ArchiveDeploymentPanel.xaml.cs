@@ -1,27 +1,18 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using LegendaryExplorerCore.GameFilesystem;
 using LegendaryExplorerCore.Helpers;
-using LegendaryExplorerCore.ME1.Unreal.UnhoodBytecode;
 using LegendaryExplorerCore.Misc;
-using LegendaryExplorerCore.Packages;
 using ME3TweaksCore.Helpers;
-using ME3TweaksCore.Services.Backup;
 using ME3TweaksCore.Services.ThirdPartyModIdentification;
 using ME3TweaksCoreWPF.UI;
-using ME3TweaksModManager.modmanager.diagnostics;
 using ME3TweaksModManager.modmanager.helpers;
 using ME3TweaksModManager.modmanager.importer;
-using ME3TweaksModManager.modmanager.loaders;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects.deployment;
 using ME3TweaksModManager.modmanager.objects.deployment.checks;
@@ -29,10 +20,8 @@ using ME3TweaksModManager.modmanager.objects.mod;
 using ME3TweaksModManager.modmanager.objects.tlk;
 using ME3TweaksModManager.modmanager.windows;
 using ME3TweaksModManager.ui;
-using Microsoft.AppCenter.Analytics;
 using Microsoft.Win32;
 using Microsoft.WindowsAPICodePack.Taskbar;
-using PropertyChanged;
 using SevenZip;
 
 namespace ME3TweaksModManager.modmanager.usercontrols
@@ -617,8 +606,14 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         {
             if (sender is Hyperlink hl && hl.DataContext is DeploymentChecklistItem dcli)
             {
-                DeploymentListDialog ld = new DeploymentListDialog(dcli, Window.GetWindow(hl));
-                ld.ShowDialog();
+                if (dcli.HasMessage)
+                {
+                    DeploymentListDialog ld = new DeploymentListDialog(dcli, Window.GetWindow(hl));
+                    ld.ShowDialog();
+                } else if (dcli.Hyperlink != null)
+                {
+                    M3Utilities.OpenWebpage(dcli.Hyperlink);
+                }
             }
         }
 
@@ -635,6 +630,9 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             InitializeComponent();
             AddModToDeployment(initialMod);
             initialMod = null;
+#if PRERELEASE
+            M3L.ShowDialog(window, "This is a prerelease build of Mod Manager. If you are deploying a mod for distribution, ENSURE YOU VALIDATE IT WORKS ON THE VERSION OF MOD MANAGER THAT THE USERBASE IS ON.", "Prerelease build", MessageBoxButton.OK, MessageBoxImage.Warning);
+#endif
         }
 
         private void StartCheck(EncompassingModDeploymentCheck emc)
