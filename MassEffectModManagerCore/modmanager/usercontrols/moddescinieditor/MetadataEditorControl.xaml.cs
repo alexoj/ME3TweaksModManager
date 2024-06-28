@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel;
 using System.Globalization;
-using System.Linq;
 using System.Windows;
 using IniParser.Model;
 using LegendaryExplorerCore.Misc;
@@ -65,7 +64,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols.moddescinieditor
                     else
                     {
                         ini[v.Header][v.Key] = v.Value;
-
                     }
                 }
             }

@@ -18,9 +18,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
         public void BuildParameterMap(Mod _)
         {
             ParameterMap.ClearEx();
-
-
-
+            
             var parameterDictionary = new Dictionary<string, object>()
             {
                 // ModManager
