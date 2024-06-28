@@ -782,5 +782,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 StartCheck(mod);
             }
         }
+        public override bool DisableM3AutoSizer { get; set; } = true;
     }
 }
