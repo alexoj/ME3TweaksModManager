@@ -563,6 +563,8 @@
     <system:String x:Key="string_tooltip_endorseThisModOnNexusMods">Endorse this mod on NexusMods</system:String>
     <system:String x:Key="string_interp_errorMerging2DAX">An error occurred merging 2DA tables: {0}</system:String>
     <!-- 0={Error Message} -->
+    <system:String x:Key="string_interp_mergemodAssetIsZeroBytes">Mergemod asset is zero bytes: {0}. Assets cannot be empty.</system:String>
+    <!-- 0={Filename} -->
 
     <!-- LEX Launcher -->
     <system:String x:Key="string_interp_lexNightlyFailedToDownload">Legendary Explorer Nightly failed to download: {0}</system:String>

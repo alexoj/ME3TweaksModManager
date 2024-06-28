@@ -407,6 +407,10 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         {
                             throw new Exception(M3L.GetString(M3L.string_interp_error_mergefile_scriptNotFoundX, mc.ScriptUpdate.ScriptFileName));
                         }
+                        if (new FileInfo(scriptDiskFile).Length == 0)
+                        {
+                            throw new Exception(M3L.GetString(M3L.string_interp_mergemodAssetIsZeroBytes, mc.ScriptUpdate.ScriptFileName));
+                        }
                         M3Log.Information($@"M3MCompiler: Adding script update file to m3m: {scriptDiskFile}");
                         if (mergeModVersion >= 2)
                         {
@@ -434,6 +438,11 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                             if (!File.Exists(scriptDiskFile))
                             {
                                 throw new Exception(M3L.GetString(M3L.string_interp_error_mergefile_scriptNotFoundX, fileName));
+                            }
+
+                            if (new FileInfo(scriptDiskFile).Length == 0)
+                            {
+                                throw new Exception(M3L.GetString(M3L.string_interp_mergemodAssetIsZeroBytes, fileName));
                             }
 
                             M3Log.Information($@"M3MCompiler: Adding AddToClassOrReplace file to m3m: {scriptDiskFile}");
@@ -482,6 +491,10 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                 outStream.WriteStringASCII(MMV1_ASSETMAGIC); // MAGIC
                 outStream.WriteUnrealStringUnicode(asset.FileName); // ASSET NAME
                 var assetBytes = File.ReadAllBytes(Path.Combine(sourceDir, asset.FileName));
+                if (assetBytes.Length == 0)
+                {
+                    throw new Exception(M3L.GetString(M3L.string_interp_mergemodAssetIsZeroBytes, asset.FileName));
+                }
                 outStream.WriteInt32(assetBytes.Length); // DECOMPRESSED ASSET LENGTH
 
                 if (mergeModVersion >= 2)
