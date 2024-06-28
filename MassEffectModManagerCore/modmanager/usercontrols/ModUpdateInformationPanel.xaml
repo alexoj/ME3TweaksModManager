@@ -26,8 +26,11 @@
         <TextBlock
             DockPanel.Dock="Top"
             Text="{DynamicResource string_modManagerDetectedModUpdates}"
-            TextAlignment="Center"
-            Margin="0,0,0,5"/>
+            TextAlignment="Center"/>
+        <Separator DockPanel.Dock="Top" 
+                   Margin="10,4,10,10"
+                   Opacity=".5"
+                   Foreground="{DynamicResource {x:Static adonisUi:Brushes.SlightlyDimmedForegroundBrush}}"/>
         <DockPanel
             Dock="Bottom">
             <Button
@@ -293,7 +296,14 @@
                         <TextBlock
                             Grid.Row="2"
                             Grid.Column="0"
-                            Text="{Binding LocalizedLocalVersionString}" />
+                            Text="{Binding LocalizedLocalVersionString}"
+                            Visibility="{Binding IsRestoreMode, Converter={StaticResource BoolToVisibilityConverter}, ConverterParameter='Inverse'}"/>
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Text="In restore mode"
+                            FontStyle="Italic"
+                            Visibility="{Binding IsRestoreMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         <TextBlock
                             Grid.Row="3"
                             Grid.Column="0"
