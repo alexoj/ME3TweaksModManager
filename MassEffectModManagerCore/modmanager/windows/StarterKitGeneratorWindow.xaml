@@ -424,89 +424,109 @@
                     DockPanel.Dock="Top"
                     Visibility="{Binding Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='LE2'}">
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeMiranda}"
                         IsChecked="{Binding AddSquadmateMerge2Miranda}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeMiranda}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeJacob}"
                         IsChecked="{Binding AddSquadmateMerge2Jacob}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeJacob}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeMordin}"
                         IsChecked="{Binding AddSquadmateMerge2Mordin}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeMordin}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeGarrus}"
                         IsChecked="{Binding AddSquadmateMerge2Garrus}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeGarrus}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeJack}"
                         IsChecked="{Binding AddSquadmateMerge2Jack}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeJack}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeGrunt}"
                         IsChecked="{Binding AddSquadmateMerge2Grunt}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeGrunt}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeTali}"
                         IsChecked="{Binding AddSquadmateMerge2Tali}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeTali}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeSamaraMorinth}"
                         IsChecked="{Binding AddSquadmateMerge2Samara}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeSamaraMorinth}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeThane}"
                         IsChecked="{Binding AddSquadmateMerge2Thane}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top" >
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeThane}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeLegion}"
                         IsChecked="{Binding AddSquadmateMerge2Legion}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeLegion}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeKasumi}"
                         IsChecked="{Binding AddSquadmateMerge2Kasumi}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top" >
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeKasumi}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeZaeed}"
                         IsChecked="{Binding AddSquadmateMerge2Zaeed}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeZaeed}" TextWrapping="Wrap"/>
+                    </CheckBox>
                 </DockPanel>
                 <DockPanel
                     DockPanel.Dock="Top"
                     Visibility="{Binding Game, Converter={StaticResource GameToVisibilityConverter}, ConverterParameter='Game3'}">
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeAshley}"
                         IsChecked="{Binding AddSquadmateMerge3Ashley}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeAshley}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeGarrus}"
                         IsChecked="{Binding AddSquadmateMerge3Garrus}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeGarrus}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeEDI}"
                         IsChecked="{Binding AddSquadmateMerge3EDI}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top" >
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeEDI}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeJavik}"
                         IsChecked="{Binding AddSquadmateMerge3Javik}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top" >
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeJavik}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeJames}"
                         IsChecked="{Binding AddSquadmateMerge3James}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top" >
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeJames}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeKaidan}"
                         IsChecked="{Binding AddSquadmateMerge3Kaidan}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top" >
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeKaidan}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeLiara}"
                         IsChecked="{Binding AddSquadmateMerge3Liara}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top" >
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeLiara}" TextWrapping="Wrap"/>
+                    </CheckBox>
                     <CheckBox
-                        Content="{DynamicResource string_squadmateOutfitMergeTali}"
                         IsChecked="{Binding AddSquadmateMerge3Tali}"
-                        DockPanel.Dock="Top" />
+                        DockPanel.Dock="Top">
+                        <TextBlock Text="{DynamicResource string_squadmateOutfitMergeTali}" TextWrapping="Wrap"/>
+                    </CheckBox>
                 </DockPanel>
                 <DockPanel
                     DockPanel.Dock="Top"
