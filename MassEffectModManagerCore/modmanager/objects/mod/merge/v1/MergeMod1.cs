@@ -220,7 +220,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
                 if (mc.ScriptUpdate != null)
                 {
-                    File.WriteAllText(Path.Combine(outputfolder, Path.GetFileName(mc.ScriptUpdate.ScriptFileName)), mc.ScriptUpdate.ScriptText);
+                    File.WriteAllText(Path.Combine(outputfolder, Path.GetFileName(mc.ScriptUpdate.ScriptFileName)), mc.ScriptUpdate.GetScriptText());
                     mc.ScriptUpdate.ScriptText = null;
                 }
 
@@ -487,7 +487,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
             outStream.WriteInt32(assets.Count);
             foreach (var asset in assets)
             {
-                M3Log.Information($@"M3MCompiler: Serializing {asset} into m3m");
+                M3Log.Information($@"M3MCompiler: Serializing {asset.FileName} into m3m");
                 outStream.WriteStringASCII(MMV1_ASSETMAGIC); // MAGIC
                 outStream.WriteUnrealStringUnicode(asset.FileName); // ASSET NAME
                 var assetBytes = File.ReadAllBytes(Path.Combine(sourceDir, asset.FileName));
@@ -511,19 +511,19 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                         outStream.WriteBoolByte(hasCompressionBenefits);
                         if (hasCompressionBenefits)
                         {
-                            M3Log.Information($@"M3MCompiler: Asset {asset} is being stored compressed");
+                            M3Log.Information($@"M3MCompiler: Asset {asset.FileName} is being stored compressed {assetBytes.Length} -> {assetBytesCompressed.Length} ({assetBytesCompressed.Length * 100f / Math.Max(1, assetBytes.Length)}%)");
                             outStream.WriteInt32(assetBytesCompressed.Length); // COMPRESSED ASSET LENGTH
                             outStream.Write(assetBytesCompressed); // COMPRESSED ASSET DATA
                         }
                         else
                         {
-                            M3Log.Information($@"M3MCompiler: Asset {asset} does not shrink enough from compression to warrant compressing it. It is being stored uncompressed");
+                            M3Log.Information($@"M3MCompiler: Asset {asset.FileName} does not shrink enough from compression to warrant compressing it. It is being stored uncompressed {assetBytes.Length} -> {assetBytesCompressed.Length} ({assetBytesCompressed.Length * 100f / Math.Max(1, assetBytes.Length)}%)");
                             outStream.Write(assetBytes); // UNCOMPRESSED ASSET DATA
                         }
                     }
                     else
                     {
-                        M3Log.Information($@"M3MCompiler: Asset {asset} is being stored uncompressed");
+                        M3Log.Information($@"M3MCompiler: Asset {asset.FileName} is being stored uncompressed");
                         outStream.WriteBoolByte(false); // Not compressed
                         outStream.Write(assetBytes); // UNCOMPRESSED ASSET DATA
                     }
@@ -531,13 +531,13 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
                 else
                 {
                     // Assets are not compressed at all in V1
-                    M3Log.Information($@"M3MCompiler: Asset {asset} is being stored uncompressed (V1)");
+                    M3Log.Information($@"M3MCompiler: Asset {asset.FileName} is being stored uncompressed (V1)");
                     outStream.Write(assetBytes); // ASSET DATA
                 }
 
             }
 
-            M3Log.Information($@"M3MCompiler: V1 serialization complete");
+            M3Log.Information($@"M3MCompiler: V{mergeModVersion} serialization complete");
             return null;
         }
 

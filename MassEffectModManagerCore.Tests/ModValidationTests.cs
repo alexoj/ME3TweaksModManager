@@ -16,6 +16,7 @@ using ME3TweaksModManager.modmanager.me3tweaks.online;
 using ME3TweaksModManager.modmanager.me3tweaks.services;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.objects.batch;
+using ME3TweaksModManager.modmanager.objects.mod.merge;
 using ME3TweaksModManager.modmanager.objects.mod.texture;
 using ME3TweaksModManager.modmanager.usercontrols;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -219,6 +220,41 @@ namespace ME3TweaksModManager.Tests
                     Monitor.Pulse(ValidateImportFlowSyncObj);
                 }
             }
+        }
+
+        [TestMethod]
+        public void ValidateMergeModSerialization()
+        {
+            GlobalTest.Init();
+            var mmFolder = GlobalTest.GetTestingDataDirectoryFor(@"mergemods");
+
+            var mergeMods = Directory.GetFiles(mmFolder, "*.m3m", SearchOption.AllDirectories);
+            foreach (var mm in mergeMods)
+            {
+                var startMd5 = MUtilities.CalculateHash(mm);
+
+                // Decomp
+                GlobalTest.DeleteScratchDir();
+                var scratchDir = GlobalTest.CreateScratchDir();
+                MergeModLoader.DecompileM3M(mm, scratchDir);
+
+                int version = 1;
+                using (var fs = File.OpenRead(mm))
+                {
+                    var loadedMod = MergeModLoader.LoadMergeMod(fs, mm, false);
+                    version = loadedMod.MergeModVersion;
+                }
+
+                // Recomp
+                var manifest = Path.Combine(scratchDir, $"{Path.GetFileNameWithoutExtension(mm)}.json");
+                MergeModLoader.SerializeManifest(manifest, version);
+                var finalFile = Path.Combine(scratchDir, Path.GetFileName(mm));
+                var endMd5 = MUtilities.CalculateHash(finalFile);
+
+                Assert.AreEqual(startMd5, endMd5, "Mergemod recompilation yielded a different hash");
+            }
+
+            GlobalTest.DeleteScratchDir();
         }
     }
 }

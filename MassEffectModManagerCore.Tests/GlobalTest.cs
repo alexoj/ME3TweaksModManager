@@ -56,7 +56,7 @@ namespace ME3TweaksModManager.Tests
                 Crashes.SetEnabledAsync(false);
                 Settings.LogModStartup = true;
                 App.BuildNumber = 134; //THIS NEEDS TO BE UPDATED FOR EVERY MOD THAT TARGETS A NEWER RELEASE. Not really a convenient way to update it constantly though...
-#if !AZURE
+#if !AZURE || DEBUG
                 Log.Logger = new LoggerConfiguration().WriteTo.Console().WriteTo.Debug().CreateLogger();
 #else
                 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
@@ -102,7 +102,7 @@ namespace ME3TweaksModManager.Tests
         public static string GetTestGameFoldersDirectory(MEGame game) => Path.Combine(GetTestGameFoldersDirectory(), game.ToString().ToLowerInvariant());
         public static string GetScratchDir() => Path.Combine(Directory.GetParent(GetTestModsDirectory()).FullName, "Scratch");
 
-        public static void CreateScratchDir() => Directory.CreateDirectory(GetScratchDir());
+        public static string CreateScratchDir() => Directory.CreateDirectory(GetScratchDir()).FullName;
 
         public static void DeleteScratchDir()
         {

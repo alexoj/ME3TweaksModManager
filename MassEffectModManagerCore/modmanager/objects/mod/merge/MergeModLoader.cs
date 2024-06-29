@@ -74,13 +74,13 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge
         /// Decompiles an m3m file into its components.
         /// </summary>
         /// <param name="file">Filepath to decompile</param>
-        public static void DecompileM3M(string file)
+        public static void DecompileM3M(string file, string outDir = null)
         {
             using var fs = File.OpenRead(file);
             var mm = LoadMergeMod(fs, file, true, validate: false); // Decompile does not depend on version number
             if (mm != null)
             {
-                mm.ExtractToFolder(Directory.GetParent(file).FullName);
+                mm.ExtractToFolder(outDir ?? Directory.GetParent(file).FullName);
             }
             else
             {
