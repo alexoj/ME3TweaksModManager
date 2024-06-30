@@ -738,7 +738,7 @@
 	<system:String x:Key="string_collectingDLCInformation">DLC-Informationen werden gesammelt</system:String>
 	<system:String x:Key="string_collectingTFCFileInformation">TFC-Dateiinformationen werden gesammelt</system:String>
 	<system:String x:Key="string_checkingTextureMapGameConsistency">Texture map &lt;-&gt; Spiel Übereinstimmung wird überprüft</system:String>
-	<system:String x:Key="string_interp_performingFullTexturesCheckX">Vollständige Texturüberprüfung wird ausgeführt</system:String>
+    <system:String x:Key="string_interp_performingFullTexturesCheckX">Vollständige Texturüberprüfung wird ausgeführt {0}%</system:String>
 	<system:String x:Key="string_collectingASIFileInformation">ASI-Dateiinformationen werden gesammelt</system:String>
 	<system:String x:Key="string_collectingME1ApplicationLogs">ME1 Anwendungsereignisprotokolle werden gesammelt</system:String>
 	<system:String x:Key="string_collectingEventLogs">Ereignisprotokolle werden gesammelt</system:String>
