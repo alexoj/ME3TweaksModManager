@@ -9,6 +9,7 @@
     xmlns:usercontrols="clr-namespace:ME3TweaksModManager.modmanager.usercontrols"
     xmlns:converters="clr-namespace:ME3TweaksModManager.modmanager.converters"
     xmlns:mm="clr-namespace:ME3TweaksModManager"
+    xmlns:ui="clr-namespace:ME3TweaksModManager.ui"
     d:DesignHeight="450"
     d:DesignWidth="800"
     DataContext="{Binding RelativeSource={RelativeSource Self}}"
@@ -36,28 +37,6 @@
                 Content="{DynamicResource string_reloadMod}"
                 Margin="5,0,0,0"
                 Command="{Binding ReloadCommand}"
-                Padding="7,4" />
-            <Button
-                DockPanel.Dock="Right"
-                MinWidth="70"
-                Content="{DynamicResource string_Openmodfolder}"
-                Margin="5,0,0,0"
-                Command="{Binding OpenModFolderCommand}"
-                Padding="7,4" />
-            <Button
-                DockPanel.Dock="Right"
-                MinWidth="70"
-                Content="{DynamicResource string_openModdesciniFile}"
-                Margin="5,0,0,0"
-                Command="{Binding EditModdescCommand}"
-                Padding="7,4" />
-            <Button
-                DockPanel.Dock="Right"
-                MinWidth="70"
-                ToolTip="{Binding SelectedMod.ModWebsite}"
-                Content="{DynamicResource string_visitWebsite}"
-                Margin="5,0,0,0"
-                Command="{Binding VisitWebsiteCommand}"
                 Padding="7,4" />
             <Button
                 DockPanel.Dock="Right"
@@ -165,6 +144,56 @@
                     DockPanel.Dock="Top"
                     Text="{DynamicResource string_failureInformation}"
                     FontWeight="Bold" />
+                <ui:Clipper
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    Constraint="Width"
+                    DockPanel.Dock="Bottom">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center"
+                                ui:Clipper.WidthFraction="1"
+                                ui:Clipper.HeightFraction="0"
+                                VerticalAlignment="Bottom"
+                                Name="VisitWebsitePanel">
+                        <TextBlock
+                            ToolTip="{DynamicResource string_tooltip_openModdescIniFile}"
+                            VerticalAlignment="Bottom">
+                            <Hyperlink
+                                Click="EditModdesc">
+                                <TextBlock
+                                    Text="{DynamicResource string_openModdesciniFile}" />
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock 
+                            Text="•"
+                            Margin="5,0"
+                            VerticalAlignment="Bottom"/>
+                        <TextBlock
+                            ToolTip="{Binding SelectedMod.ModPath}"
+                            VerticalAlignment="Bottom">
+                            <Hyperlink
+                                Click="OpenModFolder">
+                                <TextBlock
+                                    Text="{DynamicResource string_Openmodfolder}" />
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock 
+                            Visibility="{Binding SelectedMod.ModWebsite, Converter={StaticResource NullVisibilityConverter}}"
+                            Text="•"
+                            VerticalAlignment="Bottom"
+                            Margin="5,0"/>
+                        <TextBlock
+                            Visibility="{Binding SelectedMod.ModWebsite, Converter={StaticResource NullVisibilityConverter}}"
+                            ToolTip="{Binding SelectedMod.ModWebsite}"
+                            VerticalAlignment="Bottom">
+                            <Hyperlink
+                                RequestNavigate="RequestNavigate"
+                                NavigateUri="{Binding SelectedMod.ModWebsite}">
+                                <TextBlock
+                                    Text="{DynamicResource string_visitWebsite}" />
+                            </Hyperlink>
+                        </TextBlock>
+                    </StackPanel>
+                </ui:Clipper>
                 <TextBox
                     Name="FailureInformation_TextBox"
                     IsReadOnly="True"

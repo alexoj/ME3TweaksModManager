@@ -20,30 +20,29 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         }
 
         public Mod SelectedMod { get; set; }
+
+        private bool ShowingModLink;
+
+        public void OnSelectedModChanged(object oldO, object newO)
+        {
+            var show = SelectedMod != null && SelectedMod.ModWebsite != null;
+            if (show != ShowingModLink)
+            {
+                ClipperHelper.ShowHideVerticalContent(VisitWebsitePanel, show);
+                ShowingModLink = show;
+            }
+        }
+
         public ICommand RestoreSelectedModCommand { get; set; }
         public ICommand ReloadCommand { get; set; }
         public ICommand DeleteModCommand { get; set; }
         public ICommand VisitWebsiteCommand { get; set; }
-        public ICommand EditModdescCommand { get; set; }
-        public ICommand OpenModFolderCommand { get; set; }
         private void LoadCommands()
         {
             RestoreSelectedModCommand = new GenericCommand(CloseToRestoreMod, CanRestoreMod);
             ReloadCommand = new GenericCommand(AttemptModReload, CanReload);
-            OpenModFolderCommand = new GenericCommand(OpenModFolder, CanReload);
             DeleteModCommand = new GenericCommand(DeleteMod, ModIsSelected);
             VisitWebsiteCommand = new GenericCommand(VisitWebsite, CanVisitWebsite);
-            EditModdescCommand = new GenericCommand(EditModdesc, ModIsSelected);
-        }
-
-        private void OpenModFolder()
-        {
-            M3Utilities.OpenExplorer(SelectedMod.ModPath);
-        }
-
-        private void EditModdesc()
-        {
-            M3Utilities.ShellOpenFile(SelectedMod?.ModDescPath);
         }
 
         private bool ModIsSelected()
@@ -116,6 +115,23 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         {
             InitializeComponent();
             SelectedMod = FailedMods.FirstOrDefault();
+        }
+
+        private void RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            M3Utilities.OpenWebpage(e.Uri.AbsoluteUri);
+        }
+
+        private void EditModdesc(object sender, RoutedEventArgs e)
+        {
+            if (SelectedMod != null)
+                M3Utilities.ShellOpenFile(SelectedMod.ModDescPath);
+        }
+
+        private void OpenModFolder(object sender, RoutedEventArgs e)
+        {
+            if (SelectedMod != null)
+                M3Utilities.OpenExplorer(SelectedMod.ModPath);
         }
     }
 }
