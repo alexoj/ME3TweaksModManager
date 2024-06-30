@@ -55,7 +55,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                     AllSettings = [
                         new M3BooleanSetting(settingsType, nameof(Settings.SkipLELauncher), M3L.string_launcherAutobootSelectedGame, M3L.string_description_autobootLE),
                         new M3BooleanSetting(settingsType, nameof(Settings.EnableLE1CoalescedMerge), M3L.string_lE1EnableCoalescedMerge, M3L.string_description_le1CoalescedMergeOption),
-                        new M3BooleanSetting(settingsType, nameof(Settings.EnableLE12DAMerge), M3L.GetString(M3L.string_LE1Enable2DAMerge), M3L.GetString(M3L.string_description_LE1Enable2DAMerge)),
+                        new M3BooleanSetting(settingsType, nameof(Settings.EnableLE12DAMerge), M3L.string_LE1Enable2DAMerge, M3L.string_description_LE1Enable2DAMerge),
                     ]
                 },
 
@@ -67,7 +67,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                         new M3BooleanSetting(settingsType, nameof(Settings.LogModStartup), M3L.string_LogModStartup, M3L.string_description_autobootLE),
                         new M3BooleanSetting(settingsType, nameof(Settings.LogModInstallation), M3L.string_LogModInstallation, M3L.string_tooltip_logModInstaller),
                         new M3BooleanSetting(settingsType, nameof(Settings.LogModUpdater), M3L.string_LogModUpdater, M3L.string_tooltip_logModUpdater),
-                        new M3BooleanSetting(settingsType, nameof(Settings.LogBackupAndRestore), M3L.GetString(M3L.string_logAllFilesCopiedDuringRestore), M3L.GetString(M3L.string_description_logOptionLotsa)),
+                        new M3BooleanSetting(settingsType, nameof(Settings.LogBackupAndRestore), M3L.string_logAllFilesCopiedDuringRestore, M3L.string_description_logOptionLotsa),
                         new M3BooleanSetting(settingsType, nameof(Settings.LogModMakerCompiler), M3L.string_LogModMakerCompiler, M3L.string_tooltip_logModMakerCompiler),
 
                     ]
