@@ -33,6 +33,10 @@
         <KeyBinding
             Key="Escape"
             Command="{Binding EscapePressedCommand}" />
+        <KeyBinding
+            Key="F"
+            Modifiers="Control"
+            Command="{Binding SearchModsCommand}" />
     </Window.InputBindings>
     <DockPanel
         Margin="5">
