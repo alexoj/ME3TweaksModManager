@@ -1957,8 +1957,7 @@
                             Name="FailedModsPopupPanel"
                             ToolTip="{DynamicResource string_tooltip_someModsFailed}">
               <Hyperlink
-                                RequestNavigate="FailedMods_LinkClick"
-                                NavigateUri="internal://trigger"
+                                Click="FailedMods_LinkClick"
                                 Foreground="Red">
                 <TextBlock
                                     Text="{Binding FailedModsString}" />

@@ -3600,7 +3600,7 @@ namespace ME3TweaksModManager
             Close();
         }
 
-        private void FailedMods_LinkClick(object sender, RequestNavigateEventArgs e)
+        private void FailedMods_LinkClick(object sender, RoutedEventArgs e)
         {
             var failedModsPanel = new FailedModsPanel(M3LoadedMods.Instance.FailedMods.ToList());
             failedModsPanel.Close += (a, b) =>
