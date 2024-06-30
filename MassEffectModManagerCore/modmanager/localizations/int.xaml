@@ -2483,23 +2483,6 @@
     <system:String  x:Key="string_mEMVanillaDatabaseViewer">MEM Vanilla Database Viewer</system:String>
     <system:String  x:Key="string_viewInformationInTheVanillaDatabaseUsedForBackupVerification">View information in the vanilla database used for backup verification</system:String>
 
-    <!-- Log Collector -->
-    <system:String x:Key="string_preparingToCollectDiagnosticInfo">Preparing to collect diagnostic info</system:String>
-    <system:String x:Key="string_interp_preparingMEMNoGUIX">Preparing MEM No GUI {0}%</system:String>
-    <!-- 0={Percent} -->
-    <system:String x:Key="string_collectingGameInformation">Collecting game information</system:String>
-    <system:String x:Key="string_collectingSystemInformation">Collecting system information</system:String>
-    <system:String x:Key="string_collectingDLCInformation">Collecting DLC information</system:String>
-    <system:String x:Key="string_collectingTFCFileInformation">Collecting TFC file information</system:String>
-    <system:String x:Key="string_checkingTextureMapGameConsistency">Checking texture map &lt;-&gt; game consistency</system:String>
-    <system:String x:Key="string_interp_performingFullTexturesCheckX">Performing full textures check {0}%</system:String>
-    <!-- 0={Percent} -->
-    <system:String x:Key="string_collectingASIFileInformation">Collecting ASI file information</system:String>
-    <system:String x:Key="string_collectingME1ApplicationLogs">Collecting ME1 application logs</system:String>
-    <system:String x:Key="string_collectingEventLogs">Collecting event logs</system:String>
-    <system:String x:Key="string_collectingME3SessionLog">Collecting ME3 session log</system:String>
-    <system:String x:Key="string_gettingTextureInfo">Getting texture mod installation info</system:String>
-
     <!-- EA App in-game overlay disabler-->
     <system:String x:Key="string_overlayDisablerInstalled">Overlay disabler installed</system:String>
     <system:String x:Key="string_uninstallDisabler">Uninstall disabler</system:String>
@@ -2513,7 +2496,7 @@
     <system:String xml:space="preserve" x:Key="string_oigPanelHeader">EA App in-game overlay is known to cause significant performance loss in the OT Mass Effect games. While it can be turned off in the EA App settings, this setting does not work for the Steam version of Mass Effect 3. You can install a proxy d3d9.dll that will disable forcibly disable the overlay per game target.&#10;&#10;Using other d3d9 proxies, such as Reshade, will also disable the overlay.</system:String>
     <system:String x:Key="string_noOriginBasedTargetsInstalledForThisGame">No EA App-based targets are installed for this game</system:String>
 
-    <!-- Moddescini Editor-->
+    <!-- Under development strings -->
     <system:String x:Key="string_toolUnderDevelopment">This tool is in development and may or may not work. Use at your own risk!</system:String>
     <system:String x:Key="string_underDevelopment">Under development</system:String>
 
