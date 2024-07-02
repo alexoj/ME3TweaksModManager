@@ -674,7 +674,7 @@
 	<system:String x:Key="string_tooltip_installedDLCTab">Liste der installierten DLC</system:String>
 	<system:String x:Key="string_tooltip_texturesTab">Liste aller Texturmods, die mit Texturmodding-Tools installiert wurden</system:String>
 	<system:String x:Key="string_tooltip_otherTab">Extra information über diese Spielinstallation</system:String>
-<system:String x:Key="string_mustUseExternalTool">Externes Werkzeug erforderlich</system:String>
+	<system:String x:Key="string_mustUseExternalTool">Externes Werkzeug erforderlich</system:String>
 	<system:String x:Key="string_dialog_otTexturesImported">Texturen für die Originaltrilogie werden mit ALOT Installer oder Mass Effect Modder installiert, beide sind im Menü „Werkzeuge“ verfügbar. Die Texturmods wurden in der Mod Manager Mod-Bibliothek in den entsprechenden Spielordner im Ordner „Textures“ importiert.</system:String>
 	<system:String x:Key="string_next">Weiter</system:String>
 	<system:String x:Key="string_previous">Zurück</system:String>
