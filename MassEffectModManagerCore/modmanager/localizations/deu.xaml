@@ -426,7 +426,7 @@
 	<system:String x:Key="string_interp_warningBinaryNameReferenceOutsideNameTable">{0} Ungültige binary reference für einen Namen gefunden</system:String>
 	<system:String x:Key="string_interp_warningUnableToParseBinary">{0} Binary kann nicht geparst werden. Es ist möglicherweise ungötig. Fehlernachricht: {1}. Beachte, dass die Fehlernachricht wahrscheinlich kontextspezifisch im Code ist und nicht sehr nützlich ist, ohne die Applikation im Debug-Modus auszuführen, um den Kontext festzustellen</system:String>
 	<system:String x:Key="string_interp_warningImportLinkOutideOfTables">{0}, Import {1} hat einen ungültigen Link-Wert, der außerhalb der Import-/Exporttabelle ist: {2}</system:String>
-	<system:String x:Key="string_interp_dialog_dlcFolderNotInTPMI" xml:space="preserve">Die folgenden Mods beinhalten DLC-Ordner, die dem Drittanbieter Modindentifikationsdienst unbekannt sind. Wenn du diese Mod jetzt veröffentlichen willst, solltest du Telemetrie für diese Mod einsenden, damit sie von verschiedenen Werkzeugen wie ALOT Installer/Mod Manager Diagnostik erkannt werden kann, in der DLC-Mod Datenbank enthalten ist und von Mod Manager erkannt wird.\n\n{0}\n\nMods werden erst in die Datenbank aufgenommen, wenn sie eine öffentliche NexusMods-Seite haben.</system:String>
+	<system:String x:Key="string_interp_dialog_dlcFolderNotInTPMI" xml:space="preserve">Die folgenden Mods beinhalten DLC-Ordner, die dem Drittanbieter Modindentifikationsdienst unbekannt sind. Wenn du diese Mod jetzt veröffentlichen willst, solltest du Telemetrie für diese Mod einsenden, damit sie von verschiedenen Werkzeugen wie Mod Manager Diagnostiken identifiziert werden kann und in der DLC-Mod Datenbank enthalten ist.\n\n{0}\n\nMods werden erst in die Datenbank aufgenommen, wenn sie eine öffentliche NexusMods-Seite haben.</system:String>
 	<system:String x:Key="string_interp_gamenameValidationTarget">{0} Überprüfungsziel</system:String>
 	<system:String x:Key="string_deploymentValidationTargetDesc">Validierungsziele werden verwendet, um die Konfiguration deiner Mods gegenüber anderen Mods zu validieren, von denen deine Mod abhängig sein könnte, z. B. Kompatibilitätspatches, die auf Texturen in einer anderen Mod verweisen. Installiere diese Mods auf dem Ziel, damit der Mod Manager diese Verweise überprüfen kann.</system:String>
 	<system:String x:Key="string_validationTargetsCannotBeTextureModdedOT">Validierungsziele können nicht texturmodifiziert werden.</system:String>
@@ -479,7 +479,7 @@
 	<system:String x:Key="string_error_netRuntimeMissing">Die .NET {0} x64 Desktop Laufzeitumgebung ist nicht installiert</system:String>
 	<system:String x:Key="string_interp_errorGettingStoragePathForToolX">Fehler beim Abrufen des Speicherpfads für {0}: {1}.</system:String>
 	<system:String x:Key="string_restoreFromME3Tweaks">Von ME3Tweaks wiederherstellen</system:String>
-	<system:String x:Key="string_theFollowingModsFailedToLoad">Die folgenden Mods konnten nicht aus der Bibliothek geladen werden. Klicke die Mods an um den Grund dafür zu finden.</system:String>
+	<system:String x:Key="string_theFollowingModsFailedToLoad">Die folgenden Mods konnten nicht aus der Mod-Bibliothek geladen werden. Wähle eine Mod aus, um zu sehen, warum.</system:String>
 	<system:String x:Key="string_failedMods">Fehlgeschlagene Mods</system:String>
 	<system:String x:Key="string_failureInformation">Fehlerinformationen</system:String>
 	<system:String x:Key="string_deleteFromLibrary">Aus der Bibliothek entfernen</system:String>
@@ -558,8 +558,8 @@
 	<system:String x:Key="string_modsInInstallGroup">Mods in dieser Installationsgruppe</system:String>
 	<system:String x:Key="string_directionsInstallGroupEditor">Mods werden in dieser Reihenfolge installiert. Mods, die sich in abhängigkeit von anderen Mods automatisch konfigurieren, sollten als letztes installiert werden.</system:String>
 	<system:String x:Key="string_removeModFromInstallGroup">Mod aus Installationsgruppe entfernen</system:String>
-	<system:String x:Key="string_moveDown">Hinunter schieben</system:String>
-	<system:String x:Key="string_moveUp">Hoch schieben</system:String>
+	<system:String x:Key="string_moveDown">Hinunterschieben</system:String>
+	<system:String x:Key="string_moveUp">Hochschieben</system:String>
 	<system:String x:Key="string_contentMods">Content Mods</system:String>
 	<system:String x:Key="string_aSIMods">ASI Mods</system:String>
 	<system:String x:Key="string_textureMods">Textur Mods</system:String>
@@ -571,7 +571,7 @@
 	<system:String x:Key="string_required">Erforderlich</system:String>
 	<system:String x:Key="string_sortByMountPriority">Nach Mount-Priorität sortieren</system:String>
 	<system:String x:Key="string_tooltip_restoreBeforeInstall" xml:space="preserve">Vor der Installation dieser Gruppe wird der Benutzer aufgefordert, sein Spiel wiederherzustellen. Dadurch wird ein zuverlässig Ergebnis sichergestellt.</system:String>
-	<system:String x:Key="string_restoreGameBeforeInstall">Spiel vor der Installation wiederherstellen</system:String>
+	<system:String x:Key="string_restoreGameBeforeInstall">Spiel vor Installation wiederherstellen</system:String>
 	<system:String x:Key="string_tooltip_closeSearchPanel">Suchfeld schließen</system:String>
 	<system:String x:Key="string_typeToSearchCTRLF">Zum Suchen eingeben (STRG + F)</system:String>
 	<system:String x:Key="string_tooltip_lowestMountPriority">Niedrigste Mount-Priorität dieser Mod (falls zutreffend)</system:String>
@@ -674,6 +674,8 @@
 	<system:String x:Key="string_tooltip_installedDLCTab">Liste der installierten DLC</system:String>
 	<system:String x:Key="string_tooltip_texturesTab">Liste aller Texturmods, die mit Texturmodding-Tools installiert wurden</system:String>
 	<system:String x:Key="string_tooltip_otherTab">Extra information über diese Spielinstallation</system:String>
+	<system:String x:Key="string_mustUseExternalTool">Externes Werkzeug erforderlich</system:String>
+	<system:String x:Key="string_dialog_otTexturesImported">Texturen für die Originaltrilogie werden mit ALOT Installer oder Mass Effect Modder installiert, beide sind im Menü „Werkzeuge“ verfügbar. Die Texturmods wurden in der Mod Manager Mod-Bibliothek in den entsprechenden Spielordner im Ordner „Textures“ importiert.</system:String>
 	<system:String x:Key="string_next">Weiter</system:String>
 	<system:String x:Key="string_previous">Zurück</system:String>
 	<system:String x:Key="string_skipTutorial">Tutorial überspringen</system:String>
@@ -731,19 +733,6 @@
 	<system:String x:Key="string_errorCopyingDataToClipboard">Fehler beim Kopieren der Daten in die Zwischenablage</system:String>
 	<system:String x:Key="string_copyItemsToClipboard">Elemente in Zwischenablage kopieren</system:String>
 	<system:String x:Key="string_copiedToClipboard">In Zwischenablage kopiert</system:String>
-	<system:String x:Key="string_preparingToCollectDiagnosticInfo">Sammeln von Diagnoseinformationen wird vorbereitet</system:String>
-	<system:String x:Key="string_interp_preparingMEMNoGUIX">MEM No GUI wird vorbereitet {0}%</system:String>
-	<system:String x:Key="string_collectingGameInformation">Spielinformationen werden gesammelt</system:String>
-	<system:String x:Key="string_collectingSystemInformation">Systeminformationen werden gesammelt</system:String>
-	<system:String x:Key="string_collectingDLCInformation">DLC-Informationen werden gesammelt</system:String>
-	<system:String x:Key="string_collectingTFCFileInformation">TFC-Dateiinformationen werden gesammelt</system:String>
-	<system:String x:Key="string_checkingTextureMapGameConsistency">Texture map &lt;-&gt; Spiel Übereinstimmung wird überprüft</system:String>
-    <system:String x:Key="string_interp_performingFullTexturesCheckX">Vollständige Texturüberprüfung wird ausgeführt {0}%</system:String>
-	<system:String x:Key="string_collectingASIFileInformation">ASI-Dateiinformationen werden gesammelt</system:String>
-	<system:String x:Key="string_collectingME1ApplicationLogs">ME1 Anwendungsereignisprotokolle werden gesammelt</system:String>
-	<system:String x:Key="string_collectingEventLogs">Ereignisprotokolle werden gesammelt</system:String>
-	<system:String x:Key="string_collectingME3SessionLog">ME3 Sitzungsereignisprotokoll wird gesammelt</system:String>
-	<system:String x:Key="string_gettingTextureInfo">Texturmodinformationen werden gesammelt</system:String>
 	<system:String x:Key="string_selectALogToView">Wähle das anzuzeigende Ereignisprotokoll</system:String>
 	<system:String x:Key="string_collectingLogInformation">Sammle Ereignisprotokoll-Informationen</system:String>
 	<system:String x:Key="string_interp_serverRejectedTheUpload">Der Server hat deinen Upload abgewiesen. Die Antwort lautete: {0}</system:String>
@@ -761,7 +750,8 @@
 	<system:String x:Key="string_fullTexturesCheck">Komplette Texturenüberprüfung</system:String>
 	<system:String x:Key="string_diagShareTheLink">Teile den Link mit dem Empfänger deiner Ereignisprotokolle/Diagnose. Wenn du nicht sicher bist, welche Optionen du wählen sollst, wähle einfach eine von beiden.</system:String>
 	<system:String x:Key="string_selectAnApplicationLog">Wähle ein Anwendungsereignisprotokoll</system:String>
-	<system:String x:Key="string_selectAGameTargetToGenerateDiagnosticsFor">Wähle eine Zielinstallation, für die Diagnosedaten gesammelt werden sollen</system:String>
+	<system:String x:Key="string_noApplicationLog">Kein Anwendungsprotokoll</system:String>
+	<system:String x:Key="string_selectAGameTargetToGenerateDiagnosticsFor">Wähle eine Zielinstallation, für die Diagnostikdaten gesammelt werden sollen</system:String>
 	<system:String x:Key="string_compressingForUpload">Wird zum Hochladen komprimiert</system:String>
 	<system:String x:Key="string_uploadingToME3Tweaks">Wird zu ME3Tweaks hochgeladen</system:String>
 	<system:String x:Key="string_noSaveSelected">Kein Spielstand ausgewählt</system:String>
@@ -770,6 +760,9 @@
 	<system:String x:Key="string_saveFile">Spielstand</system:String>
 	<system:String x:Key="string_description_saveFile">Optional kann ein Spielstand in die Spieldiagnose eingebunden werden. Wähle nur einen Spielstand auf, wenn er angefordert wird.</system:String>
 	<system:String x:Key="string_selectSaveFile">Wähle Spielstand</system:String>
+    	<system:String x:Key="string_validation_mergeModVersionUnsupported">Mergemod konnte nicht geladen werden: Nicht unterstützte Version</system:String>
+    	<system:String x:Key="string_interp_validation_mergeModCompilerTooNew">Mergemod {0} wurde mit einem Compiler erstellt, der mindestens cmmver {1} erfordert. Kompiliere die Mergemod neu oder aktualisiere die cmmver</system:String>
+	<system:String x:Key="string_interp_errorReadingMergeMod">Beim Lesen des referenzierten Mergemods „{0}“ ist ein Fehler aufgetreten: {1}. Weitere Informationen sind in den Protokollen auffindbar.</system:String>
 	<system:String x:Key="string_validation_m3ASIVersionWrongValueCount">M3ASIVersion-Daten in Moddesc sind ungültig. Eine M3ASIVersion-Struct kann höchstens 1 oder 2 Werte enthalten: GroupID und optional die Version. Dies hat {0} Einträge. Daten: {1}</system:String>
 	<system:String x:Key="string_interp_m3ASIVersionMissingKey">M3ASIVersion-Daten in Moddesc sind ungültig. Schlüssel '{0}' fehlt. Daten: {1}</system:String>
 	<system:String x:Key="string_interp_m3ASIVersionNotAnInteger">M3ASIVersion-Daten in Moddesc sind ungültig. Der Schlüssel „{0}“ wurde nicht in einen Integer aufgelöst. Daten: {1}</system:String>
@@ -1303,6 +1296,7 @@
 	<system:String x:Key="string_typeToSearch">Zum Suchen eingeben</system:String>
 	<system:String x:Key="string_tooltip_endorseThisModOnNexusMods">Diese Mod auf NexusMods empfehlen</system:String>
 	<system:String x:Key="string_interp_errorMerging2DAX">Beim Zusammenführen der 2DA-Tabellen ist ein Fehler aufgetreten: {0}</system:String>
+	<system:String x:Key="string_interp_mergemodAssetIsZeroBytes">Mergemod-Asset hat null Bytes: {0}. Assets dürfen nicht leer sein.</system:String>
 	<system:String x:Key="string_dialog_missingConfigFileForMEIM">Mass Effect Config-Datei {0}.ini fehlt. Sie sollte sich in {1} befinden. Bitte starte das Spiel mindestens ein Mal, um die Standard-Dateien zu generieren.</system:String>
 	<system:String x:Key="string_interp_dialogConfigDirectoryMissing">Mass Effect Config-Ordner fehlt. Er sollte sich in {0} befinden. Bitte starte das Spiel mindestens ein Mal, um die Standard-Dateien zu generieren.</system:String>
 	<system:String x:Key="string_cannotRunMassEffectIniModder">Mass Effect Ini Modder kann nicht gestartet werden</system:String>
