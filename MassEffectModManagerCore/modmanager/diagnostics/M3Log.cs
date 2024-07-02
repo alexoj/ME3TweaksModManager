@@ -124,6 +124,7 @@ namespace ME3TweaksModManager.modmanager.diagnostics
             var loggerConfig = new LoggerConfiguration().WriteTo
                 .File(Path.Combine(MCoreFilesystem.GetLogDir(), @"modmanagerlog-.txt"),
                     rollingInterval: RollingInterval.Day,
+                    retainedFileTimeLimit: TimeSpan.FromDays(7), // Retain only one week of logs.
                     fileSizeLimitBytes: FileSize.MebiByte * 10, // 10 MB
                                                                 // shared: true, // Allow us to read log without closing it // doesn't work in shared mode
                     hooks: new CaptureFilePathHook()); // Allow us to capture current log path 
