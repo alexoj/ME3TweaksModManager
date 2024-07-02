@@ -3511,7 +3511,6 @@ namespace ME3TweaksModManager
                 return;
             }
 
-
             if (IsOnTrackToClose && AppExiting)
             {
                 MEMProcessHandler.TerminateAll();
@@ -3525,6 +3524,17 @@ namespace ME3TweaksModManager
             {
                 M3Log.Information(@"Ignoring window closing request: application cleanup in progress");
                 return;
+            }
+
+
+            foreach (var w in Application.Current.Windows.OfType<IClosableWindow>())
+            {
+                if (w.AskToClose() == false)
+                {
+                    M3Log.Information($@"Aborting application close - open window {w} indicates user does not want app to close.");
+                    IsOnTrackToClose = false;
+                    return;
+                }
             }
 
             // Texture installing
@@ -4701,11 +4711,18 @@ namespace ME3TweaksModManager
                     }
                 }
 
-                if (modInspector.MAI.ImportedTextureMod)
+                if (modInspector.MAI.ImportedLETextureMod)
                 {
-                    M3L.ShowDialog(this, M3L.GetString(M3L.string_dialog_textureModsImportedHowToUse),
-                        M3L.GetString(M3L.string_textureModsImported), MessageBoxButton.OK, MessageBoxImage.Information);
+                    Settings.GenerationSettingLE = true; // Force on
+                    M3L.ShowDialog(this, M3L.GetString(M3L.string_dialog_textureModsImportedHowToUse), M3L.GetString(M3L.string_textureModsImported), MessageBoxButton.OK, MessageBoxImage.Information);
                 }
+
+                if (modInspector.MAI.ImportedOTTextureMod)
+                {
+                    Settings.GenerationSettingOT = true; // Force on
+                    M3L.ShowDialog(this, M3L.GetString(M3L.string_dialog_otTexturesImported), M3L.GetString(M3L.string_mustUseExternalTool), MessageBoxButton.OK, MessageBoxImage.Warning);
+                }
+
 
                 if (modInspector.MAI.ImportedBatchQueue)
                 {

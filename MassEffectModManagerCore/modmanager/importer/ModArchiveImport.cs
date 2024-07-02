@@ -198,19 +198,19 @@ namespace ME3TweaksModManager.modmanager.importer
 
         #region RESULTS
         /// <summary>
-        /// If this object imported a texture mod file
+        /// If this object imported an LE texture mod file
         /// </summary>
-        public bool ImportedTextureMod { get; set; }
+        public bool ImportedLETextureMod { get; set; }
+
+        /// <summary>
+        /// If this object imported an OT texture mod file (.mem)
+        /// </summary>
+        public bool ImportedOTTextureMod { get; set; }
 
         /// <summary>
         /// If this object imported a batch queue file
         /// </summary>
         public bool ImportedBatchQueue { get; set; }
-
-        /// <summary>
-        /// If OT ALOT files were detected on scan
-        /// </summary>
-        public bool OTALOTTextureFilesImported { get; set; }
 
         /// <summary>
         /// List of moddesc.ini files that have been modified due to the extract operation
@@ -722,9 +722,12 @@ namespace ME3TweaksModManager.modmanager.importer
                 try
                 {
                     mod.ExtractFromArchive(ArchiveFilePath, sanitizedPath, CompressPackages, TextUpdateCallback, ExtractionProgressCallback, CompressedPackageCallback, false, ArchiveStream, SourceNXMLink);
-                    if (mod is MEMMod)
+                    if (mod is MEMMod mmod)
                     {
-                        ImportedTextureMod = true;
+                        // Determine which game
+                        mmod.Game = ModFileFormats.GetGameMEMFileIsFor(mmod.ExtractedPath);
+                        ImportedLETextureMod |= mmod.Game.IsLEGame();
+                        ImportedOTTextureMod |= mmod.Game.IsOTGame();
                     }
                 }
                 catch (Exception ex)

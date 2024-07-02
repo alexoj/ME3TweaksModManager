@@ -251,7 +251,13 @@ namespace ME3TweaksModManager.modmanager.objects.mod.texture
             var outPath = Path.Combine(outputDir, Path.GetFileName(memPath));
             M3Log.Information($@"Moving .mem file to final destination: {memPath} -> {outPath}");
             File.Move(memPath, outPath, true);
+            ExtractedPath = outPath;
         }
+
+        /// <summary>
+        /// EXTRACTION ONLY - Where the .mem ultimately was put. This value will always be null otherwise
+        /// </summary>
+        public string ExtractedPath { get; private set; }
 
         public bool IsAvailableForInstall()
         {
