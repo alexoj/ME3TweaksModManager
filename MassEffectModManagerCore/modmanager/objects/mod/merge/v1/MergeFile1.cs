@@ -96,7 +96,8 @@ namespace ME3TweaksModManager.modmanager.objects.mod.merge.v1
 
             // Change 04/15/2023: Multi-core support for multiple changes from a single 'file'. If it has multiple localizations they will all be different
             // So in theory this should work...
-            var numCores = !Settings.LogModInstallation ? 4 : 1;
+
+            var numCores = !Settings.LogModInstallation ? Math.Min(4, Environment.ProcessorCount) : 1;
             var syncObj = new object();
             Parallel.ForEach(targetFiles, new ParallelOptions() { MaxDegreeOfParallelism = numCores }, f =>
             //{
