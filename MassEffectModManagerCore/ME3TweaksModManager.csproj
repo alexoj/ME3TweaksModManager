@@ -71,7 +71,7 @@
 	<ItemGroup>
 		<None Remove="appicon.ico" />
 		<None Remove="images\asi.png" />
-	  <None Remove="images\darktheme.png" />
+		<None Remove="images\darktheme.png" />
 		<None Remove="images\dvd.png" />
 		<None Remove="images\gameicons\Unknown_48.ico" />
 		<None Remove="images\lighttheme.png" />
@@ -164,12 +164,12 @@
 	<ItemGroup>
 		<EmbeddedResource Include="modmanager\asi\ME1-DLC-ModEnabler-v1.0.asi" />
 		<EmbeddedResource Include="modmanager\asi\ME3Logger_truncating-v1.0.asi" />
-    <EmbeddedResource Include="modmanager\gamemd5\*.bin" />
-    <EmbeddedResource Include="modmanager\squadmates\**\*.txt" />
-    <EmbeddedResource Include="modmanager\squadmates\**\*.pcc" />
-  	<EmbeddedResource Include="modmanager\merge\game2email\**\*.pcc" />
-    <EmbeddedResource Include="modmanager\licenses\minhook.txt" />
-    <EmbeddedResource Include="modmanager\me3tweaks\LiveIni.bin" />
+		<EmbeddedResource Include="modmanager\gamemd5\*.bin" />
+		<EmbeddedResource Include="modmanager\squadmates\**\*.txt" />
+		<EmbeddedResource Include="modmanager\squadmates\**\*.pcc" />
+		<EmbeddedResource Include="modmanager\merge\game2email\**\*.pcc" />
+		<EmbeddedResource Include="modmanager\licenses\minhook.txt" />
+		<EmbeddedResource Include="modmanager\me3tweaks\LiveIni.bin" />
 		<EmbeddedResource Include="modmanager\me3tweaks\PermissionsGranter.exe" />
 		<EmbeddedResource Include="modmanager\meim\propertymaps\BioEngine.xml" />
 		<EmbeddedResource Include="modmanager\meim\propertymaps\BioGame.xml" />
@@ -178,7 +178,7 @@
 		<EmbeddedResource Include="modmanager\starterkit\henchimages\placeholder_available.png" />
 		<EmbeddedResource Include="modmanager\starterkit\henchimages\placeholder_chosen.png" />
 		<EmbeddedResource Include="modmanager\starterkit\scripts\SFXGUIData_ModSettings.uc" />
-    <EmbeddedResource Include="updater\ME3CMM.exe" />
+		<EmbeddedResource Include="updater\ME3CMM.exe" />
 		<EmbeddedResource Include="updater\ME3TweaksUpdater.exe" />
 	</ItemGroup>
 
@@ -213,7 +213,7 @@
 		<PackageReference Include="SSH.NET" Version="2024.0.0" />
 		<PackageReference Include="WatsonWebsocket" Version="4.1.2" />
 		<PackageReference Include="WindowsAPICodePack-Shell" Version="1.1.1" />
-  </ItemGroup>
+	</ItemGroup>
 	<ItemGroup>
 		<DotNetCliToolReference Include="Microsoft.Extensions.SecretManager.Tools" Version="2.0.2" />
 	</ItemGroup>
@@ -240,15 +240,23 @@
 		<EmbeddedResource Include="modmanager\objects\mod\merge\v2\schema.json" />
 		<Resource Include="modmanager\toolicons\*.png" />
 		<Resource Include="modmanager\toolicons\*.ico" />
-    <EmbeddedResource Include="modmanager\plotmanager\**\*.pcc" />
-    <EmbeddedResource Include="modmanager\merge\dlc\**\*.pcc" />
-	<EmbeddedResource Include="modmanager\merge\dlc\**\*.ini" />
-    <EmbeddedResource Include="modmanager\plotmanager\**\*.u*" />
-  </ItemGroup>
+		<EmbeddedResource Include="modmanager\plotmanager\**\*.pcc" />
+		<EmbeddedResource Include="modmanager\merge\dlc\**\*.pcc" />
+		<EmbeddedResource Include="modmanager\merge\dlc\**\*.ini" />
+		<EmbeddedResource Include="modmanager\plotmanager\**\*.u*" />
+	</ItemGroup>
 
-  <ItemGroup>
+	<ItemGroup>
+		<!-- Lcoalizations that have fallen out of date or were never implemented to begin with. -->
+		<Page Remove="modmanager\localizations\bra.xaml" />
+		<Page Remove="modmanager\localizations\esn.xaml" />
+		<Page Remove="modmanager\localizations\fra.xaml" />
+		<Page Remove="modmanager\localizations\pol.xaml" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<Compile Update="modmanager\usercontrols\moddescinieditor\HeadmorphsEditorControl.xaml.cs">
-		  <SubType>Code</SubType>
+			<SubType>Code</SubType>
 		</Compile>
 		<Compile Update="modmanager\usercontrols\TestArchiveGenerator.xaml.cs">
 			<SubType>Code</SubType>
@@ -259,60 +267,54 @@
 		<Page Update="modmanager\localizations\deu.xaml">
 			<SubType>Designer</SubType>
 		</Page>
-		<Page Update="modmanager\localizations\fra.xaml">
-			<SubType>Designer</SubType>
-		</Page>
-		<Page Update="modmanager\localizations\pol.xaml">
-			<SubType>Designer</SubType>
-		</Page>
 		<Page Update="modmanager\localizations\rus.xaml">
 			<SubType>Designer</SubType>
 		</Page>
 		<Page Update="modmanager\usercontrols\NXMHandlerConfigPanel.xaml">
-		  <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 		</Page>
 		<Page Update="modmanager\usercontrols\moddescinieditor\LELauncherEditorControl.xaml">
-		  <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 		</Page>
 		<Page Update="modmanager\usercontrols\moddescinieditor\Game1TLKMergeEditorControl.xaml">
-		  <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 		</Page>
 		<Page Update="modmanager\usercontrols\LE1CoalescedMergePanel.xaml">
-		  <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 		</Page>
 		<Page Update="modmanager\usercontrols\PlotManagerUpdatePanel.xaml">
-		  <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 		</Page>
 		<Page Update="modmanager\usercontrols\TextureInstallerPanel.xaml">
-		  <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
 		</Page>
 		<Page Update="modmanager\usercontrols\TestArchiveGenerator.xaml">
 			<SubType>Designer</SubType>
 		</Page>
 		<Page Update="modmanager\windows\dialog\DeploymentListDialog.xaml">
-		  <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
-		  <SubType>Designer</SubType>
+			<XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+			<SubType>Designer</SubType>
 		</Page>
 	</ItemGroup>
-  <ItemGroup>
-    <ContentWithTargetPath Include="modmanager\native\7z64.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <TargetPath>7z64.dll</TargetPath>
-    </ContentWithTargetPath>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="modmanager\starterkit\henchimages\placeholder_silo.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="modmanager\merge\dlc\LE2\" />
-    <Folder Include="modmanager\merge\dlc\ME2\" />
-    <Folder Include="modmanager\objects\merge\email\" />
-    <Folder Include="modmanager\objects\merge\squadmate\" />
-    <Folder Include="modmanager\save\game2\UI\" />
-    <Folder Include="modmanager\squadmates\LE3\" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="modmanager\merge\coalesced\LE1\Coalesced_INT.bin" />
-  </ItemGroup>
+	<ItemGroup>
+		<ContentWithTargetPath Include="modmanager\native\7z64.dll">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<TargetPath>7z64.dll</TargetPath>
+		</ContentWithTargetPath>
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="modmanager\starterkit\henchimages\placeholder_silo.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<Folder Include="modmanager\merge\dlc\LE2\" />
+		<Folder Include="modmanager\merge\dlc\ME2\" />
+		<Folder Include="modmanager\objects\merge\email\" />
+		<Folder Include="modmanager\objects\merge\squadmate\" />
+		<Folder Include="modmanager\save\game2\UI\" />
+		<Folder Include="modmanager\squadmates\LE3\" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="modmanager\merge\coalesced\LE1\Coalesced_INT.bin" />
+	</ItemGroup>
 
 </Project>
