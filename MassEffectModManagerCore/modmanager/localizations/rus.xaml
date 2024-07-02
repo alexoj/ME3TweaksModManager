@@ -1359,10 +1359,10 @@
 	<system:String x:Key="string_deployment_sqmIssuesFound">Обнаружены проблемы Squadmate Outfit Merge</system:String>
 	<system:String x:Key="string_deployment_sqmIssuesFoundTooltip">Преобразование выявило проблемы с файлами Squadmate Outfit Merge</system:String>
 	<system:String x:Key="string_deployment_sqmIssueReferencedPackageNotFound">Пакетный файл Squadmate Outfit '{0}' не устанавливается вместе с модом.</system:String>
-	<system:String x:Key="string_deployment_sqmIssueOutfitLocalizationMissing">Локализация '{0}' для пакетного файла сопартийца {1} отсутствует.</system:String>
+	<system:String x:Key="string_deployment_sqmIssueOutfitLocalizationMissing">Локализация '{0}' для пакетного файла напарника {1} отсутствует.</system:String>
 	<system:String x:Key="string_deployment_sqmIssueInvalidOutfitImageReferenceType">Недопустимое значение '{0}': Тип экспорта должен быть 'Texture2D', но ссылка идет на тип '{1}'.</system:String>
 	<system:String x:Key="string_deployment_sqmIssueCouldntFindOutfitImage">Недопустимое значение '{0}': Ни одна устанавливаемая версия '{1}' не содержит экспорта с указанным полным путем '{0}'.</system:String>
-	<system:String x:Key="string_deployment_sqmIssueHenchImagePackageNotFound">Пакетный файл изображений сопартийца не найден. Имя файла должно иметь формат SFXHenchImages_[DLC_MOD_YourModName].</system:String>
+	<system:String x:Key="string_deployment_sqmIssueHenchImagePackageNotFound">Пакетный файл изображений напарника не найден. Имя файла должно иметь формат SFXHenchImages_[DLC_MOD_YourModName].</system:String>
 	<system:String x:Key="string_deployment_sqmIssueInvalidHenchId">Неизвестный 'henchname': {0}. Значения чувствительны к регистру.</system:String>
 	<system:String x:Key="string_deployment_basegameFullFileWarning">Мод потенциально устанавливает файл, используемые merge-модами: {0}. Рекомендуется перенастроить мод с применением mergemods к данному файлу для большей совместимости с остальными модами.</system:String>
 	<system:String x:Key="string_deployment_unusedExtraFileTypeFound">Вместе с модом может быть установлен {0}-файл: {1}. Данный файл следует удалить, так как он никогда не будет использован игрой. Если вы хотите включать дополнительные файлы типа этого, используйте 'additionaldeploymentfolder' из заголовка [UPDATES].</system:String>
@@ -2022,8 +2022,8 @@
 	<system:String x:Key="string_interp_unknownSaveTypeX">Неизвестный тип сохранения: {0}</system:String>
 	<system:String x:Key="string_interp_noBackupMessage">Отсутствуют доступные архивы {0}. Если продолжить, вы не сможете создать архив игры, так как игра будет модифицирована. Вы уверены, что хотите сделать это?</system:String>
 	<system:String x:Key="string_backupWarning">Предупреждение архивации</system:String>
-	<system:String x:Key="string_synchronizedSquadmateOutfits">Костюмы сопартийцев синхронизированы</system:String>
-	<system:String x:Key="string_synchronizingSquadmateOutfitFiles">Синхронизация файлов костюмов сопартийцев</system:String>
+	<system:String x:Key="string_synchronizedSquadmateOutfits">Костюмы напарников синхронизированы</system:String>
+	<system:String x:Key="string_synchronizingSquadmateOutfitFiles">Синхронизация файлов костюмов напарников</system:String>
 	<system:String x:Key="string_starterKitAddins">Добавления Starter Kit</system:String>
 	<system:String x:Key="string_addStartupFile">Добавление файла запуска</system:String>
 	<system:String x:Key="string_addPlotManagerData">Добавление данных PlotManager</system:String>
