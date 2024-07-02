@@ -28,7 +28,7 @@ namespace ME3TweaksModManager.modmanager.windows
     /// Interaction logic for BatchModQueueEditor.xaml
     /// </summary>
     [AddINotifyPropertyChangedInterface]
-    public partial class BatchModQueueEditor : Window
+    public partial class BatchModQueueEditor : Window, IClosableWindow
     {
         // Tab constants
         private const int TAB_CONTENTMOD = 0;
@@ -992,6 +992,18 @@ namespace ME3TweaksModManager.modmanager.windows
         {
             ShowSearchBox();
             LoadComplete = true;
+        }
+
+        public bool AskToClose()
+        {
+            if (M3L.ShowDialog(this, "Close without saving changes?", "Application closing", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes) == MessageBoxResult.Yes)
+            {
+                Close();
+                return true;
+            }
+
+            // Denied closing.
+            return false;
         }
     }
 

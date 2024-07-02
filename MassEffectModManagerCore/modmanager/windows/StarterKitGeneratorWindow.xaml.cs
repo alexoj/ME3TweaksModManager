@@ -30,7 +30,7 @@ namespace ME3TweaksModManager.modmanager.windows
     /// <summary>
     /// Interaction logic for StarterKitGeneratorWindow.xaml
     /// </summary>
-    public partial class StarterKitGeneratorWindow : ValidatableWindowBase
+    public partial class StarterKitGeneratorWindow : ValidatableWindowBase, IClosableWindow
     {
         public int MaxMountForGame
         {
@@ -743,6 +743,18 @@ namespace ME3TweaksModManager.modmanager.windows
             ModDescription = @"Debug Description for mod";
             ModDLCModuleNumber = 12345;
 #endif
+        }
+
+        public bool AskToClose()
+        {
+            if (M3L.ShowDialog(this, "Close without generating the mod?", "Application closing", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes) == MessageBoxResult.Yes)
+            {
+                Close();
+                return true;
+            }
+
+            // Denied closing.
+            return false;
         }
     }
 }

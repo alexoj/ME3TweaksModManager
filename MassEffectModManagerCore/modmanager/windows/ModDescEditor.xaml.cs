@@ -17,7 +17,7 @@ namespace ME3TweaksModManager.modmanager.windows
     /// <summary>
     /// Interaction logic for ModDescEditor.xaml
     /// </summary>
-    public partial class ModDescEditor : Window, INotifyPropertyChanged
+    public partial class ModDescEditor : Window, INotifyPropertyChanged, IClosableWindow
     {
         public Mod EditingMod { get; private set; }
         private List<ModdescEditorControlBase> editorControls = new List<ModdescEditorControlBase>();
@@ -241,5 +241,16 @@ namespace ME3TweaksModManager.modmanager.windows
         }
 
         public bool IsLocalizationMod { get; set; }
+        public bool AskToClose()
+        {
+            if (M3L.ShowDialog(this, "Close without saving changes?", "Application closing", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes) == MessageBoxResult.Yes)
+            {
+                Close();
+                return true;
+            }
+
+            // Denied closing.
+            return false;
+        }
     }
 }
