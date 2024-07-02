@@ -922,7 +922,7 @@
     <!-- 0={Message prefix string} 1={Exception message} -->
     <system:String x:Key="string_interp_warningImportLinkOutideOfTables">{0}, import {1} has an invalid link value that is outside of the import/export table: {2}</system:String>
     <!-- 0={Relative filepath} 1={integer} 2={integer} -->
-    <system:String xml:space="preserve" x:Key="string_interp_dialog_dlcFolderNotInTPMI">The following mods contain DLC folders that are not in the Third Party Mod Identification Service (TPMI). If this mod is about to be released, you should submit telemetry for this mod so it can be identified in various tools such as ALOT Installer/Mod Manager diagnostics, be in the DLC mod database, and be identified by Mod Manager.\n\n{0}\n\nMods are only entered into the database once they have a public mod page.</system:String>
+    <system:String xml:space="preserve" x:Key="string_interp_dialog_dlcFolderNotInTPMI">The following mods contain DLC folders that are not in the Third Party Mod Identification Service (TPMI). If this mod is about to be released, you should submit telemetry for this mod, so it can be identified in various tools such as Mod Manager diagnostics and be in the DLC mod database.\n\n{0}\n\nMods are only entered into the database once they have a public mod page.</system:String>
     <!-- 0={List of mod names} -->
     <system:String x:Key="string_interp_gamenameValidationTarget">{0} validation target</system:String>
     <!-- 0={Name of game (Mass Effect, Mass Effect 2, Mass Effect 3)} -->
@@ -1205,6 +1205,8 @@
     <system:String x:Key="string_tooltip_installedDLCTab">List of installed DLC</system:String>
     <system:String x:Key="string_tooltip_texturesTab">List of all texture mods that were installed with texture modding tools</system:String>
     <system:String x:Key="string_tooltip_otherTab">Extra information about this game installation</system:String>
+    <system:String x:Key="string_mustUseExternalTool">Must use external tool</system:String>
+    <system:String x:Key="string_dialog_otTexturesImported">Textures for the original trilogy are installed using ALOT Installer or Mass Effect Modder, both available in the Tools menu. The texture mods have been imported into the respective game folder in your Mod Manager mod library's Textures folder.</system:String>
 
     <!-- Log uploader-->
     <system:String x:Key="string_selectALogToView">Select a log to view on log viewing service</system:String>
@@ -1226,7 +1228,8 @@
     <system:String x:Key="string_fullTexturesCheck">Full textures check</system:String>
     <system:String x:Key="string_diagShareTheLink">Share the resulting link of your log/diagnostic with your recipient. If you aren't sure what options to pick, simply select one from both.</system:String>
     <system:String x:Key="string_selectAnApplicationLog">Select an application log</system:String>
-    <system:String x:Key="string_selectAGameTargetToGenerateDiagnosticsFor">Select a game target to generate diagnostics for</system:String>
+    <system:String x:Key="string_noApplicationLog">No application log</system:String>
+    <system:String x:Key="string_selectAGameTargetToGenerateDiagnosticsFor">Select a game target to generate diagnostics for (optional)</system:String>
     <system:String x:Key="string_compressingForUpload">Compressing for upload</system:String>
     <system:String x:Key="string_uploadingToME3Tweaks">Uploading to ME3Tweaks</system:String>
     <system:String x:Key="string_noSaveSelected">No save selected</system:String>
@@ -2611,7 +2614,7 @@
     <!-- As in "Use these options to control what DLC mods your mod will install"-->
     <system:String x:Key="string_headmorphs">Headmorphs</system:String>
     <system:String x:Key="string_serializeModToShowGeneratedModdesciniFile">Serialize mod to show generated moddesc.ini file</system:String>
-    <system:String x:Key="string_mde_altFiles_directions">Alternate Files (Custom DLC) allows you to define single-item alternate file options for the CUSTOMDLC task header. Typically for the CUSTOMDLC task header, you will want to use the Alternate DLC feature instead.</system:String>
+    <system:String x:Key="string_mde_altFiles_directions">Alternate Files (Custom DLC) allows you to define single-item alternate file options for the CUSTOMDLC task header. Typically, for the CUSTOMDLC task header, you will want to use the Alternate DLC feature instead.</system:String>
     <system:String x:Key="string_mde_interp_removeTextureModReferenceX">Remove texture mod reference '{0}'?</system:String>
     <!-- 0={Title of texture mod object} -->
     <system:String x:Key="string_confirmRemoval">Confirm removal</system:String>

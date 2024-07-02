@@ -1044,6 +1044,8 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_tooltip_installedDLCTab = "string_tooltip_installedDLCTab";
 		public const string string_tooltip_texturesTab = "string_tooltip_texturesTab";
 		public const string string_tooltip_otherTab = "string_tooltip_otherTab";
+		public const string string_mustUseExternalTool = "string_mustUseExternalTool";
+		public const string string_dialog_otTexturesImported = "string_dialog_otTexturesImported";
 		public const string string_selectALogToView = "string_selectALogToView";
 		public const string string_collectingLogInformation = "string_collectingLogInformation";
 		public const string string_interp_serverRejectedTheUpload = "string_interp_serverRejectedTheUpload";
@@ -1061,6 +1063,7 @@ namespace ME3TweaksModManager.modmanager.localizations
 		public const string string_fullTexturesCheck = "string_fullTexturesCheck";
 		public const string string_diagShareTheLink = "string_diagShareTheLink";
 		public const string string_selectAnApplicationLog = "string_selectAnApplicationLog";
+		public const string string_noApplicationLog = "string_noApplicationLog";
 		public const string string_selectAGameTargetToGenerateDiagnosticsFor = "string_selectAGameTargetToGenerateDiagnosticsFor";
 		public const string string_compressingForUpload = "string_compressingForUpload";
 		public const string string_uploadingToME3Tweaks = "string_uploadingToME3Tweaks";
