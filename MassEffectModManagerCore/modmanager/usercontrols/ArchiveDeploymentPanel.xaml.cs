@@ -169,6 +169,14 @@ namespace ME3TweaksModManager.modmanager.usercontrols
                 };
                 nbw.RunWorkerCompleted += (a, b) =>
                 {
+                    // If we are shutting down, close the panel immediately.
+                    if (HandlingShutdownTasks)
+                    {
+                        OnClosing(DataEventArgs.Empty);
+                        return;
+                    }
+
+
                     TaskbarHelper.SetProgressState(TaskbarProgressBarState.NoProgress);
 
                     if (b.Error != null)
@@ -782,5 +790,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             }
         }
         public override bool DisableM3AutoSizer { get; set; } = true;
+
+        public override bool CanBeForceClosed()
+        {
+            // Force wait
+            return !DeploymentInProgress;
+        }
     }
 }
