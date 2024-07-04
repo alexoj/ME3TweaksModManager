@@ -708,6 +708,23 @@
 	<system:String x:Key="string_tooltip_autoResume">Indica al gioco di provare a riprendere dall'ultima partita salvata in modo automatico</system:String>
 	<system:String x:Key="string_noForceFeedback">No force feedback</system:String>
 	<system:String x:Key="string_tooltip_disablesControllerVibration">Disabilita vibrazione controller</system:String>
+	<system:String x:Key="string_enableProcessMinidumps">Abilita i minidump dei processi</system:String>
+	<system:String x:Key="string_tooltip_enableMinidumps" xml:space="preserve">Crea crash dump quando si verificano eccezioni nel gioco.\nNon attivare a meno che non venga richiesto da uno sviluppatore, poiché questa opzione riduce le prestazioni.</system:String>
+	<system:String x:Key="string_english">Inglese</system:String>
+	<system:String x:Key="string_french">Francese</system:String>
+	<system:String x:Key="string_frenchTextEnglishVoiceover">Francese (testo), Inglese (doppiaggio)</system:String>
+	<system:String x:Key="string_german">Tedesco</system:String>
+	<system:String x:Key="string_germanTextEnglishVoiceover">Tedesco (testo), Inglese (doppiaggio)</system:String>
+	<system:String x:Key="string_italian">Italiano</system:String>
+	<system:String x:Key="string_italianTextEnglishVoiceover">Italiano (testo), Inglese (doppiaggio)</system:String>
+	<system:String x:Key="string_spanishTextEnglishVoiceover">Spagnolo (testo), Inglese (doppiaggio)</system:String>
+	<system:String x:Key="string_japaneseTextEnglishVoiceover">Giapponese (testo), Inglese (doppiaggio)</system:String>
+	<system:String x:Key="string_polish">Polacco</system:String>
+	<system:String x:Key="string_polishTextEnglishVoiceover">Polacco (testo), Inglese (doppiaggio)</system:String>
+	<system:String x:Key="string_russian">Russo</system:String>
+	<system:String x:Key="string_russianTextEnglishVoiceover">Russo (testo), Inglese (doppiaggio)</system:String>
+	<system:String x:Key="string_czechTextPartialEnglishVoiceover">Ceco (testo parziale), Inglese (doppiaggio)</system:String>
+	<system:String x:Key="string_hungarianTextPartialEnglishVoiceover">Ungherese (testo parziale), Inglese (doppiaggio)</system:String>
 	<system:String x:Key="string_dialog_firstCoalescedMerge" xml:space="preserve">ME3Tweaks Mod Manager sostituisce automaticamente il file Coalesced_INT.bin del gioco di base per LE1, in modo che le mod possano usare la funzionalità LE1 Coalesced Merge. Mod del file Coalesced_INT.bin installate o modificate manualmente saranno sovrascritte da questa funzionalità; puoi disattivarla nelle impostazioni del Mod Manager.\n\nDisabilitare la funzionalità LE1 Coalesced Merge romperà tutte le mod che dipendono da essa.</system:String>
 	<system:String x:Key="string_information">Informazioni</system:String>
 	<system:String x:Key="string_interp_lexNightlyFailedToDownload">Il download del Legendary Explorer Nightly è fallito: {0}</system:String>
