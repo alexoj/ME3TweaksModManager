@@ -28,6 +28,7 @@
 		<PublishTrimmed>False</PublishTrimmed>
 		<Nullable>disable</Nullable>
 		<Configurations>Debug;Release;WinAzureTest;WinAzureRelease</Configurations>
+		<IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
