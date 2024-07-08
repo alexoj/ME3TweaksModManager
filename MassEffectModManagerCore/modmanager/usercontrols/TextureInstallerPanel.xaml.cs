@@ -124,8 +124,11 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             File.WriteAllLines(GetMEMMFLPath(), MEMFilesToInstall);
 
             // Perform the installation
-            _keepAwakeTimer.Elapsed += keepSystemAwake;
-            _keepAwakeTimer.Start();
+            if (_keepAwakeTimer != null)
+            {
+                _keepAwakeTimer.Elapsed += keepSystemAwake;
+                _keepAwakeTimer.Start();
+            }
 
             NamedBackgroundWorker nbw = new NamedBackgroundWorker(@"TextureInstaller");
             nbw.DoWork += (a, b) =>
@@ -337,7 +340,6 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             // Allow sleep when panel closes
             _keepAwakeTimer.Stop();
             _keepAwakeTimer.Elapsed -= keepSystemAwake;
-            _keepAwakeTimer = null;
             SystemSleepManager.AllowSleep();
         }
 
