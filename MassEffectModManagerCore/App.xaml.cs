@@ -461,20 +461,20 @@ namespace ME3TweaksModManager
             }
 
             // These localizations have been abandoned; if they are updated serverside, they can be dynamically re-enabled, for the most part
-            if (lang == @"pol") // Localization was abandoned
-            {
-                // This may not be available on first load
-                ServerManifest.TryGetBool(ServerManifest.LOCALIZATION_ENABLED_POL, out var enabled, false);
-                return enabled;
-            }
+            //if (lang == @"pol") // Localization was abandoned
+            //{
+            //    // This may not be available on first load
+            //    ServerManifest.TryGetBool(ServerManifest.LOCALIZATION_ENABLED_POL, out var enabled, false);
+            //    return enabled;
+            //}
 
 
-            if (lang == @"bra") // Localization was abandoned
-            {
-                // This may not be available on first load
-                ServerManifest.TryGetBool(ServerManifest.LOCALIZATION_ENABLED_BRA, out var enabled, false);
-                return enabled;
-            }
+            //if (lang == @"bra") // Localization was abandoned
+            //{
+            //    // This may not be available on first load
+            //    ServerManifest.TryGetBool(ServerManifest.LOCALIZATION_ENABLED_BRA, out var enabled, false);
+            //    return enabled;
+            //}
 
             if (lang == @"int") return true; // Just in case
             return false;
