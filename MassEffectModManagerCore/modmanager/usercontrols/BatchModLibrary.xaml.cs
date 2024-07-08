@@ -427,7 +427,13 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             InstallationTargetsForGroup.ClearEx();
             if (SelectedBatchQueue != null)
             {
-                InstallationTargetsForGroup.AddRange(mainwindow.InstallationTargets.Where(x => x.Game == SelectedBatchQueue.Game));
+                // Telemetry shows null access here... mainwindow? Is this being called before the panel loads somehow? Or maybe it's during a target reload?
+                // Lock access to installation targets
+                lock (MainWindow.targetRepopulationSyncObj)
+                {
+                    InstallationTargetsForGroup.AddRange(mainwindow.InstallationTargets.Where(x => x.Game == SelectedBatchQueue.Game));
+                }
+
                 if (InstallationTargetsForGroup.Contains(currentTarget))
                 {
                     SelectedGameTarget = currentTarget;
