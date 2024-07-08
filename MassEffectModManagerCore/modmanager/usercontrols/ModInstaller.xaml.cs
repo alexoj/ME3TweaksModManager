@@ -82,7 +82,12 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             InstallOptionsPackage = package;
             LoadCommands();
             lastPercentUpdateTime = DateTime.Now;
-            package.InstallTarget.ReloadGameTarget(false); //Reload so we can have consistent state with ALOT on disk
+            if (!package.BatchMode)
+            {
+                // Don't reload between batch installs to improve performance.
+                package.InstallTarget.ReloadGameTarget(false); //Reload so we can have consistent state with disk
+            }
+
             Action = M3L.GetString(M3L.string_preparingToInstall);
         }
 

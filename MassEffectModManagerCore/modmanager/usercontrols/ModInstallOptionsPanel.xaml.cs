@@ -56,7 +56,7 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         public bool InstallationCancelled { get; private set; }
 
         /// <summary>
-        /// The associated batch mode mode. If this is not a batch install, this will be null.
+        /// The associated batch mode mod. If this is not a batch install, this will be null.
         /// </summary>
         public BatchMod BatchMod { get; private set; }
 
