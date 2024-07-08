@@ -1467,6 +1467,10 @@ namespace ME3TweaksModManager
                         }
                         else
                         {
+
+                            // Do an initial reload since we don't reload targets in the mod options panel anymore.
+                            target.ReloadGameTarget(false);
+
                             if (queue.ContainsTextureMods() && (queue.UseSavedOptions ||
                                                                 // If all options are standalone we don't really care if there are saved options so just show it here
                                                                 queue.ModsToInstall.Where(x => !x.ModMissing).All(x => x.IsStandalone)))
@@ -1516,6 +1520,7 @@ namespace ME3TweaksModManager
 
                     if (queue.RestoreBeforeInstall)
                     {
+                        // Will trigger target reload automatically
                         RunBatchRestore(queue, target, modInstalled);
                     }
                     else
