@@ -117,7 +117,6 @@ namespace ME3TweaksModManager
         public object BusyContentM3 { get; set; }
 
 #if DEBUG
-
         public void OnBusyContentM3Changed(object old, object newB)
         {
             if (newB is SingleItemPanel2 sip2)
@@ -125,7 +124,6 @@ namespace ME3TweaksModManager
                 Debug.WriteLine($@"Changing busy panels to {sip2.Content}");
             }
         }
-
 #endif
 
         public string CurrentDescriptionText { get; set; } = DefaultDescriptionText;
@@ -352,8 +350,7 @@ namespace ME3TweaksModManager
         /// </summary>
         public Mod SelectedMod { get; set; }
 
-        public ObservableCollectionExtended<GameTargetWPF> InstallationTargets { get; } =
-            new ObservableCollectionExtended<GameTargetWPF>();
+        public ObservableCollectionExtended<GameTargetWPF> InstallationTargets { get; } = new ObservableCollectionExtended<GameTargetWPF>();
 
         /// <summary>
         /// List of all loaded targets, even ones for different generations
@@ -2007,13 +2004,14 @@ namespace ME3TweaksModManager
             if (queuedUserControls.Count == 0 && !IsBusy)
             {
                 IsBusy = true;
+                M3Log.Information(@$"Showing panel {control.GetType().Name}");
                 BusyContentM3 = new SingleItemPanel2(control);
             }
             else
             {
                 if (swapImmediately)
                 {
-                    M3Log.Information(@$"Immediately swapping to panel {control}");
+                    M3Log.Information(@$"Immediately swapping to panel {control.GetType().Name}");
 
                     // Rebuild the queue list with our existing open panel at the front
                     Queue<MMBusyPanelBase> rebuildQueue = new Queue<MMBusyPanelBase>();
@@ -3113,154 +3111,164 @@ namespace ME3TweaksModManager
             nbw.RunWorkerAsync();
         }
 
+        /// <summary>
+        /// Lock on this object if you want to ensure targets are not repopulating when code is run.
+        /// </summary>
+        internal static object targetRepopulationSyncObj = new();
+
         private void PopulateTargets(GameTargetWPF selectedTarget = null)
         {
-            RepopulatingTargets = true;
-            InstallationTargets.ClearEx();
-            SelectedGameTarget = null;
-            MEDirectories.ReloadGamePaths(true); //this is redundant on the first boot but whatever.
-            M3Log.Information(@"Populating game targets");
-            var targets = new List<GameTargetWPF>();
-            bool foundMe1Active = false;
-            bool foundMe2Active = false;
-            if (ME3Directory.DefaultGamePath != null && Directory.Exists(ME3Directory.DefaultGamePath))
+            // We lock this code behind object to ensure it finishes running before something else tries to use targets. If a panel tries to access targets list, it could be empty, and that's a problem.
+            lock (targetRepopulationSyncObj)
             {
-                var target = new GameTargetWPF(MEGame.ME3, ME3Directory.DefaultGamePath, true);
-                var failureReason = target.ValidateTarget();
-                if (failureReason == null)
+                RepopulatingTargets = true;
+                InstallationTargets.ClearEx();
+                SelectedGameTarget = null;
+                MEDirectories.ReloadGamePaths(true); //this is redundant on the first boot but whatever.
+                M3Log.Information(@"Populating game targets");
+                var targets = new List<GameTargetWPF>();
+                bool foundMe1Active = false;
+                bool foundMe2Active = false;
+                if (ME3Directory.DefaultGamePath != null && Directory.Exists(ME3Directory.DefaultGamePath))
                 {
-                    M3Log.Information(@"Current boot target for ME3: " + target.TargetPath);
-                    targets.Add(target);
-                    M3Utilities.AddCachedTarget(target);
-                }
-                else
-                {
-                    M3Log.Error(@"Current boot target for ME3 is invalid: " + failureReason);
-                }
-            }
-
-            if (ME2Directory.DefaultGamePath != null && Directory.Exists(ME2Directory.DefaultGamePath))
-            {
-                var target = new GameTargetWPF(MEGame.ME2, ME2Directory.DefaultGamePath, true);
-                var failureReason = target.ValidateTarget();
-                if (failureReason == null)
-                {
-                    M3Log.Information(@"Current boot target for ME2: " + target.TargetPath);
-                    targets.Add(target);
-                    M3Utilities.AddCachedTarget(target);
-                    foundMe2Active = true;
-                }
-                else
-                {
-                    M3Log.Error(@"Current boot target for ME2 is invalid: " + failureReason);
-                }
-            }
-
-            if (ME1Directory.DefaultGamePath != null && Directory.Exists(ME1Directory.DefaultGamePath))
-            {
-                var target = new GameTargetWPF(MEGame.ME1, ME1Directory.DefaultGamePath, true);
-                var failureReason = target.ValidateTarget();
-                if (failureReason == null)
-                {
-                    M3Log.Information(@"Current boot target for ME1: " + target.TargetPath);
-                    targets.Add(target);
-                    M3Utilities.AddCachedTarget(target);
-                    foundMe1Active = true;
-                }
-                else
-                {
-                    M3Log.Error(@"Current boot target for ME1 is invalid: " + failureReason);
-                }
-            }
-
-            if (!string.IsNullOrWhiteSpace(LegendaryExplorerCoreLibSettings.Instance?.LEDirectory) &&
-                Directory.Exists(LegendaryExplorerCoreLibSettings.Instance.LEDirectory))
-            {
-                // Load LE targets
-                void loadLETarget(MEGame game, string defaultPath)
-                {
-                    var target = new GameTargetWPF(game, defaultPath, true);
+                    var target = new GameTargetWPF(MEGame.ME3, ME3Directory.DefaultGamePath, true);
                     var failureReason = target.ValidateTarget();
                     if (failureReason == null)
                     {
-                        M3Log.Information($@"Current boot target for {game}: {target.TargetPath}");
-                        targets.Add(target);
-                    }
-                    else
-                    {
-                        M3Log.Error($@"Current boot target for {game} at {target.TargetPath} is invalid: " +
-                                    failureReason);
-                    }
-                }
-
-                loadLETarget(MEGame.LELauncher, LEDirectory.LauncherPath);
-                loadLETarget(MEGame.LE1, LE1Directory.DefaultGamePath);
-                loadLETarget(MEGame.LE2, LE2Directory.DefaultGamePath);
-                loadLETarget(MEGame.LE3, LE3Directory.DefaultGamePath);
-            }
-
-            // Read steam locations
-            void addSteamTarget(string targetPath, bool foundActiveAlready, MEGame game)
-            {
-                if (!string.IsNullOrWhiteSpace(targetPath)
-                    && Directory.Exists(targetPath)
-                    && !targets.Any(x => x.TargetPath.Equals(targetPath, StringComparison.InvariantCultureIgnoreCase)))
-                {
-                    var target = new GameTargetWPF(game, targetPath, !foundActiveAlready);
-                    var failureReason = target.ValidateTarget();
-                    if (failureReason == null)
-                    {
-                        M3Log.Information($@"Found Steam game for {game}: " + target.TargetPath);
-                        // Todo: Figure out how to insert at correct index
+                        M3Log.Information(@"Current boot target for ME3: " + target.TargetPath);
                         targets.Add(target);
                         M3Utilities.AddCachedTarget(target);
                     }
                     else
                     {
-                        M3Log.Error($@"Steam version of {game} at {targetPath} is invalid: {failureReason}");
+                        M3Log.Error(@"Current boot target for ME3 is invalid: " + failureReason);
                     }
                 }
+
+                if (ME2Directory.DefaultGamePath != null && Directory.Exists(ME2Directory.DefaultGamePath))
+                {
+                    var target = new GameTargetWPF(MEGame.ME2, ME2Directory.DefaultGamePath, true);
+                    var failureReason = target.ValidateTarget();
+                    if (failureReason == null)
+                    {
+                        M3Log.Information(@"Current boot target for ME2: " + target.TargetPath);
+                        targets.Add(target);
+                        M3Utilities.AddCachedTarget(target);
+                        foundMe2Active = true;
+                    }
+                    else
+                    {
+                        M3Log.Error(@"Current boot target for ME2 is invalid: " + failureReason);
+                    }
+                }
+
+                if (ME1Directory.DefaultGamePath != null && Directory.Exists(ME1Directory.DefaultGamePath))
+                {
+                    var target = new GameTargetWPF(MEGame.ME1, ME1Directory.DefaultGamePath, true);
+                    var failureReason = target.ValidateTarget();
+                    if (failureReason == null)
+                    {
+                        M3Log.Information(@"Current boot target for ME1: " + target.TargetPath);
+                        targets.Add(target);
+                        M3Utilities.AddCachedTarget(target);
+                        foundMe1Active = true;
+                    }
+                    else
+                    {
+                        M3Log.Error(@"Current boot target for ME1 is invalid: " + failureReason);
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(LegendaryExplorerCoreLibSettings.Instance?.LEDirectory) &&
+                    Directory.Exists(LegendaryExplorerCoreLibSettings.Instance.LEDirectory))
+                {
+                    // Load LE targets
+                    void loadLETarget(MEGame game, string defaultPath)
+                    {
+                        var target = new GameTargetWPF(game, defaultPath, true);
+                        var failureReason = target.ValidateTarget();
+                        if (failureReason == null)
+                        {
+                            M3Log.Information($@"Current boot target for {game}: {target.TargetPath}");
+                            targets.Add(target);
+                        }
+                        else
+                        {
+                            M3Log.Error($@"Current boot target for {game} at {target.TargetPath} is invalid: " +
+                                        failureReason);
+                        }
+                    }
+
+                    loadLETarget(MEGame.LELauncher, LEDirectory.LauncherPath);
+                    loadLETarget(MEGame.LE1, LE1Directory.DefaultGamePath);
+                    loadLETarget(MEGame.LE2, LE2Directory.DefaultGamePath);
+                    loadLETarget(MEGame.LE3, LE3Directory.DefaultGamePath);
+                }
+
+                // Read steam locations
+                void addSteamTarget(string targetPath, bool foundActiveAlready, MEGame game)
+                {
+                    if (!string.IsNullOrWhiteSpace(targetPath)
+                        && Directory.Exists(targetPath)
+                        && !targets.Any(x =>
+                            x.TargetPath.Equals(targetPath, StringComparison.InvariantCultureIgnoreCase)))
+                    {
+                        var target = new GameTargetWPF(game, targetPath, !foundActiveAlready);
+                        var failureReason = target.ValidateTarget();
+                        if (failureReason == null)
+                        {
+                            M3Log.Information($@"Found Steam game for {game}: " + target.TargetPath);
+                            // Todo: Figure out how to insert at correct index
+                            targets.Add(target);
+                            M3Utilities.AddCachedTarget(target);
+                        }
+                        else
+                        {
+                            M3Log.Error($@"Steam version of {game} at {targetPath} is invalid: {failureReason}");
+                        }
+                    }
+                }
+
+                // ME1
+                addSteamTarget(M3Utilities.GetRegistrySettingString(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 17460",
+                    @"InstallLocation"), foundMe1Active, MEGame.ME1);
+
+                // ME2
+                addSteamTarget(M3Utilities.GetRegistrySettingString(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 24980",
+                    @"InstallLocation"), foundMe2Active, MEGame.ME2);
+
+                // ME3
+                addSteamTarget(M3Utilities.GetRegistrySettingString(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1238020",
+                    @"InstallLocation"), foundMe2Active, MEGame.ME3);
+
+                // Legendary Edition
+                var legendarySteamLoc = M3Utilities.GetRegistrySettingString(
+                    @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1328670",
+                    @"InstallLocation");
+                if (!string.IsNullOrWhiteSpace(legendarySteamLoc))
+                {
+                    addSteamTarget(Path.Combine(legendarySteamLoc, @"Game", @"Launcher"), false, MEGame.LELauncher);
+                    addSteamTarget(Path.Combine(legendarySteamLoc, @"Game", @"ME1"), false, MEGame.LE1);
+                    addSteamTarget(Path.Combine(legendarySteamLoc, @"Game", @"ME2"), false, MEGame.LE2);
+                    addSteamTarget(Path.Combine(legendarySteamLoc, @"Game", @"ME3"), false, MEGame.LE3);
+                }
+
+                M3Log.Information(@"Loading cached targets");
+                targets.AddRange(M3Utilities.GetCachedTargets(MEGame.ME3, targets));
+                targets.AddRange(M3Utilities.GetCachedTargets(MEGame.ME2, targets));
+                targets.AddRange(M3Utilities.GetCachedTargets(MEGame.ME1, targets));
+
+                // Load LE cached targets
+                targets.AddRange(M3Utilities.GetCachedTargets(MEGame.LE3, targets));
+                targets.AddRange(M3Utilities.GetCachedTargets(MEGame.LE2, targets));
+                targets.AddRange(M3Utilities.GetCachedTargets(MEGame.LE1, targets));
+                targets.AddRange(M3Utilities.GetCachedTargets(MEGame.LELauncher, targets));
+
+                OrderAndSetTargets(targets, selectedTarget);
             }
-
-            // ME1
-            addSteamTarget(M3Utilities.GetRegistrySettingString(
-                @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 17460",
-                @"InstallLocation"), foundMe1Active, MEGame.ME1);
-
-            // ME2
-            addSteamTarget(M3Utilities.GetRegistrySettingString(
-                @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 24980",
-                @"InstallLocation"), foundMe2Active, MEGame.ME2);
-
-            // ME3
-            addSteamTarget(M3Utilities.GetRegistrySettingString(
-                @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1238020",
-                @"InstallLocation"), foundMe2Active, MEGame.ME3);
-
-            // Legendary Edition
-            var legendarySteamLoc = M3Utilities.GetRegistrySettingString(
-                @"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1328670",
-                @"InstallLocation");
-            if (!string.IsNullOrWhiteSpace(legendarySteamLoc))
-            {
-                addSteamTarget(Path.Combine(legendarySteamLoc, @"Game", @"Launcher"), false, MEGame.LELauncher);
-                addSteamTarget(Path.Combine(legendarySteamLoc, @"Game", @"ME1"), false, MEGame.LE1);
-                addSteamTarget(Path.Combine(legendarySteamLoc, @"Game", @"ME2"), false, MEGame.LE2);
-                addSteamTarget(Path.Combine(legendarySteamLoc, @"Game", @"ME3"), false, MEGame.LE3);
-            }
-
-            M3Log.Information(@"Loading cached targets");
-            targets.AddRange(M3Utilities.GetCachedTargets(MEGame.ME3, targets));
-            targets.AddRange(M3Utilities.GetCachedTargets(MEGame.ME2, targets));
-            targets.AddRange(M3Utilities.GetCachedTargets(MEGame.ME1, targets));
-
-            // Load LE cached targets
-            targets.AddRange(M3Utilities.GetCachedTargets(MEGame.LE3, targets));
-            targets.AddRange(M3Utilities.GetCachedTargets(MEGame.LE2, targets));
-            targets.AddRange(M3Utilities.GetCachedTargets(MEGame.LE1, targets));
-            targets.AddRange(M3Utilities.GetCachedTargets(MEGame.LELauncher, targets));
-
-            OrderAndSetTargets(targets, selectedTarget);
         }
 
         private void OrderAndSetTargets(List<GameTargetWPF> targets, GameTargetWPF selectedTarget = null)

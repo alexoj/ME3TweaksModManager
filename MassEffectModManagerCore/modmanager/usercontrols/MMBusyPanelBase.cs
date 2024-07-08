@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Threading;
 using LegendaryExplorerCore.Helpers;
+using ME3TweaksCore.Diagnostics;
 using ME3TweaksModManager.modmanager.memoryanalyzer;
 using ME3TweaksModManager.modmanager.objects;
 using ME3TweaksModManager.modmanager.usercontrols.interfaces;
@@ -49,7 +50,12 @@ namespace ME3TweaksModManager.modmanager.usercontrols
             window = Window.GetWindow(this);
             mainwindow = window as MainWindow;
             window.KeyDown += HandleKeyPress;
-            OnPanelVisible();
+            
+            // Lock here as OnPanelVisible() is where targets are likely set.
+            lock (MainWindow.targetRepopulationSyncObj)
+            {
+                OnPanelVisible();
+            }
         }
 
         /// <summary>
@@ -58,11 +64,14 @@ namespace ME3TweaksModManager.modmanager.usercontrols
         public PanelResult Result = new();
 
         public abstract void HandleKeyPress(object sender, KeyEventArgs e);
+
         public abstract void OnPanelVisible();
 
         public event EventHandler<DataEventArgs> Close;
         protected virtual void OnClosing(DataEventArgs e)
         {
+            M3Log.Information($@"Panel closing: {this.GetType().Name}");
+
             // This is done on the UI thread as it might require UI interaction to release things
             Application.Current.Dispatcher.Invoke(() =>
             {
