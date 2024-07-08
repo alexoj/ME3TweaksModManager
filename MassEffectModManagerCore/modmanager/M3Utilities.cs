@@ -126,8 +126,12 @@ namespace ME3TweaksModManager.modmanager
                 return true;
             }
 
+            string exe = null;
             try
             {
+                // Telemetry shows this being in the catch block can crash the app if the directory is not writable. So we put it into the try block instead.
+                exe = M3Filesystem.GetCachedExecutablePath("PermissionsGranter.exe");
+
                 //try first without admin.
                 if (forcePermissions) throw new UnauthorizedAccessException(); //just go to the alternate case.
                 Directory.CreateDirectory(directoryPath);
@@ -135,9 +139,15 @@ namespace ME3TweaksModManager.modmanager
             }
             catch (UnauthorizedAccessException)
             {
+                if (exe == null)
+                {
+                    // We couldn't even get to the permissions granter file
+                    M3Log.Fatal("Error accessing PermissionsGranter folder. App's data folder permissions are messed up, the app is probably going to crash.");
+                    return false;
+                }
+
                 //Must have admin rights.
                 M3Log.Information("We need admin rights to create this directory");
-                string exe = M3Filesystem.GetCachedExecutablePath("PermissionsGranter.exe");
                 try
                 {
                     M3Utilities.ExtractInternalFile("ME3TweaksModManager.modmanager.me3tweaks.PermissionsGranter.exe", exe, true);
