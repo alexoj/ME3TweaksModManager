@@ -108,6 +108,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod.texture
         public MEMMod(MEMMod other)
         {
             FilePath = other.FilePath;
+            ModName = other.ModName;
             Game = other.Game;
             ModdedTextures = other.ModdedTextures?.ToList(); // Clone the other's object with .ToList()
             FileExists = other.FileExists; // Should we do this...?
