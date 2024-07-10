@@ -1,5 +1,5 @@
-﻿using System.Diagnostics;
-using ME3TweaksCore.Helpers;
+﻿using ME3TweaksCore.Helpers;
+using ME3TweaksCore.Objects;
 using ME3TweaksCore.Services.FileSource;
 using ME3TweaksModManager.modmanager.localizations;
 using ME3TweaksModManager.modmanager.objects.mod;
@@ -97,7 +97,7 @@ namespace ME3TweaksModManager.modmanager.objects.batch
         {
             get
             {
-                if (Mod != null && Mod.InstallationJobs.Sum(x => x.GetAllAlternates().Count) == 0) return M3L.GetString(M3L.string_batchModHasNoConfigOptionsUIText);
+                if (IsStandalone) return M3L.GetString(M3L.string_batchModHasNoConfigOptionsUIText);
                 if (!HasChosenOptions) return M3L.GetString(M3L.string_notConfigured);
                 if (ChosenOptionsDesync) return M3L.GetString(M3L.string_reconfigurationRequired);
                 return M3L.GetString(M3L.string_interp_configuredTimestamp, ConfigurationTime.ToString(@"d"));
@@ -105,7 +105,28 @@ namespace ME3TweaksModManager.modmanager.objects.batch
         }
 
         /// <summary>
-        /// Indiciates this is the first mod being installed
+        /// If a content mod has no configurable options
+        /// </summary>
+        public bool IsStandalone => Mod != null && Mod.InstallationJobs.Sum(x => x.GetAllAlternates().Count) == 0;
+
+        /// <summary>
+        /// The UI bound tooltip string to show if options were chosen or not
+        /// </summary>
+        [JsonIgnore]
+        public string OptionsRecordedTooltipString
+        {
+            get
+            {
+                // Standalone
+                if (Mod != null && Mod.InstallationJobs.Sum(x => x.GetAllAlternates().Count) == 0) return M3L.GetString(M3L.string_tooltip_standaloneBQ);
+                if (!HasChosenOptions) return M3L.GetString(M3L.string_tooltip_noSavedOptionsBQ);
+                if (ChosenOptionsDesync) return M3L.GetString(M3L.string_tooltip_reconfigurationBQ);
+                return M3L.GetString(M3L.string_tooltip_timestampBQ);
+            }
+        }
+
+        /// <summary>
+        /// Indicates this is the first mod being installed
         /// </summary>
         [JsonIgnore]
         public bool IsFirstBatchMod { get; set; }
@@ -116,11 +137,17 @@ namespace ME3TweaksModManager.modmanager.objects.batch
         [JsonIgnore]
         public bool UseSavedOptions { get; set; }
 
+        /// <summary>
+        /// Name to show when mod is not available. For serialization.
+        /// </summary>
+        [JsonProperty(@"modname")]
+        public string ModName { get; set; }
+
 
         /// <summary>
         /// Initializes and associates a mod with this object
         /// </summary>
-        public void Init()
+        public void Init(bool logMissing)
         {
             var libraryRoot = M3LoadedMods.GetCurrentModLibraryDirectory(); // biq2 stores relative to library root. biq stores to library root FOR GAME
 
@@ -132,7 +159,7 @@ namespace ME3TweaksModManager.modmanager.objects.batch
                 {
                     Mod = m;
                     var localHash = MUtilities.CalculateHash(Mod.ModDescPath);
-                    ChosenOptionsDesync = Hash != null && localHash != Hash;
+                    ChosenOptionsDesync = Hash != null && localHash != Hash && !IsStandalone;
                     //if (ChosenOptionsDesync)
                     //{
                     //    Debugger.Break();
@@ -145,7 +172,7 @@ namespace ME3TweaksModManager.modmanager.objects.batch
             }
             else
             {
-                M3Log.Warning($@"Batch queue mod not available in library: {fullModdescPath}");
+                M3Log.Warning($@"Batch queue mod not available in library: {fullModdescPath}", logMissing);
             }
         }
 
@@ -162,6 +189,8 @@ namespace ME3TweaksModManager.modmanager.objects.batch
                 {
                     DownloadLink = sourceLink;
                 }
+
+                ModName = Mod.ModName;
             }
         }
 

@@ -1,15 +1,13 @@
 ﻿using System.Windows;
-using Dark.Net;
 using ME3TweaksCoreWPF.UI;
 using ME3TweaksModManager.extensions;
-using ME3TweaksModManager.ui;
 
 namespace ME3TweaksModManager.modmanager.windows
 {
     /// <summary>
     /// Interaction logic for LicenseViewerWindow.xaml
     /// </summary>
-    public partial class LicenseViewerWindow : Window
+    public partial class LicenseViewerWindow : Window, IClosableWindow
     {
         public LicenseViewerWindow(string licenseText)
         {
@@ -23,9 +21,14 @@ namespace ME3TweaksModManager.modmanager.windows
 
         private void LoadCommands()
         {
-            CloseCommand = new GenericCommand(() => Close());
+            CloseCommand = new GenericCommand(Close);
         }
 
         public GenericCommand CloseCommand { get; set; }
+        public bool AskToClose()
+        {
+            Close();
+            return true;
+        }
     }
 }

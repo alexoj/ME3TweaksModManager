@@ -19,7 +19,7 @@ namespace ME3TweaksModManager.modmanager.windows
     /// Interaction logic for IntroTutorial.xaml
     /// </summary>
     [AddINotifyPropertyChangedInterface]
-    public partial class IntroTutorial : Window
+    public partial class IntroTutorial : Window, IClosableWindow
     {
         /// <summary>
         /// The list of all steps in the tutorial
@@ -169,5 +169,10 @@ namespace ME3TweaksModManager.modmanager.windows
         public GenericCommand PreviousCommand { get; set; }
         public GenericCommand SkipTutorialCommand { get; set; }
         public GenericCommand ReloadTutorialCommand { get; set; }
+        public bool AskToClose()
+        {
+            Close();
+            return true;
+        }
     }
 }

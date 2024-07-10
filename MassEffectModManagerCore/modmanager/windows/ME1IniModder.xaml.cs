@@ -21,7 +21,7 @@ namespace ME3TweaksModManager.modmanager.windows
     /// <summary>
     /// Interaction logic for ME1IniModder.xaml
     /// </summary>
-    public partial class ME1IniModder : Window, INotifyPropertyChanged
+    public partial class ME1IniModder : Window, INotifyPropertyChanged, IClosableWindow
     {
         private bool doNotOpen;
 
@@ -251,6 +251,21 @@ public event PropertyChangedEventHandler PropertyChanged;
             {
                 Close();
             }
+        }
+
+        public bool AskToClose()
+        {
+            if (doNotOpen)
+                return true;
+
+            if (M3L.ShowDialog(this, "Close without saving changes?", "Application closing", MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.Yes) == MessageBoxResult.Yes)
+            {
+                Close();
+                return true;
+            }
+
+            // Denied closing.
+            return false;
         }
     }
 }

@@ -85,10 +85,10 @@ namespace ME3TweaksModManager
         /// <summary>
         /// The highest version of ModDesc that this version of Mod Manager can support.
         /// </summary>
-        public const double HighestSupportedModDesc = 8.2;
+        public const double HighestSupportedModDesc = 9.0;
 
         //Windows 10 1909
-        public static readonly Version MIN_SUPPORTED_OS = new Version(@"10.0.19044");
+        public static readonly Version MIN_SUPPORTED_OS = new Version(@"10.0.19045"); // Windows 10 22H2
 
         internal static readonly string[] SupportedOperatingSystemVersions =
         {
@@ -219,6 +219,16 @@ namespace ME3TweaksModManager
                         {
                             CommandLinePending.PendingMergeDLCCreation = parsedCommandLineArgs.Value.CreateMergeDLC;
                         }
+
+                        if (parsedCommandLineArgs.Value.MergeModManifestToCompile != null)
+                        {
+                            CommandLinePending.PendingMergeModCompileManifest = parsedCommandLineArgs.Value.MergeModManifestToCompile;
+                        }
+
+                        if (parsedCommandLineArgs.Value.FeatureLevel > 0)
+                        {
+                            CommandLinePending.PendingFeatureLevel = parsedCommandLineArgs.Value.FeatureLevel;
+                        }
                     }
                     else
                     {
@@ -315,7 +325,7 @@ namespace ME3TweaksModManager
                             });
 
                             M3Log.Information(@"Deleting old data directory: " + oldDir);
-                            M3Utilities.DeleteFilesAndFoldersRecursively(oldDir);
+                            MUtilities.DeleteFilesAndFoldersRecursively(oldDir);
                             M3Log.Information(@"Migration from pre 104 settings to 104+ settings completed");
                         }
                         catch (Exception e)
@@ -368,7 +378,7 @@ namespace ME3TweaksModManager
                 M3Log.Information(@"Deleting temp files (if any)");
                 try
                 {
-                    M3Utilities.DeleteFilesAndFoldersRecursively(MCoreFilesystem.GetTempDirectory());
+                    MUtilities.DeleteFilesAndFoldersRecursively(MCoreFilesystem.GetTempDirectory());
                 }
                 catch (Exception e)
                 {
@@ -451,20 +461,20 @@ namespace ME3TweaksModManager
             }
 
             // These localizations have been abandoned; if they are updated serverside, they can be dynamically re-enabled, for the most part
-            if (lang == @"pol") // Localization was abandoned
-            {
-                // This may not be available on first load
-                ServerManifest.TryGetBool(ServerManifest.LOCALIZATION_ENABLED_POL, out var enabled, false);
-                return enabled;
-            }
+            //if (lang == @"pol") // Localization was abandoned
+            //{
+            //    // This may not be available on first load
+            //    ServerManifest.TryGetBool(ServerManifest.LOCALIZATION_ENABLED_POL, out var enabled, false);
+            //    return enabled;
+            //}
 
 
-            if (lang == @"bra") // Localization was abandoned
-            {
-                // This may not be available on first load
-                ServerManifest.TryGetBool(ServerManifest.LOCALIZATION_ENABLED_BRA, out var enabled, false);
-                return enabled;
-            }
+            //if (lang == @"bra") // Localization was abandoned
+            //{
+            //    // This may not be available on first load
+            //    ServerManifest.TryGetBool(ServerManifest.LOCALIZATION_ENABLED_BRA, out var enabled, false);
+            //    return enabled;
+            //}
 
             if (lang == @"int") return true; // Just in case
             return false;
@@ -623,7 +633,13 @@ namespace ME3TweaksModManager
         /// <summary>
         /// The executable location for this application
         /// </summary>
-        public static string ExecutableLocation { get; private set; }
+        public static string ExecutableLocation { 
+            get;
+#if !AZURE
+            private 
+#endif
+            set;
+        }
 
         public static List<NexusDomainHandler> NexusDomainHandlers { get; } = new();
 
@@ -687,7 +703,7 @@ namespace ME3TweaksModManager
                     {
                         try
                         {
-                            M3Utilities.DeleteFilesAndFoldersRecursively(M3Filesystem.GetModDownloadCacheDirectory(),
+                            MUtilities.DeleteFilesAndFoldersRecursively(M3Filesystem.GetModDownloadCacheDirectory(),
                                 false);
                             M3Log.Information(@"Deleted mod download cache");
                         }
@@ -768,16 +784,26 @@ namespace ME3TweaksModManager
         [Option(@"installasi", HelpText = "Instructs Mod Manager to automatically install the ASI with the specified group ID to the specified game")]
         public int AutoInstallASIGroupID { get; set; }
 
+        [Option(@"asiversion", HelpText = "Chooses a specific version of an ASI when paired with --installasi")]
+        public int AutoInstallASIVersion { get; set; }
+
         [Option(@"installbink", HelpText = "Instructs Mod Manager to automatically install the bink asi loader to the specified game")]
         public bool AutoInstallBink { get; set; }
 
-        [Option(@"createmergedlc", HelpText = "Instructs Mod Manager to automatically (re)create a merge DLC for the given game.")]
+        [Option(@"createmergedlc", HelpText = "Instructs Mod Manager to automatically (re)create a merge DLC for the given game")]
         public bool CreateMergeDLC { get; set; }
 
         [Option(@"m3link", HelpText = "Instructs Mod Manager to perform a task based on the contents of a me3tweaksmodmanager:// link")]
         public string M3Link { get; set; }
         
-         [Option(@"debuglogging", HelpText = "Enables verbose debug logs")]
+        [Option(@"debuglogging", HelpText = "Enables verbose debug logs")]
         public bool DebugLogging { get; set; }
+
+
+        [Option(@"compilemergemod", HelpText = "Instructs Mod Manager to compile a mergemod manifest file. Requires providing a moddesc version with the 'featurelevel' option")]
+        public string MergeModManifestToCompile { get; set; }
+
+        [Option(@"featurelevel", HelpText = "Indicates the feature level a command line operation uses")]
+        public double FeatureLevel { get; set; }
     }
 }

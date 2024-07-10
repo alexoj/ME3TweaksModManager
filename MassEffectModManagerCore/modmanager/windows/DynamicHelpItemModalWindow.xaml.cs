@@ -13,7 +13,7 @@ namespace ME3TweaksModManager.modmanager.windows
     /// <summary>
     /// Interaction logic for DynamicHelpItemModalWindow.xaml
     /// </summary>
-    public partial class DynamicHelpItemModalWindow : Window
+    public partial class DynamicHelpItemModalWindow : Window, IClosableWindow
     {
         public string ModalTitle { get; }
         public string ModalText { get; }
@@ -58,6 +58,12 @@ namespace ME3TweaksModManager.modmanager.windows
         private void OK_Click(object sender, RoutedEventArgs e)
         {
             Close();
+        }
+
+        public bool AskToClose()
+        {
+            Close();
+            return true;
         }
     }
 }

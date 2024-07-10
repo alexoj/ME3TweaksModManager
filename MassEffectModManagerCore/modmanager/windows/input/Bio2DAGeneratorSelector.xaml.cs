@@ -1,13 +1,10 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using LegendaryExplorerCore.GameFilesystem;
 using LegendaryExplorerCore.Misc;
 using ME3TweaksModManager.modmanager.localizations;
-using ME3TweaksModManager.modmanager.objects.starterkit;
 using System.Windows;
 using LegendaryExplorerCore.Helpers;
-using Microsoft.WindowsAPICodePack.COMNative.MediaDevices;
-using Dark.Net;
+using ME3TweaksCore.ME3Tweaks.StarterKit;
 using ME3TweaksModManager.extensions;
 
 namespace ME3TweaksModManager.modmanager.windows
@@ -49,14 +46,14 @@ namespace ME3TweaksModManager.modmanager.windows
 
             var twoDAs = new List<Bio2DAOption>();
 
-            string[] searchFiles = { @"Engine.pcc", @"SFXGame.pcc", @"EntryMenu.pcc" };
+            string[] searchFiles = [@"Engine.pcc", @"SFXGame.pcc", @"EntryMenu.pcc"];
             foreach (var twoDAF in searchFiles)
             {
                 // We only unsafe load to speed up loading on slow backup paths
                 using var p = MEPackageHandler.UnsafePartialLoad(Path.Combine(cookedPath, twoDAF), x => !x.IsDefaultObject && !x.IsDefaultObject && x.ObjectName.Name != @"Default2DA" && x.ClassName is @"Bio2DA" or @"Bio2DANumberedRows");
                 foreach (var twoDA in p.Exports.Where(x => x.IsDataLoaded()))
                 {
-                    twoDAs.Add(new Bio2DAOption(twoDA.ObjectName, new LEXOpenable(twoDA)));
+                    twoDAs.Add(new Bio2DAOption(twoDA.ObjectName.Instanced, new LEXOpenable(twoDA)));
                 }
             }
             return twoDAs;
