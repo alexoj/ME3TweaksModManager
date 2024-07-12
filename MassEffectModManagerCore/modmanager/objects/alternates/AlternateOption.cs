@@ -256,7 +256,7 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             IsHidden = other.IsHidden;
             GroupName = other.GroupName;
             CheckedByDefault = other.CheckedByDefault;
-            
+
         }
 
         /// <summary>
@@ -789,7 +789,11 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
             target.GroupName = GroupName;
 
             // Used for map
-            target.ParameterMap.ReplaceAll(ParameterMap);
+            // Must make copy
+            foreach (var p in ParameterMap)
+            {
+                target.ParameterMap.Add(p.CopyForEditor());
+            }
         }
     }
 }

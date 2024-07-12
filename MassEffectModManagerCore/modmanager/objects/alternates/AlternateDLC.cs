@@ -502,7 +502,6 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
         /// <summary>
         /// Copy constructor
         /// </summary>
-        /// <param name="other">Item to copy</param>
         internal AlternateDLC CopyForEditor()
         {
             AlternateDLC dlc = new AlternateDLC();
