@@ -745,14 +745,14 @@ namespace ME3TweaksModManager.modmanager.objects.alternates
         }
 
         /// <summary>
-        /// Checks if this alternate meets the conditional DLC requirements for option keys in other mods.
+        /// Checks if this alternate meets extra conditions on its ConditionalDLC structs
         /// </summary>
         /// <param name="metaInfo"></param>
         /// <returns></returns>
-        public bool CheckConditionalDLCOptionKeys(CaseInsensitiveDictionary<MetaCMM> metaInfo)
+        public bool CheckExtraConditions(CaseInsensitiveDictionary<MetaCMM> metaInfo)
         {
             // We also check for option keys in the metacmms
-            foreach (var condDLC in ConditionalDLC.Where(x => x.DLCOptionKeys != null && x.DLCOptionKeys.Any()))
+            foreach (var condDLC in ConditionalDLC.Where(x => x.HasConditions()))
             {
                 if (!condDLC.IsRequirementMet(null, metaInfo))
                 {
