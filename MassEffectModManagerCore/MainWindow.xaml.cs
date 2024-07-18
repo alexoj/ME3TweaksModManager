@@ -2045,10 +2045,8 @@ namespace ME3TweaksModManager
         }
 
         /// <summary>
-        /// Shows or queues the specified control
+        /// Removes the currently shown busy control and shows the next queued one, if any, additionally handling batch panel results.
         /// </summary>
-        /// <param name="control">Control to show or queue</param>
-        /// <returns>True if a new control was queued up, false if it wasn't</returns>
         internal void ReleaseBusyControl()
         {
             if (BusyContentM3 is SingleItemPanel2 singleItemPanel)
@@ -4747,6 +4745,7 @@ namespace ME3TweaksModManager
             };
 
             // 05/29/2024 - Change to null-only assignment as it would wipe out an existing BatchPanelResult, such as from the Mod Update list.
+            // This only is used 
             BatchPanelResult ??= new PanelResult();
             HandleBatchPanelResult = false;
             ShowBusyControl(modInspector, priority);
