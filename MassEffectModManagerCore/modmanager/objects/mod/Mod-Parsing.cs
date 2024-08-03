@@ -2410,7 +2410,7 @@ namespace ME3TweaksModManager.modmanager.objects.mod
                         foreach (var manualTrigger in altdlc.DLCRequirementsForManual)
                         {
                             var info = TPMIService.GetThirdPartyModInfo(manualTrigger.DLCFolderName.Key, Game);
-                            autoConfigs.Add(manualTrigger.DLCFolderName.Key);
+                            autoConfigs.Add(manualTrigger.ToUIString(info));
                         }
                     }
                 }
