@@ -2881,10 +2881,10 @@ namespace ME3TweaksModManager
 
             if (!App.IsOperatingSystemSupported())
             {
-                string osList = string.Join("\n - ", App.SupportedOperatingSystemVersions); //do not localize
-                M3Log.Error(@"This operating system is not supported.");
-                M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_dialog_unsupportedOS, osList),
-                    M3L.GetString(M3L.string_unsupportedOperatingSystem), MessageBoxButton.OK, MessageBoxImage.Error);
+                //string osList = string.Join("\n - ", App.SupportedOperatingSystemVersions); //do not localize
+                //M3Log.Error(@"This operating system is not supported.");
+                //M3L.ShowDialog(this, M3L.GetString(M3L.string_interp_dialog_unsupportedOS, osList),
+                    //M3L.GetString(M3L.string_unsupportedOperatingSystem), MessageBoxButton.OK, MessageBoxImage.Error);
             }
             else
             {
